@@ -2,6 +2,10 @@ body {
     margin-top: 50px;
 }
 
+.sub-title {
+    font-style: italic;
+}
+
 .fork-me {
     position: absolute;
     top: 0;
