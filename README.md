@@ -1,12 +1,38 @@
-Mammon
-======
+Mammon Cucumber
+===============
 
-Mammon is a distributed IOU management system, capable of running in daemon mode on a server and also able to run on a mobile phone. A peer-to-peer network between servers allows (circular) debts to be resolved, while the mobile application allows users to issue and transfer IOUs without requiring an active internet connection.
+Mammon is a distributed IOU management system, capable of running in
+daemon mode on a server and also able to run on a mobile phone. A
+peer-to-peer network between servers allows (circular) debts to be
+resolved, while the mobile application allows users to issue and
+transfer IOUs without requiring an active internet connection.
 
-The protocol and crypto are based on a publication by [Stefan Brands][Br93].
+See the [main branch](https://github.com/phedny/Mammon "phedny/Mammon on Github")
+for a more thorough introduction to Mammon
 
-References
--------------
+Cucumber
+--------
 
-[Br93]: http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.41.8411 "Untraceable Off-line Cash in Wallets with Observers"
+[Cucumber](http://cukes.info/ "Cucumber Homepage") make Behaviour
+Driven Development fun. We use it to verify that our code delivers our
+intended use cases.
 
+Environment
+-----------
+
+We use [maven](http://maven.apache.org/ "Maven homepage") to build our
+software. See the 
+[documentation](http://maven.apache.org/run-maven/index.html "Running Maven")
+for more information about running maven.
+
+### Eclipse
+
+To generate project files for Eclipse run
+
+    > mvn eclipse:eclipse
+
+### Test
+
+To run the test suite execute
+
+    > mvn test
