@@ -17,3 +17,10 @@ Feature: IOU
     Then Alice should have the IOU [Bob, 1.00]
     And Alice should have the IOU [Coral, 2.00]
     And Alice should have the IOU [Dave, 3.00]
+  
+  Scenario: Redeem an IOU
+    Given Alice holds an IOU of 1.00 euros redeemable by Bob
+    And Alice holds an IOU of 2.00 euros redeemable by Carol
+    When Alice redeems the IOU [Bob, 1.00]
+    Then Alice should have the IOU [Coral, 2.00]
+  

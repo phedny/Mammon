@@ -40,4 +40,9 @@ public class IOUStepDefinitions {
 	public void thenLenderShouldOwnIOU(String lender, String borrower, String amount) {
 		fail();
 	}
+
+	@When("^(\\w+) redeems the IOU \\[(\\w+), (\\d+\\.\\d{2})\\]$")
+	public void lenderRedeemsIOU(String lender, String borrower, String amount) {
+
+	}
 }
