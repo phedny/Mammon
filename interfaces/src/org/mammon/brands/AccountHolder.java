@@ -1,5 +1,7 @@
 package org.mammon.brands;
 
+import java.util.concurrent.Callable;
+
 import org.mammon.Bearer;
 
 /**
@@ -7,31 +9,29 @@ import org.mammon.Bearer;
  * isSellable() method on IOweYou objects hold by an AccountHolder must return
  * <code>true</code>.
  */
-public interface AccountHolder extends Bearer {
+public interface AccountHolder<G extends Group, S, T, H extends Callable<Group.Element<G>[]>, H0 extends Callable<Group.Element<G>>>
+		extends Bearer {
 
 	/**
 	 * @return the setup instantiation used by this object.
 	 */
-	BrandsSchemeSetup getSetup();
+	BrandsSchemeSetup<G, S, T, H, H0> getSetup();
 
 	/**
-	 * @return the private key $u_1$ of the Account Holder, which is an element
-	 *         of the group getSetup().getGroup().
+	 * @return the private key $u_1$ of the Account Holder.
 	 */
-	Void getPrivateKey();
+	Group.Element<G> getPrivateKey();
 
 	/**
-	 * @return the public key or identity $I$ of the Account Holder, which is an
-	 *         element of the group getSetup().getGroup() and equals $I =
-	 *         g_1^{u_1}$.
+	 * @return the public key or identity $I$ of the Account Holder, which
+	 *         equals $I = g_1^{u_1}$.
 	 */
-	Void getPublicKey();
+	Group.Element<G> getPublicKey();
 
 	/**
 	 * @return the identity $z$ of the Account Holder blinded by the Bank, which
-	 *         is an element of the group getSetup().getGroup() and equals $z =
-	 *         (I g_2)^x$.
+	 *         equals $z = (I g_2)^x$.
 	 */
-	Void getBlindedIdentity();
+	Group.Element<G> getBlindedIdentity();
 
 }

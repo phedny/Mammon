@@ -1,13 +1,16 @@
 package org.mammon.brands;
 
+import java.util.concurrent.Callable;
+
 import org.mammon.IOweYou;
 
-public interface Coin extends IOweYou {
+public interface Coin<G extends Group, S, T, H extends Callable<Group.Element<G>[]>, H0 extends Callable<Group.Element<G>>>
+		extends IOweYou {
 
 	/**
 	 * @return the setup instantiation used by this object.
 	 */
-	BrandsSchemeSetup getSetup();
+	BrandsSchemeSetup<G, S, T, H, H0> getSetup();
 
 	/**
 	 * The issuer of an IOU is the entity that has created the promise to pay
@@ -16,25 +19,25 @@ public interface Coin extends IOweYou {
 	 * @return the issuer of this IOU.
 	 */
 	@Override
-	Bank getIssuer();
+	Bank<G, S, T, H, H0> getIssuer();
 
 	/**
 	 * @return the blinded identity $A$ of the AccountHolder that withdrew the
 	 *         coins from the Bank.
 	 */
-	Void getBlindedIdentity();
+	Group.Element<G> getBlindedIdentity();
 
 	/**
 	 * @return the commitment $B$ to the secret values of the coin known to the
 	 *         AccountHolder.
 	 */
-	Void getCommitment();
+	Group.Element<G> getCommitment();
 
 	/**
 	 * @return the signature $\operatorname(Sig){A,B}$, which can be used to
 	 *         verify that this coin has been correctly issued by the Bank and
 	 *         must therefore be valid.
 	 */
-	Void getCoinSignature();
+	Group.Element<G> getCoinSignature();
 
 }

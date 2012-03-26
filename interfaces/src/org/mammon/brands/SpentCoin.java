@@ -1,11 +1,14 @@
 package org.mammon.brands;
 
+import java.util.concurrent.Callable;
+
 /**
  * In the Brands scheme, coins that have been issued and spent, are hold by an
  * bearer that must be a Shop. The isSellable() method of any implementation of
  * this interface must return <code>false</code>.
  */
-public interface SpentCoin extends Coin {
+public interface SpentCoin<G extends Group, S, T, H extends Callable<Group.Element<G>[]>, H0 extends Callable<Group.Element<G>>>
+		extends Coin<G, S, T, H, H0> {
 
 	/**
 	 * The bearer of an IOU is the entity that currently holds the IOU and is
@@ -14,19 +17,19 @@ public interface SpentCoin extends Coin {
 	 * @return the current bearer of this IOU.
 	 */
 	@Override
-	Shop getBearer();
+	Shop<G, S, T, H, H0> getBearer();
 
 	/**
 	 * @return the time when the payment protocol of the Brands scheme has been
 	 *         executed.
 	 */
-	Void getTime();
+	T getTime();
 
 	/**
 	 * @return array of length 2, containing $r_1$ and $r_2$, which can be used
 	 *         to prove that the coin has been spent by the original
 	 *         AccountHolder.
 	 */
-	Void[] getSpendingCommitments();
+	Group.Element<G>[] getSpendingCommitments();
 
 }

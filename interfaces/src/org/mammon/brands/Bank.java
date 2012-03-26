@@ -1,27 +1,28 @@
 package org.mammon.brands;
 
+import java.util.concurrent.Callable;
+
 import org.mammon.Issuer;
 
 /**
  * In the Brands scheme, an issuer of an IOU is called the bank.
  */
-public interface Bank extends Issuer {
+public interface Bank<G extends Group, S, T, H extends Callable<Group.Element<G>[]>, H0 extends Callable<Group.Element<G>>>
+		extends Issuer {
 
 	/**
 	 * @return the setup instantiation used by this object.
 	 */
-	BrandsSchemeSetup getSetup();
+	BrandsSchemeSetup<G, S, T, H, H0> getSetup();
 
 	/**
-	 * @return the private key $x$ of the Bank, which is an element of the group
-	 *         getSetup().getGroup().
+	 * @return the private key $x$ of the Bank.
 	 */
-	Void getPrivateKey();
+	Group.Element<G> getPrivateKey();
 
 	/**
-	 * @return the public key $h$ of the Bank, which is an element of the group
-	 *         getSetup().getGroup() and equals $h = g^x$.
+	 * @return the public key $h$ of the Bank, which equals $h = g^x$.
 	 */
-	Void getPublicKey();
+	Group.Element<G> getPublicKey();
 
 }

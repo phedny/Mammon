@@ -1,11 +1,14 @@
 package org.mammon.brands;
 
+import java.util.concurrent.Callable;
+
 /**
  * In the Brands scheme, coins that have been issued, but have not been spent
  * yet, are hold by an bearer that must be an AccountHolder. The isSellable()
  * method of any implementation of this interface must return <code>true</code>.
  */
-public interface UnspentCoin extends Coin {
+public interface UnspentCoin<G extends Group, S, T, H extends Callable<Group.Element<G>[]>, H0 extends Callable<Group.Element<G>>>
+		extends Coin<G, S, T, H, H0> {
 
 	/**
 	 * The bearer of an IOU is the entity that currently holds the IOU and is
@@ -14,18 +17,17 @@ public interface UnspentCoin extends Coin {
 	 * @return the current bearer of this IOU.
 	 */
 	@Override
-	AccountHolder getBearer();
+	AccountHolder<G, S, T, H, H0> getBearer();
 
 	/**
-	 * @return the identity blinding factor $s$, which is an element of the
-	 *         group getSetup().getGroup().
+	 * @return the identity blinding factor $s$.
 	 */
-	Void getBlindingFactor();
+	Group.Element<G> getBlindingFactor();
 
 	/**
 	 * @return an array of length 2, containing the payer witnesses $x_1$ and
-	 *         $x_2$, which are elements of the group getSetup().getGroup().
+	 *         $x_2$.
 	 */
-	Void[] getPayerWitness();
+	Group.Element<G>[] getPayerWitness();
 
 }
