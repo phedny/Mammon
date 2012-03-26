@@ -9,29 +9,29 @@ import java.util.Random;
  * The group must comply to the requirements set out in the Brands scheme for
  * the group $G$ and may in particular be $\mathbb{Z}_q^*$.
  */
-public interface Group {
+public interface Group<G extends Group<G>> {
 
 	/**
 	 * @return the zero element of this group.
 	 */
-	Element<Group> getZero();
+	Element<G> getZero();
 
 	/**
 	 * @return the unit (one) element of this group.
 	 */
-	Element<Group> getOne();
+	Element<G> getOne();
 
 	/**
 	 * @param random
 	 *            randomization source.
 	 * @return a random element from this group.
 	 */
-	Element<Group> getRandomElement(Random random);
+	Element<G> getRandomElement(Random random);
 
 	/**
 	 * This interface represents an element from a group.
 	 */
-	interface Element<G extends Group> {
+	interface Element<G> {
 
 		/**
 		 * @return the group this element belongs to.
