@@ -11,6 +11,16 @@ public class IOUStepDefinitions {
 	    // Express the Regexp above with the code you wish you had
 	}
 
+	@Given("^(\\w+) holds the IOU \\[(\\w+), (\\d+\\.\\d{2})\\]$")
+	public void givenLenderHoldsIOU(String lender, String borrower, String amount) {
+		// Express the Regexp above with the code you wish you had
+	}
+
+	@Given("^(\\w+) holds the forwarded IOU \\[(\\w+), (\\d+\\.\\d{2})\\]$")
+	public void givenLenderHoldsForwardedIOU(String lender, String borrower, String amount) {
+		// Express the Regexp above with the code you wish you had
+	}
+
 	@When("^(\\w+) creates an IOU of (\\d+\\.\\d{2}) euros$")
 	public void whenBorrowerCreatesAnIOU(String borrower, String amount) {
 	    // Express the Regexp above with the code you wish you had
@@ -18,16 +28,6 @@ public class IOUStepDefinitions {
 
 	@When("^sends the IOU to (\\w+)$")
 	public void whenBorrowerSendsTheIOUToLender(String lender) {
-	    // Express the Regexp above with the code you wish you had
-	}
-
-	@Then("^(\\w+) should have the IOU \\[(\\w+), (\\d+\\.\\d{2})\\]$")
-	public void thenLenderShouldOwnIOU(String lender, String borrower, String amount) {
-		fail(); // Express the Regexp above with the code you wish you had
-	}
-
-	@Given("^(\\w+) holds the IOU \\[(\\w+), (\\d+\\.\\d{2})\\]$")
-	public void givenLenderHoldsIOU(String lender, String borrower, String amount) {
 	    // Express the Regexp above with the code you wish you had
 	}
 
@@ -46,19 +46,19 @@ public class IOUStepDefinitions {
 	    // Express the Regexp above with the code you wish you had
 	}
 
-	@Then("^(\\w+) should have no IOU's$")
-	public void thenLenderShouldHaveNoIOUs() {
+	@When("^(\\w+) request a refresh of \\[(\\w+), (\\d+\\.\\d{2})\\]$")
+	public void whenLenderRequestARefresh(String lender, String borrower, String amount) {
+		// Express the Regexp above with the code you wish you had
+	}
+
+	@Then("^(\\w+) should have the IOU \\[(\\w+), (\\d+\\.\\d{2})\\]$")
+	public void thenLenderShouldOwnIOU(String lender, String borrower, String amount) {
 		fail(); // Express the Regexp above with the code you wish you had
 	}
 
-	@Given("^(\\w+) holds the forwarded IOU \\[(\\w+), (\\d+\\.\\d{2})\\]$")
-	public void givenLenderHoldsForwardedIOU(String lender, String borrower, String amount) {
-	    // Express the Regexp above with the code you wish you had
-	}
-
-	@When("^(\\w+) request a refresh of \\[(\\w+), (\\d+\\.\\d{2})\\]$")
-	public void whenLenderRequestARefresh(String lender, String borrower, String amount) {
-	    // Express the Regexp above with the code you wish you had
+	@Then("^(\\w+) should have no IOU's$")
+	public void thenLenderShouldHaveNoIOUs() {
+		fail(); // Express the Regexp above with the code you wish you had
 	}
 
 	@Then("^\\[(\\w+), (\\d+\\.\\d{2})\\] should be forwardable$")
