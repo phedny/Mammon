@@ -40,4 +40,14 @@ public class IOUStepDefinitions {
 	public void lenderRedeemsIOU(String lender, String borrower, String amount) {
 
 	}
+
+	@When("^(\\w+) forwards the IOU \\[(\\w+), (\\d+\\.\\d{2})\\] to (\\w+)$")
+	public void whenBorrowerForwardsIOU(String borrower, String forwardee, String amount, String lender) {
+
+	}
+
+	@Then("^(\\w+) should have no IOU's$")
+	public void thenLenderShouldHaveNoIOUs() {
+	    // Express the Regexp above with the code you wish you had
+	}
 }

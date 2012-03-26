@@ -23,4 +23,11 @@ Feature: IOU
     And Alice holds the IOU [Caral, 2.00]
     When Alice redeems the IOU [Bob, 1.00]
     Then Alice should have the IOU [Coral, 2.00]
+    
+  Scenario: Forward an IOU
+    Given Alice owes Carol 3.00 euros
+    And Alice holds the IOU [Bob, 3.00]
+    When Alice forwards the IOU [Bob, 3.00] to Carol
+    Then Alice should have no IOU's
+    And Coral should have the IOU [Bob, 3.00]
   
