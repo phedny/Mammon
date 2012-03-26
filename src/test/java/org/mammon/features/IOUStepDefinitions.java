@@ -48,6 +48,6 @@ public class IOUStepDefinitions {
 
 	@Then("^(\\w+) should have no IOU's$")
 	public void thenLenderShouldHaveNoIOUs() {
-	    // Express the Regexp above with the code you wish you had
+		fail();
 	}
 }
