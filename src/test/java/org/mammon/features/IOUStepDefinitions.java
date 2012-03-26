@@ -7,38 +7,33 @@ import cucumber.annotation.en.When;
 
 public class IOUStepDefinitions {
 	@Given("^(\\w+) owes (\\w+) (\\d+\\.\\d{2}) euros$")
-	public void givenBorrowerOwesLenderMoney(String personA, String personB, String amount) {
+	public void givenBorrowerOwesLenderMoney(String borrower, String lender, String amount) {
 
 	}
 
 	@When("^(\\w+) creates an IOU of (\\d+\\.\\d{2}) euros$")
-	public void whenBorrowerCreatesAnIOU(String person, String amount) {
+	public void whenBorrowerCreatesAnIOU(String borrower, String amount) {
 
 	}
 
 	@When("^sends the IOU to (\\w+)$")
-	public void whenBorrowerSendsTheIOULender(String person) {
-
-	}
-
-	@Then("^(\\w+) should hold an IOU of (\\d+\\.\\d{2}) euros redeemable by (\\w+)$")
-	public void thenLenderHoldsIOU(String personB, String amount, String personA) {
-		fail();
-	}
-
-	@Given("^(\\w+) holds an IOU of (\\d+\\.\\d{2}) euros redeemable by (\\w+)$")
-	public void givenLenderHoldsIOU(String lender, String amount, String borrower) {
-
-	}
-
-	@When("^(\\w+) lists the IOU's$")
-	public void whenLenderListsIOUs(String lender) {
+	public void whenBorrowerSendsTheIOUToLender(String lender) {
 
 	}
 
 	@Then("^(\\w+) should have the IOU \\[(\\w+), (\\d+\\.\\d{2})\\]$")
 	public void thenLenderShouldOwnIOU(String lender, String borrower, String amount) {
 		fail();
+	}
+
+	@Given("^(\\w+) holds the IOU \\[(\\w+), (\\d+\\.\\d{2})\\]$")
+	public void givenLenderHoldsIOU(String lender, String borrower, String amount) {
+
+	}
+
+	@When("^(\\w+) lists the IOU's$")
+	public void whenLenderListsIOUs(String lender) {
+
 	}
 
 	@When("^(\\w+) redeems the IOU \\[(\\w+), (\\d+\\.\\d{2})\\]$")
