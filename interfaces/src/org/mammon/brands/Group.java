@@ -1,5 +1,7 @@
 package org.mammon.brands;
 
+import java.util.Random;
+
 /**
  * This interface can be used for generic typing, to bind classes of an actual
  * implementation compile-time.
@@ -10,12 +12,58 @@ package org.mammon.brands;
 public interface Group {
 
 	/**
+	 * @return the zero element of this group.
+	 */
+	Element<Group> getZero();
+
+	/**
+	 * @return the unit (one) element of this group.
+	 */
+	Element<Group> getOne();
+
+	/**
+	 * @param random
+	 *            randomization source.
+	 * @return a random element from this group.
+	 */
+	Element<Group> getRandomElement(Random random);
+
+	/**
 	 * This interface represents an element from a group.
-	 * 
-	 * @param <G>
 	 */
 	interface Element<G extends Group> {
-		// Empty
+
+		/**
+		 * @return the group this element belongs to.
+		 */
+		G getGroup();
+
+		/**
+		 * @return the inverse of this element.
+		 */
+		Element<G> getInverse();
+
+		/**
+		 * @param other
+		 *            an element from the same group to add together.
+		 * @return the sum of this element and the other element.
+		 */
+		Element<G> add(Element<G> other);
+
+		/**
+		 * @param other
+		 *            an element from the same group to multiply together.
+		 * @return the multiplication of this element and the other element.
+		 */
+		Element<G> multiply(Element<G> other);
+
+		/**
+		 * @param exponent
+		 *            an element from the same group to use as exponent.
+		 * @return the exponentiation of this element by the exponent.
+		 */
+		Element<G> exponentiate(Element<G> exponent);
+
 	}
 
 }
