@@ -32,10 +32,11 @@ public interface Coin<G extends Group, S, T, H extends SignatureHashFunction<G>,
 	Group.Element<G> getCommitment();
 
 	/**
-	 * @return the signature $\operatorname(Sig){A,B}$, which can be used to
-	 *         verify that this coin has been correctly issued by the Bank and
-	 *         must therefore be valid.
+	 * @return and array of length 4, which represents the signature
+	 *         $\operatorname(Sig){A,B}$, which can be used to verify that this
+	 *         coin has been correctly issued by the Bank and must therefore be
+	 *         valid.
 	 */
-	Group.Element<G> getCoinSignature();
+	Group.Element<G>[] getCoinSignature();
 
 }
