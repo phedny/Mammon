@@ -31,3 +31,9 @@ Feature: IOU
     Then Alice should have no IOU's
     And Coral should have the IOU [Bob, 3.00]
   
+  Scenario: Refresh an IOU
+    Given Alice holds the forwarded IOU [Bob, 1.00]
+    When Alice request a refresh of [Bob, 1.00]
+    Then Alice should have the IOU [Bob, 1.00]
+    And [Bob, 1.00] should be forwardable
+  

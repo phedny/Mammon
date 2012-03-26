@@ -50,4 +50,20 @@ public class IOUStepDefinitions {
 	public void thenLenderShouldHaveNoIOUs() {
 		fail();
 	}
+
+	@Given("^(\\w+) holds the forwarded IOU \\[(\\w+), (\\d+\\.\\d{2})\\]$")
+	public void givenLenderHoldsForwardedIOU(String lender, String borrower, String amount) {
+
+	}
+
+	@When("^(\\w+) request a refresh of \\[(\\w+), (\\d+\\.\\d{2})\\]$")
+	public void whenLenderRequestARefresh(String lender, String borrower, String amount) {
+
+	}
+
+	@Then("^\\[(\\w+), (\\d+\\.\\d{2})\\] should be forwardable$")
+	public void thenIOUShouldBeForwardable(String borrower, String amount) {
+		fail();
+	}
+
 }
