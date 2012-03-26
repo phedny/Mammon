@@ -10,6 +10,11 @@ import org.mammon.Bearer;
 public interface Shop extends Bearer {
 
 	/**
+	 * @return the setup instantiation used by this object.
+	 */
+	BrandsSchemeSetup getSetup();
+
+	/**
 	 * @return the identity $I_\mathcal{S}$ of the shop.
 	 */
 	Void getIdentity();
