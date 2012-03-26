@@ -7,8 +7,8 @@ peer-to-peer network between servers allows (circular) debts to be
 resolved, while the mobile application allows users to issue and
 transfer IOUs without requiring an active internet connection.
 
-See the [main branch](https://github.com/phedny/Mammon "phedny/Mammon on Github")
-for a more thorough introduction to Mammon
+See the [homepage](http://phedny.github.com/Mammon/ "Mammon Homepage")
+for a more thorough introduction to Mammon.
 
 Cucumber
 --------
