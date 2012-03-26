@@ -1,7 +1,5 @@
 package org.mammon.brands;
 
-import java.util.concurrent.Callable;
-
 import org.mammon.Bearer;
 
 /**
@@ -9,7 +7,7 @@ import org.mammon.Bearer;
  * isSellable() method on IOweYou objects hold by an AccountHolder must return
  * <code>true</code>.
  */
-public interface AccountHolder<G extends Group, S, T, H extends Callable<Group.Element<G>[]>, H0 extends Callable<Group.Element<G>>>
+public interface AccountHolder<G extends Group, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
 		extends Bearer {
 
 	/**

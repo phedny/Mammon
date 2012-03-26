@@ -1,13 +1,11 @@
 package org.mammon.brands;
 
-import java.util.concurrent.Callable;
-
 import org.mammon.Issuer;
 
 /**
  * In the Brands scheme, an issuer of an IOU is called the bank.
  */
-public interface Bank<G extends Group, S, T, H extends Callable<Group.Element<G>[]>, H0 extends Callable<Group.Element<G>>>
+public interface Bank<G extends Group, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
 		extends Issuer {
 
 	/**

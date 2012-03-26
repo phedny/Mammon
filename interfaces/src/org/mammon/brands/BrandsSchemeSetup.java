@@ -1,7 +1,5 @@
 package org.mammon.brands;
 
-import java.util.concurrent.Callable;
-
 /**
  * Any object that implements this interface represents a concrete setup of the
  * Brands scheme. All objects that refer to the same concrete setup are
@@ -18,7 +16,7 @@ import java.util.concurrent.Callable;
  * @param <H0>
  *            The payment hash function.
  */
-public interface BrandsSchemeSetup<G extends Group, S, T, H extends Callable<Group.Element<G>[]>, H0 extends Callable<Group.Element<G>>> {
+public interface BrandsSchemeSetup<G extends Group, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>> {
 
 	/**
 	 * @return the object that describes the group that is named $G$ in the

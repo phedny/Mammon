@@ -1,13 +1,11 @@
 package org.mammon.brands;
 
-import java.util.concurrent.Callable;
-
 /**
  * In the Brands scheme, coins that have been issued and spent, are hold by an
  * bearer that must be a Shop. The isSellable() method of any implementation of
  * this interface must return <code>false</code>.
  */
-public interface SpentCoin<G extends Group, S, T, H extends Callable<Group.Element<G>[]>, H0 extends Callable<Group.Element<G>>>
+public interface SpentCoin<G extends Group, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
 		extends Coin<G, S, T, H, H0> {
 
 	/**

@@ -1,10 +1,8 @@
 package org.mammon.brands;
 
-import java.util.concurrent.Callable;
-
 import org.mammon.IOweYou;
 
-public interface Coin<G extends Group, S, T, H extends Callable<Group.Element<G>[]>, H0 extends Callable<Group.Element<G>>>
+public interface Coin<G extends Group, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
 		extends IOweYou {
 
 	/**
