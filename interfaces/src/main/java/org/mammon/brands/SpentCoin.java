@@ -5,7 +5,7 @@ package org.mammon.brands;
  * bearer that must be a Shop. The isSellable() method of any implementation of
  * this interface must return <code>false</code>.
  */
-public interface SpentCoin<G extends Group, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
+public interface SpentCoin<G extends Group<G>, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
 		extends Coin<G, S, T, H, H0> {
 
 	/**

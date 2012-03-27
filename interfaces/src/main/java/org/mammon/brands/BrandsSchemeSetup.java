@@ -16,7 +16,7 @@ package org.mammon.brands;
  * @param <H0>
  *            The payment hash function.
  */
-public interface BrandsSchemeSetup<G extends Group, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>> {
+public interface BrandsSchemeSetup<G extends Group<G>, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>> {
 
 	/**
 	 * @return the object that describes the group that is named $G$ in the

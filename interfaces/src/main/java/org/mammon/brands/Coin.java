@@ -2,7 +2,7 @@ package org.mammon.brands;
 
 import org.mammon.IOweYou;
 
-public interface Coin<G extends Group, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
+public interface Coin<G extends Group<G>, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
 		extends IOweYou {
 
 	/**

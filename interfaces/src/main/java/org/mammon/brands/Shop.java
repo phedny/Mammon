@@ -7,7 +7,7 @@ import org.mammon.Bearer;
  * isSellable() method on IOweYou objects hold by an Shop must return
  * <code>true</code>.
  */
-public interface Shop<G extends Group, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
+public interface Shop<G extends Group<G>, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
 		extends Bearer {
 
 	/**

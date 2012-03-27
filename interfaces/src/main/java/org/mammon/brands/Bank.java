@@ -5,7 +5,7 @@ import org.mammon.Issuer;
 /**
  * In the Brands scheme, an issuer of an IOU is called the bank.
  */
-public interface Bank<G extends Group, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
+public interface Bank<G extends Group<G>, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
 		extends Issuer {
 
 	/**

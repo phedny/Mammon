@@ -3,7 +3,7 @@ package org.mammon.brands;
 /**
  * The signature hash is used to construct and verify signatures of the Bank.
  */
-public interface SignatureHashFunction<G extends Group> {
+public interface SignatureHashFunction<G extends Group<G>> {
 
 	/**
 	 * Hash the input value into an output element.

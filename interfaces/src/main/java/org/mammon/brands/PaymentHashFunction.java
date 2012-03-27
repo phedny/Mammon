@@ -3,7 +3,7 @@ package org.mammon.brands;
 /**
  * The payment hash is used to compute challenges during the payment protocol.
  */
-public interface PaymentHashFunction<G extends Group, S, T> {
+public interface PaymentHashFunction<G extends Group<G>, S, T> {
 
 	/**
 	 * Hash the input value into an output element.
