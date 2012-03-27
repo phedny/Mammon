@@ -21,7 +21,11 @@ public class Zq implements Group<Zq> {
 	}
 
 	private Element<Zq> element(long element) {
-		return new ZqElement(BigDecimal.valueOf(element));
+		return element(BigDecimal.valueOf(element));
+	}
+
+	private ZqElement element(BigDecimal element) {
+		return new ZqElement(element);
 	}
 
 	@Override
@@ -36,9 +40,10 @@ public class Zq implements Group<Zq> {
 	}
 
 	class ZqElement implements Element<Zq> {
+		private final BigDecimal element;
 
 		public ZqElement(BigDecimal element) {
-			// TODO Auto-generated constructor stub
+			this.element = element;
 		}
 
 		@Override
@@ -48,14 +53,12 @@ public class Zq implements Group<Zq> {
 
 		@Override
 		public Element<Zq> getInverse() {
-			// TODO Auto-generated method stub
-			return null;
+			return element(this.element.negate());
 		}
 
 		@Override
 		public Element<Zq> add(Element<Zq> other) {
-			// TODO Auto-generated method stub
-			return null;
+			return element(this.element.add(((ZqElement) other).element));
 		}
 
 		@Override
@@ -68,6 +71,38 @@ public class Zq implements Group<Zq> {
 		public Element<Zq> exponentiate(Element<Zq> exponent) {
 			// TODO Auto-generated method stub
 			return null;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + getOuterType().hashCode();
+			result = prime * result + ((element == null) ? 0 : element.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			ZqElement other = (ZqElement) obj;
+			if (!getOuterType().equals(other.getOuterType()))
+				return false;
+			if (element == null) {
+				if (other.element != null)
+					return false;
+			} else if (!element.equals(other.element))
+				return false;
+			return true;
+		}
+
+		private Zq getOuterType() {
+			return Zq.this;
 		}
 
 	}
