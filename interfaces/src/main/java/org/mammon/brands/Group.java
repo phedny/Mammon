@@ -1,6 +1,6 @@
 package org.mammon.brands;
 
-import java.util.Random;
+import org.mammon.brands.rand.RandomGenerator;
 
 /**
  * This interface can be used for generic typing, to bind classes of an actual
@@ -26,7 +26,7 @@ public interface Group<G extends Group<G>> {
 	 *            randomization source.
 	 * @return a random element from this group.
 	 */
-	Element<G> getRandomElement(Random random);
+	Element<G> getRandomElement(RandomGenerator randomGenerator);
 
 	/**
 	 * This interface represents an element from a group.

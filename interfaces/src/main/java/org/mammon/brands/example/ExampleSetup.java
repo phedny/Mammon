@@ -8,7 +8,7 @@ import org.mammon.brands.BrandsSchemeSetup;
 import org.mammon.brands.Group.Element;
 
 public class ExampleSetup implements
-		BrandsSchemeSetup<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
+	BrandsSchemeSetup<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	private final ExampleGroup group = new ExampleGroup();
 
@@ -20,7 +20,7 @@ public class ExampleSetup implements
 
 	@SuppressWarnings("unchecked")
 	public ExampleSetup() {
-		SecureRandom r = new SecureRandom();
+		SecureRandomGenerator r = new SecureRandomGenerator(new SecureRandom());
 		generators = (Element<ExampleGroup>[]) Array.newInstance(Element.class, 3);
 		generators[0] = group.getRandomElement(r);
 		generators[1] = group.getRandomElement(r);
@@ -54,7 +54,7 @@ public class ExampleSetup implements
 		}
 		ExampleSetup other = (ExampleSetup) obj;
 		return group.equals(other.group) && signatureHashFunction.equals(other.signatureHashFunction)
-				&& paymentHashFunction.equals(other.paymentHashFunction) && Arrays.equals(generators, other.generators);
+			&& paymentHashFunction.equals(other.paymentHashFunction) && Arrays.equals(generators, other.generators);
 	}
 
 	@Override

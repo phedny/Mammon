@@ -1,9 +1,9 @@
 package org.mammon.brands.group;
 
 import java.math.BigDecimal;
-import java.util.Random;
 
 import org.mammon.brands.Group;
+import org.mammon.brands.rand.RandomGenerator;
 
 public class Zq implements Group<Zq> {
 
@@ -34,7 +34,7 @@ public class Zq implements Group<Zq> {
 	}
 
 	@Override
-	public Element<Zq> getRandomElement(Random random) {
+	public Element<Zq> getRandomElement(RandomGenerator randomGenerator) {
 		// TODO Auto-generated method stub
 		return null;
 	}
