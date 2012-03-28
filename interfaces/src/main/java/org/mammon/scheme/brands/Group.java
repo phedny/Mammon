@@ -1,6 +1,6 @@
-package org.mammon.brands;
+package org.mammon.scheme.brands;
 
-import org.mammon.brands.rand.RandomGenerator;
+import org.mammon.scheme.brands.rand.RandomGenerator;
 
 /**
  * This interface can be used for generic typing, to bind classes of an actual

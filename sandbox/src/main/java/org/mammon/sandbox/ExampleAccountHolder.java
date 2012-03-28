@@ -1,14 +1,14 @@
 package org.mammon.sandbox;
 
-import org.mammon.brands.AccountHolder;
-import org.mammon.brands.BrandsSchemeSetup;
-import org.mammon.brands.Group;
-import org.mammon.brands.PaymentHashFunction;
-import org.mammon.brands.SignatureHashFunction;
-import org.mammon.brands.Group.Element;
+import org.mammon.scheme.brands.BrandsSchemeSetup;
+import org.mammon.scheme.brands.Group;
+import org.mammon.scheme.brands.PaymentHashFunction;
+import org.mammon.scheme.brands.SignatureHashFunction;
+import org.mammon.scheme.brands.Group.Element;
+import org.mammon.scheme.brands.accountholder.AccountHolderPrivate;
 
 public class ExampleAccountHolder<G extends Group<G>, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
-		implements AccountHolder<G, S, T, H, H0> {
+		implements AccountHolderPrivate<G, S, T, H, H0> {
 
 	private final BrandsSchemeSetup<G, S, T, H, H0> setup;
 

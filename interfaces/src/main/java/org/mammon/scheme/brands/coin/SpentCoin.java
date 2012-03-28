@@ -1,4 +1,9 @@
-package org.mammon.brands;
+package org.mammon.scheme.brands.coin;
+
+import org.mammon.scheme.brands.Group;
+import org.mammon.scheme.brands.PaymentHashFunction;
+import org.mammon.scheme.brands.SignatureHashFunction;
+import org.mammon.scheme.brands.shop.Shop;
 
 /**
  * In the Brands scheme, coins that have been issued and spent, are hold by an
@@ -26,7 +31,7 @@ public interface SpentCoin<G extends Group<G>, S, T, H extends SignatureHashFunc
 	/**
 	 * @return array of length 2, containing $r_1$ and $r_2$, which can be used
 	 *         to prove that the coin has been spent by the original
-	 *         AccountHolder.
+	 *         AccountHolderPrivate.
 	 */
 	Group.Element<G>[] getSpendingCommitments();
 

@@ -4,8 +4,8 @@ import java.lang.reflect.Array;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
-import org.mammon.brands.BrandsSchemeSetup;
-import org.mammon.brands.Group.Element;
+import org.mammon.scheme.brands.BrandsSchemeSetup;
+import org.mammon.scheme.brands.Group.Element;
 
 public class ExampleSetup implements
 	BrandsSchemeSetup<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {

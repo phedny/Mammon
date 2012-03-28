@@ -5,8 +5,8 @@ import java.util.Comparator;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.mammon.brands.Group;
-import org.mammon.brands.rand.RandomGenerator;
+import org.mammon.scheme.brands.Group;
+import org.mammon.scheme.brands.rand.RandomGenerator;
 
 public class ExampleGroup implements Group<ExampleGroup> {
 

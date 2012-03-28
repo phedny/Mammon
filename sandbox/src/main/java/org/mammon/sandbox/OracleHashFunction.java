@@ -3,7 +3,7 @@ package org.mammon.sandbox;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mammon.brands.Group.Element;
+import org.mammon.scheme.brands.Group.Element;
 
 @SuppressWarnings("unchecked")
 public class OracleHashFunction {

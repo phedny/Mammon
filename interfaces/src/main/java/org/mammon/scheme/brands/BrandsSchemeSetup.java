@@ -1,4 +1,4 @@
-package org.mammon.brands;
+package org.mammon.scheme.brands;
 
 /**
  * Any object that implements this interface represents a concrete setup of the
@@ -32,7 +32,7 @@ public interface BrandsSchemeSetup<G extends Group<G>, S, T, H extends Signature
 
 	/**
 	 * @return the hash function used to construct and verify signatures of the
-	 *         Bank. In the Brands scheme, this function is named $\mathcal{H}$.
+	 *         BankPrivate. In the Brands scheme, this function is named $\mathcal{H}$.
 	 */
 	H getSignatureHash();
 

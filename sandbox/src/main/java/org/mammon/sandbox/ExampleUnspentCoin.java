@@ -4,15 +4,15 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 
 import org.mammon.AssetType;
-import org.mammon.brands.AccountHolder;
-import org.mammon.brands.Bank;
-import org.mammon.brands.BrandsSchemeSetup;
-import org.mammon.brands.Group;
-import org.mammon.brands.PaymentHashFunction;
-import org.mammon.brands.SignatureHashFunction;
-import org.mammon.brands.UnspentCoin;
-import org.mammon.brands.Group.Element;
 import org.mammon.sandbox.ExampleGroup.ExampleElement;
+import org.mammon.scheme.brands.BrandsSchemeSetup;
+import org.mammon.scheme.brands.Group;
+import org.mammon.scheme.brands.PaymentHashFunction;
+import org.mammon.scheme.brands.SignatureHashFunction;
+import org.mammon.scheme.brands.Group.Element;
+import org.mammon.scheme.brands.accountholder.AccountHolder;
+import org.mammon.scheme.brands.bank.Bank;
+import org.mammon.scheme.brands.coin.UnspentCoin;
 
 public class ExampleUnspentCoin<G extends Group<G>, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
 		implements UnspentCoin<G, S, T, H, H0> {
