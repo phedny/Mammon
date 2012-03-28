@@ -1,4 +1,4 @@
-package org.mammon.brands.example;
+package org.mammon.sandbox;
 
 import java.lang.reflect.Array;
 

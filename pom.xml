@@ -11,5 +11,6 @@
     <module>interfaces</module>
     <module>core</module>
     <module>cucumber</module>
+    <module>sandbox</module>
   </modules>
 </project>

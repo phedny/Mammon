@@ -1,4 +1,4 @@
-package org.mammon.brands.example;
+package org.mammon.sandbox;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -12,7 +12,7 @@ import org.mammon.brands.PaymentHashFunction;
 import org.mammon.brands.SignatureHashFunction;
 import org.mammon.brands.UnspentCoin;
 import org.mammon.brands.Group.Element;
-import org.mammon.brands.example.ExampleGroup.ExampleElement;
+import org.mammon.sandbox.ExampleGroup.ExampleElement;
 
 public class ExampleUnspentCoin<G extends Group<G>, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
 		implements UnspentCoin<G, S, T, H, H0> {
