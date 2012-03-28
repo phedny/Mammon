@@ -30,8 +30,7 @@ public class Main {
 		final ExampleSetup setup = new ExampleSetup();
 
 		// Setup the bank.
-		final ExampleBank<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank = new ExampleBank<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>(
-				setup);
+		final ExampleBank bank = new ExampleBank(setup, setup.getGroup().getRandomElement(null));
 		messaging.addObject(bank);
 
 		// Test handler that automatically requests issuing 1 IOweYou of value
@@ -58,14 +57,13 @@ public class Main {
 			@Override
 			public void enteredState(IOweYou object, String enteredBy) {
 				System.out.println("New IOU: " + object.toString() + " (by " + enteredBy + ")");
-				ExampleUnspentCoin<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> coin = (ExampleUnspentCoin<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) object;
+				ExampleUnspentCoin coin = (ExampleUnspentCoin) object;
 				System.out.println("         " + coin);
 
 				ExampleShop<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> shop = new ExampleShop<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>(
 						setup, "SHOP");
-				ExampleSpentCoin<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> coin2 = new ExampleSpentCoin<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>(
-						coin, bank, shop, Long.valueOf(new Date().getTime()));
-				System.out.println(coin2);
+				ExampleSpentCoin coin2 = new ExampleSpentCoin(coin, bank, shop, Long.valueOf(new Date().getTime()));
+				System.out.println("         " + coin2);
 
 				// Trigger shutdown of messaging system.
 				messaging.shutdown();
@@ -77,8 +75,7 @@ public class Main {
 		});
 
 		// Request a new account to be opened.
-		OpeningAccountHolder<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> openingAccountHolder = new OpeningAccountHolder<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>(
-				setup, bank);
+		OpeningAccountHolder openingAccountHolder = new OpeningAccountHolder(setup, bank);
 		messaging.addObject(openingAccountHolder);
 
 		// Wait for test to be finished.

@@ -1,56 +1,33 @@
 package org.mammon.sandbox.objects.accountholder;
 
-import org.mammon.messaging.DirectedMessage;
-import org.mammon.messaging.Identifiable;
-import org.mammon.messaging.Message;
-import org.mammon.messaging.MessageEmitter;
-import org.mammon.messaging.Transitionable;
-import org.mammon.sandbox.messages.BlindedIdentityRequest;
-import org.mammon.sandbox.messages.BlindedIdentityResponse;
+import org.mammon.sandbox.generic.accountholder.AbstractOpeningAccountHolder;
 import org.mammon.sandbox.objects.example.ExampleAccountHolder;
-import org.mammon.scheme.brands.BrandsSchemeSetup;
-import org.mammon.scheme.brands.Group;
-import org.mammon.scheme.brands.PaymentHashFunction;
-import org.mammon.scheme.brands.SignatureHashFunction;
+import org.mammon.sandbox.objects.example.ExampleBank;
+import org.mammon.sandbox.objects.example.ExampleGroup;
+import org.mammon.sandbox.objects.example.ExamplePaymentHashFunction;
+import org.mammon.sandbox.objects.example.ExampleSetup;
+import org.mammon.sandbox.objects.example.ExampleSignatureHashFunction;
 import org.mammon.scheme.brands.Group.Element;
-import org.mammon.scheme.brands.bank.Bank;
+import org.mammon.scheme.brands.accountholder.AccountHolderPrivate;
 
-public class OpeningAccountHolder<G extends Group<G>, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
-		implements Identifiable<String>, Transitionable, MessageEmitter {
+public class OpeningAccountHolder
+		extends
+		AbstractOpeningAccountHolder<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction, String> {
 
-	private final BrandsSchemeSetup<G, S, T, H, H0> setup;
-
-	private final Element<G> privateKey;
-
-	private final Element<G> publicKey;
-
-	private final Bank bank;
-
-	public OpeningAccountHolder(BrandsSchemeSetup<G, S, T, H, H0> setup, Bank bank) {
-		this.setup = setup;
-		this.bank = bank;
-		privateKey = setup.getGroup().getRandomElement(null);
-		publicKey = setup.getGenerators()[1].exponentiate(privateKey);
+	public OpeningAccountHolder(ExampleSetup setup, ExampleBank bank) {
+		super(setup, bank, setup.getGroup().getRandomElement(null));
 	}
 
 	@Override
 	public String getIdentity() {
-		return "opening-" + publicKey.toString();
+		return "opening-" + getPublicKey().toString();
 	}
 
 	@Override
-	public Object transition(Message message) {
-		if (message instanceof BlindedIdentityResponse<?>) {
-			BlindedIdentityResponse<G> response = (BlindedIdentityResponse<G>) message;
-			return new ExampleAccountHolder<G, S, T, H, H0>(setup, privateKey, publicKey,
-					response.getBlindedIdentity(), bank);
-		}
-		return null;
-	}
-
-	@Override
-	public DirectedMessage emitMessage() {
-		return new BlindedIdentityRequest<G, String>(((Identifiable<String>) bank).getIdentity(), publicKey);
+	protected AccountHolderPrivate<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newAccountHolder(
+			Element<ExampleGroup> blindedIdentity) {
+		return new ExampleAccountHolder((ExampleSetup) getSetup(), getPrivateKey(), getPublicKey(), blindedIdentity,
+				(ExampleBank) getBank());
 	}
 
 }
