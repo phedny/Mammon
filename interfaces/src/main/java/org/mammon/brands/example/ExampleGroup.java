@@ -2,15 +2,15 @@ package org.mammon.brands.example;
 
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Random;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.mammon.brands.Group;
+import org.mammon.brands.rand.RandomGenerator;
 
 public class ExampleGroup implements Group<ExampleGroup> {
 
-	private AtomicInteger nextRandom = new AtomicInteger();
+	private final AtomicInteger nextRandom = new AtomicInteger();
 
 	private final ExampleElement zero = new StaticElement("0");
 
@@ -24,7 +24,7 @@ public class ExampleGroup implements Group<ExampleGroup> {
 	}
 
 	@Override
-	public ExampleElement getRandomElement(Random random) {
+	public ExampleElement getRandomElement(RandomGenerator randomGenerator) {
 		int id = nextRandom.getAndIncrement();
 		StringBuffer value = new StringBuffer();
 		do {
@@ -178,7 +178,7 @@ public class ExampleGroup implements Group<ExampleGroup> {
 			for (boolean execute = true; execute;) {
 				execute = false;
 				TreeSet<ExampleElement> newOperands = new TreeSet<ExampleElement>(
-						new HashCodeComparator<ExampleElement>());
+					new HashCodeComparator<ExampleElement>());
 				for (ExampleElement element : operands) {
 					if (element instanceof AdditionElement) {
 						newOperands.addAll(Arrays.asList(((AdditionElement) element).operands));
@@ -248,7 +248,7 @@ public class ExampleGroup implements Group<ExampleGroup> {
 			for (boolean execute = true; execute;) {
 				execute = false;
 				TreeSet<ExampleElement> newOperands = new TreeSet<ExampleElement>(
-						new HashCodeComparator<ExampleElement>());
+					new HashCodeComparator<ExampleElement>());
 				for (ExampleElement element : operands) {
 					if (element instanceof MultiplicationElement) {
 						newOperands.addAll(Arrays.asList(((MultiplicationElement) element).operands));
