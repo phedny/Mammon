@@ -30,10 +30,10 @@ public class ExampleShop<G extends Group<G>, S, T, H extends SignatureHashFuncti
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof ExampleShop)) {
+		if (obj == null || !(obj instanceof ExampleShop<?, ?, ?, ?, ?>)) {
 			return false;
 		}
-		ExampleShop other = (ExampleShop) obj;
+		ExampleShop<?, ?, ?, ?, ?> other = (ExampleShop<?, ?, ?, ?, ?>) obj;
 		return setup.equals(other.setup) && identity.equals(other.identity);
 	}
 

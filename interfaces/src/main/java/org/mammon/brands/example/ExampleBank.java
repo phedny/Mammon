@@ -40,10 +40,10 @@ public class ExampleBank<G extends Group<G>, S, T, H extends SignatureHashFuncti
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof ExampleBank)) {
+		if (obj == null || !(obj instanceof ExampleBank<?, ?, ?, ?, ?>)) {
 			return false;
 		}
-		ExampleBank other = (ExampleBank) obj;
+		ExampleBank<?, ?, ?, ?, ?> other = (ExampleBank<?, ?, ?, ?, ?>) obj;
 		return setup.equals(other.setup) && publicKey.equals(other.publicKey);
 	}
 

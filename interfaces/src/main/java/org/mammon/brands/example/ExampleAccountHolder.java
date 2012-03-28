@@ -47,10 +47,10 @@ public class ExampleAccountHolder<G extends Group<G>, S, T, H extends SignatureH
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof ExampleAccountHolder)) {
+		if (obj == null || !(obj instanceof ExampleAccountHolder<?, ?, ?, ?, ?>)) {
 			return false;
 		}
-		ExampleAccountHolder other = (ExampleAccountHolder) obj;
+		ExampleAccountHolder<?, ?, ?, ?, ?> other = (ExampleAccountHolder<?, ?, ?, ?, ?>) obj;
 		return setup.equals(other.setup) && blindedIdentity.equals(other.blindedIdentity);
 	}
 
