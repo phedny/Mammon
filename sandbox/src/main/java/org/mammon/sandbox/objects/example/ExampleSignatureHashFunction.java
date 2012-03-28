@@ -1,8 +1,8 @@
 package org.mammon.sandbox.objects.example;
 
-import org.mammon.brands.SignatureHashFunction;
-import org.mammon.brands.Group.Element;
 import org.mammon.sandbox.OracleHashFunction;
+import org.mammon.scheme.brands.SignatureHashFunction;
+import org.mammon.scheme.brands.Group.Element;
 
 public class ExampleSignatureHashFunction extends OracleHashFunction implements SignatureHashFunction<ExampleGroup> {
 

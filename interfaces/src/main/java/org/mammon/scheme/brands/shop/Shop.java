@@ -1,6 +1,10 @@
-package org.mammon.brands;
+package org.mammon.scheme.brands.shop;
 
 import org.mammon.Bearer;
+import org.mammon.scheme.brands.BrandsSchemeSetup;
+import org.mammon.scheme.brands.Group;
+import org.mammon.scheme.brands.PaymentHashFunction;
+import org.mammon.scheme.brands.SignatureHashFunction;
 
 /**
  * In the Brands scheme, one type of bearer is the generic shop. The

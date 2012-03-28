@@ -1,6 +1,11 @@
-package org.mammon.brands;
+package org.mammon.scheme.brands.coin;
 
 import org.mammon.IOweYou;
+import org.mammon.scheme.brands.BrandsSchemeSetup;
+import org.mammon.scheme.brands.Group;
+import org.mammon.scheme.brands.PaymentHashFunction;
+import org.mammon.scheme.brands.SignatureHashFunction;
+import org.mammon.scheme.brands.bank.Bank;
 
 public interface Coin<G extends Group<G>, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
 		extends IOweYou {
@@ -20,22 +25,22 @@ public interface Coin<G extends Group<G>, S, T, H extends SignatureHashFunction<
 	Bank<G, S, T, H, H0> getIssuer();
 
 	/**
-	 * @return the blinded identity $A$ of the AccountHolder that withdrew the
-	 *         coins from the Bank.
+	 * @return the blinded identity $A$ of the AccountHolderPrivate that
+	 *         withdrew the coins from the BankPrivate.
 	 */
 	Group.Element<G> getBlindedIdentity();
 
 	/**
 	 * @return the commitment $B$ to the secret values of the coin known to the
-	 *         AccountHolder.
+	 *         AccountHolderPrivate.
 	 */
 	Group.Element<G> getCommitment();
 
 	/**
 	 * @return and array of length 4, which represents the signature
 	 *         $\operatorname(Sig){A,B}$, which can be used to verify that this
-	 *         coin has been correctly issued by the Bank and must therefore be
-	 *         valid.
+	 *         coin has been correctly issued by the BankPrivate and must
+	 *         therefore be valid.
 	 */
 	Group.Element<G>[] getCoinSignature();
 

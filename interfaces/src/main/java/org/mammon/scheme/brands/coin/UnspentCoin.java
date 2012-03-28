@@ -1,9 +1,15 @@
-package org.mammon.brands;
+package org.mammon.scheme.brands.coin;
+
+import org.mammon.scheme.brands.Group;
+import org.mammon.scheme.brands.PaymentHashFunction;
+import org.mammon.scheme.brands.SignatureHashFunction;
+import org.mammon.scheme.brands.accountholder.AccountHolder;
 
 /**
  * In the Brands scheme, coins that have been issued, but have not been spent
- * yet, are hold by an bearer that must be an AccountHolder. The isSellable()
- * method of any implementation of this interface must return <code>true</code>.
+ * yet, are hold by an bearer that must be an AccountHolderPrivate. The
+ * isSellable() method of any implementation of this interface must return
+ * <code>true</code>.
  */
 public interface UnspentCoin<G extends Group<G>, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
 		extends Coin<G, S, T, H, H0> {

@@ -1,7 +1,7 @@
 package org.mammon.sandbox.messages;
 
-import org.mammon.brands.Group;
 import org.mammon.messaging.DirectedMessage;
+import org.mammon.scheme.brands.Group;
 
 public class BlindedIdentityRequest<G extends Group<G>, I> implements DirectedMessage<I> {
 

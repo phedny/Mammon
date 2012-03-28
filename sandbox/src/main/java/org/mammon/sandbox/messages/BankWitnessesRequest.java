@@ -1,12 +1,12 @@
 package org.mammon.sandbox.messages;
 
-import org.mammon.brands.Group;
 import org.mammon.messaging.DirectedMessage;
+import org.mammon.scheme.brands.Group;
 
 public class BankWitnessesRequest<G extends Group<G>, I> implements DirectedMessage<I> {
 
 	private final I destination;
-	
+
 	private final Group.Element<G> identity;
 
 	private final int count;

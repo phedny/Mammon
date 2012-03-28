@@ -1,11 +1,5 @@
 package org.mammon.sandbox.objects.accountholder;
 
-import org.mammon.brands.Bank;
-import org.mammon.brands.BrandsSchemeSetup;
-import org.mammon.brands.Group;
-import org.mammon.brands.PaymentHashFunction;
-import org.mammon.brands.SignatureHashFunction;
-import org.mammon.brands.Group.Element;
 import org.mammon.messaging.DirectedMessage;
 import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.Message;
@@ -14,6 +8,12 @@ import org.mammon.messaging.Transitionable;
 import org.mammon.sandbox.messages.BlindedIdentityRequest;
 import org.mammon.sandbox.messages.BlindedIdentityResponse;
 import org.mammon.sandbox.objects.example.ExampleAccountHolder;
+import org.mammon.scheme.brands.BrandsSchemeSetup;
+import org.mammon.scheme.brands.Group;
+import org.mammon.scheme.brands.PaymentHashFunction;
+import org.mammon.scheme.brands.SignatureHashFunction;
+import org.mammon.scheme.brands.Group.Element;
+import org.mammon.scheme.brands.bank.Bank;
 
 public class OpeningAccountHolder<G extends Group<G>, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
 		implements Identifiable<String>, Transitionable, MessageEmitter {

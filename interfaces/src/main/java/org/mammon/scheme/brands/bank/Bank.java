@@ -1,6 +1,10 @@
-package org.mammon.brands;
+package org.mammon.scheme.brands.bank;
 
 import org.mammon.Issuer;
+import org.mammon.scheme.brands.BrandsSchemeSetup;
+import org.mammon.scheme.brands.Group;
+import org.mammon.scheme.brands.PaymentHashFunction;
+import org.mammon.scheme.brands.SignatureHashFunction;
 
 /**
  * In the Brands scheme, an issuer of an IOU is called the bank.
@@ -14,12 +18,7 @@ public interface Bank<G extends Group<G>, S, T, H extends SignatureHashFunction<
 	BrandsSchemeSetup<G, S, T, H, H0> getSetup();
 
 	/**
-	 * @return the private key $x$ of the Bank.
-	 */
-	Group.Element<G> getPrivateKey();
-
-	/**
-	 * @return the public key $h$ of the Bank, which equals $h = g^x$.
+	 * @return the public key $h$ of the BankPrivate, which equals $h = g^x$.
 	 */
 	Group.Element<G> getPublicKey();
 

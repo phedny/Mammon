@@ -3,26 +3,26 @@ package org.mammon.sandbox.objects.accountholder;
 import java.lang.reflect.Array;
 import java.util.UUID;
 
-import org.mammon.brands.AccountHolder;
-import org.mammon.brands.Bank;
-import org.mammon.brands.BrandsSchemeSetup;
-import org.mammon.brands.Group;
-import org.mammon.brands.PaymentHashFunction;
-import org.mammon.brands.SignatureHashFunction;
-import org.mammon.brands.Group.Element;
 import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.Message;
 import org.mammon.messaging.MessageEmitter;
 import org.mammon.messaging.Transitionable;
 import org.mammon.sandbox.messages.BankWitnessesRequest;
 import org.mammon.sandbox.messages.BankWitnessesResponse;
+import org.mammon.scheme.brands.BrandsSchemeSetup;
+import org.mammon.scheme.brands.Group;
+import org.mammon.scheme.brands.PaymentHashFunction;
+import org.mammon.scheme.brands.SignatureHashFunction;
+import org.mammon.scheme.brands.Group.Element;
+import org.mammon.scheme.brands.accountholder.AccountHolderForBank;
+import org.mammon.scheme.brands.bank.Bank;
 
 public class WithdrawingCoinOne<G extends Group<G>, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
 		implements Identifiable<String>, Transitionable, MessageEmitter {
 
 	private final BrandsSchemeSetup<G, S, T, H, H0> setup;
 
-	private final AccountHolder<G, S, T, H, H0> accountHolder;
+	private final AccountHolderForBank<G, S, T, H, H0> accountHolder;
 
 	private final UUID identity = UUID.randomUUID();
 
@@ -32,7 +32,8 @@ public class WithdrawingCoinOne<G extends Group<G>, S, T, H extends SignatureHas
 
 	private final int count;
 
-	public WithdrawingCoinOne(AccountHolder<G, S, T, H, H0> accountHolder, Bank bank, Element<G> publicKey, int count) {
+	public WithdrawingCoinOne(AccountHolderForBank<G, S, T, H, H0> accountHolder, Bank bank, Element<G> publicKey,
+			int count) {
 		this.accountHolder = accountHolder;
 		this.bank = bank;
 		this.publicKey = publicKey;

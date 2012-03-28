@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import org.mammon.IOweYou;
-import org.mammon.brands.AccountHolder;
 import org.mammon.messaging.Identifiable;
 import org.mammon.sandbox.messages.ObtainCoinsMessage;
 import org.mammon.sandbox.objects.accountholder.OpeningAccountHolder;
@@ -16,6 +15,7 @@ import org.mammon.sandbox.objects.example.ExampleShop;
 import org.mammon.sandbox.objects.example.ExampleSignatureHashFunction;
 import org.mammon.sandbox.objects.example.ExampleSpentCoin;
 import org.mammon.sandbox.objects.example.ExampleUnspentCoin;
+import org.mammon.scheme.brands.accountholder.AccountHolder;
 
 public class Main {
 
@@ -66,7 +66,7 @@ public class Main {
 				ExampleSpentCoin<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> coin2 = new ExampleSpentCoin<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>(
 						coin, bank, shop, Long.valueOf(new Date().getTime()));
 				System.out.println(coin2);
-				
+
 				// Trigger shutdown of messaging system.
 				messaging.shutdown();
 			}
@@ -80,7 +80,7 @@ public class Main {
 		OpeningAccountHolder<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> openingAccountHolder = new OpeningAccountHolder<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>(
 				setup, bank);
 		messaging.addObject(openingAccountHolder);
-		
+
 		// Wait for test to be finished.
 		messaging.awaitTermination(5, TimeUnit.SECONDS);
 		System.out.println("Done!");

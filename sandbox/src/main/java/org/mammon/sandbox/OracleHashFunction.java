@@ -3,8 +3,8 @@ package org.mammon.sandbox;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mammon.brands.Group.Element;
 import org.mammon.sandbox.objects.example.ExampleGroup;
+import org.mammon.scheme.brands.Group.Element;
 
 @SuppressWarnings("unchecked")
 public class OracleHashFunction {

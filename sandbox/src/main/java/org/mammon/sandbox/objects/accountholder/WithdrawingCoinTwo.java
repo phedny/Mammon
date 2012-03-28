@@ -4,13 +4,6 @@ import java.lang.reflect.Array;
 import java.util.UUID;
 
 import org.mammon.AssetType;
-import org.mammon.brands.AccountHolder;
-import org.mammon.brands.Bank;
-import org.mammon.brands.BrandsSchemeSetup;
-import org.mammon.brands.Group;
-import org.mammon.brands.PaymentHashFunction;
-import org.mammon.brands.SignatureHashFunction;
-import org.mammon.brands.Group.Element;
 import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.Message;
 import org.mammon.messaging.MessageEmitter;
@@ -19,16 +12,22 @@ import org.mammon.sandbox.messages.IssueCoinsRequest;
 import org.mammon.sandbox.messages.IssueCoinsResponse;
 import org.mammon.sandbox.objects.example.ExampleAccountHolder;
 import org.mammon.sandbox.objects.example.ExampleBank;
-import org.mammon.sandbox.objects.example.ExampleSetup;
 import org.mammon.sandbox.objects.example.ExampleUnspentCoin;
 import org.mammon.sandbox.objects.example.ExampleGroup.ExampleElement;
+import org.mammon.scheme.brands.BrandsSchemeSetup;
+import org.mammon.scheme.brands.Group;
+import org.mammon.scheme.brands.PaymentHashFunction;
+import org.mammon.scheme.brands.SignatureHashFunction;
+import org.mammon.scheme.brands.Group.Element;
+import org.mammon.scheme.brands.accountholder.AccountHolderForBank;
+import org.mammon.scheme.brands.bank.Bank;
 
 public class WithdrawingCoinTwo<G extends Group<G>, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
 		implements Identifiable<String>, Transitionable, MessageEmitter {
 
 	private final BrandsSchemeSetup<G, S, T, H, H0> setup;
 
-	private final AccountHolder<G, S, T, H, H0> accountHolder;
+	private final AccountHolderForBank<G, S, T, H, H0> accountHolder;
 
 	private final UUID identity;
 
@@ -52,10 +51,10 @@ public class WithdrawingCoinTwo<G extends Group<G>, S, T, H extends SignatureHas
 
 	private final Element<G>[] challenges;
 
-	public WithdrawingCoinTwo(BrandsSchemeSetup<G, S, T, H, H0> setup, AccountHolder<G, S, T, H, H0> accountHolder,
-			UUID identity, Bank bank, Element<G> publicKey, int count, Element<G>[] blindingFactor,
-			Element<G>[] payerWitness, Element<G>[] secondWitness, Element<G>[] blindedIdentity,
-			Element<G>[] commitment, Element<G>[] witnesses, Element<G>[] challenges) {
+	public WithdrawingCoinTwo(BrandsSchemeSetup<G, S, T, H, H0> setup,
+			AccountHolderForBank<G, S, T, H, H0> accountHolder, UUID identity, Bank bank, Element<G> publicKey,
+			int count, Element<G>[] blindingFactor, Element<G>[] payerWitness, Element<G>[] secondWitness,
+			Element<G>[] blindedIdentity, Element<G>[] commitment, Element<G>[] witnesses, Element<G>[] challenges) {
 		this.setup = setup;
 		this.accountHolder = accountHolder;
 		this.identity = identity;

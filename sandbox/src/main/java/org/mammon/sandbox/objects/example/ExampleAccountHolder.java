@@ -1,21 +1,21 @@
 package org.mammon.sandbox.objects.example;
 
-import org.mammon.brands.AccountHolder;
-import org.mammon.brands.Bank;
-import org.mammon.brands.BrandsSchemeSetup;
-import org.mammon.brands.Group;
-import org.mammon.brands.PaymentHashFunction;
-import org.mammon.brands.SignatureHashFunction;
-import org.mammon.brands.Group.Element;
 import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.Message;
 import org.mammon.messaging.Transactable;
 import org.mammon.sandbox.HashCodeUtil;
 import org.mammon.sandbox.messages.ObtainCoinsMessage;
 import org.mammon.sandbox.objects.accountholder.WithdrawingCoinOne;
+import org.mammon.scheme.brands.BrandsSchemeSetup;
+import org.mammon.scheme.brands.Group;
+import org.mammon.scheme.brands.PaymentHashFunction;
+import org.mammon.scheme.brands.SignatureHashFunction;
+import org.mammon.scheme.brands.Group.Element;
+import org.mammon.scheme.brands.accountholder.AccountHolderPrivate;
+import org.mammon.scheme.brands.bank.Bank;
 
 public class ExampleAccountHolder<G extends Group<G>, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
-		implements AccountHolder<G, S, T, H, H0>, Identifiable<String>, Transactable {
+		implements AccountHolderPrivate<G, S, T, H, H0>, Identifiable<String>, Transactable {
 
 	private final BrandsSchemeSetup<G, S, T, H, H0> setup;
 

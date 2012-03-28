@@ -4,13 +4,13 @@ import java.lang.reflect.Array;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
-import org.mammon.brands.BrandsSchemeSetup;
-import org.mammon.brands.Group.Element;
 import org.mammon.sandbox.HashCodeUtil;
 import org.mammon.sandbox.SecureRandomGenerator;
+import org.mammon.scheme.brands.BrandsSchemeSetup;
+import org.mammon.scheme.brands.Group.Element;
 
 public class ExampleSetup implements
-	BrandsSchemeSetup<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
+		BrandsSchemeSetup<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	private final ExampleGroup group = new ExampleGroup();
 
@@ -56,7 +56,7 @@ public class ExampleSetup implements
 		}
 		ExampleSetup other = (ExampleSetup) obj;
 		return group.equals(other.group) && signatureHashFunction.equals(other.signatureHashFunction)
-			&& paymentHashFunction.equals(other.paymentHashFunction) && Arrays.equals(generators, other.generators);
+				&& paymentHashFunction.equals(other.paymentHashFunction) && Arrays.equals(generators, other.generators);
 	}
 
 	@Override
