@@ -47,7 +47,7 @@ public class ExampleShop<G extends Group<G>, S, T, H extends SignatureHashFuncti
 
 	@Override
 	public String toString() {
-		return "ExampleAccountHolder(" + setup.hashCode() + "," + identity.toString() + ")";
+		return "ExampleShop(" + setup.hashCode() + "," + identity.toString() + ")";
 	}
 
 }

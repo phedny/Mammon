@@ -3,12 +3,17 @@ package org.mammon.brands.example;
 import org.mammon.brands.PaymentHashFunction;
 import org.mammon.brands.Group.Element;
 
-public class ExamplePaymentHashFunction implements PaymentHashFunction<ExampleGroup, String, Long> {
+public class ExamplePaymentHashFunction extends OracleHashFunction implements
+		PaymentHashFunction<ExampleGroup, String, Long> {
+
+	public ExamplePaymentHashFunction(ExampleGroup g) {
+		super(g, 4);
+	}
 
 	@Override
 	public Element<ExampleGroup> hash(Element<ExampleGroup> blindedIdentity, Element<ExampleGroup> commitment,
 			String shopIdentity, Long time) {
-		return null;
+		return oracle(blindedIdentity, commitment, shopIdentity, time);
 	}
 
 	@Override

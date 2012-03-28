@@ -1,6 +1,7 @@
 package org.mammon.brands.example;
 
 import java.lang.reflect.Array;
+import java.util.Arrays;
 
 import org.mammon.AssetType;
 import org.mammon.brands.AccountHolder;
@@ -58,7 +59,7 @@ public class ExampleUnspentCoin<G extends Group<G>, S, T, H extends SignatureHas
 		Element<G> u = setup.getGroup().getRandomElement(null);
 		Element<G> v = setup.getGroup().getRandomElement(null);
 
-		blindedIdentity = bearer.getBlindedIdentity().multiply(setup.getGenerators()[2]).exponentiate(blindingFactor); // A
+		blindedIdentity = bearer.getPublicKey().multiply(setup.getGenerators()[2]).exponentiate(blindingFactor); // A
 		Element<G> z_ = bearer.getBlindedIdentity().exponentiate(blindingFactor);
 		commitment = setup.getGenerators()[1].exponentiate(payerWitness[0]).multiply(
 				setup.getGenerators()[2].exponentiate(payerWitness[1])); // B
@@ -158,20 +159,32 @@ public class ExampleUnspentCoin<G extends Group<G>, S, T, H extends SignatureHas
 
 	@Override
 	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
-		return super.equals(obj);
+		if (obj == null || !(obj instanceof ExampleUnspentCoin<?, ?, ?, ?, ?>)) {
+			return false;
+		}
+		ExampleUnspentCoin<?, ?, ?, ?, ?> other = (ExampleUnspentCoin<?, ?, ?, ?, ?>) obj;
+		return setup.equals(other.setup) && bank.equals(other.bank) && bearer.equals(other.bearer)
+				&& blindingFactor.equals(other.blindingFactor) && Arrays.deepEquals(payerWitness, other.payerWitness);
 	}
 
 	@Override
 	public int hashCode() {
-		// TODO Auto-generated method stub
-		return super.hashCode();
+		int hashCode = HashCodeUtil.SEED;
+		hashCode = HashCodeUtil.hash(hashCode, setup);
+		hashCode = HashCodeUtil.hash(hashCode, bank);
+		hashCode = HashCodeUtil.hash(hashCode, bearer);
+		hashCode = HashCodeUtil.hash(hashCode, blindingFactor);
+		hashCode = HashCodeUtil.hash(hashCode, payerWitness);
+		return hashCode;
 	}
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return super.toString();
+		return "I, " + bank + ", owe the bearer of this IOU, " + bearer + ", the repayment of "
+				+ getAssetType().getCallSign() + " " + getFaceValue() + " [BF=" + blindingFactor + ", PW=("
+				+ getPayerWitness()[0] + "," + getPayerWitness()[1] + "), COIN=(" + getBlindedIdentity() + ","
+				+ getCommitment() + ",(" + getCoinSignature()[0] + "," + getCoinSignature()[1] + ","
+				+ getCoinSignature()[2] + "," + getCoinSignature()[3] + "))]";
 	}
 
 }

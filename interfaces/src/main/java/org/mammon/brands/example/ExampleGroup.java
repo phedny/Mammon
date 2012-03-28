@@ -241,7 +241,10 @@ public class ExampleGroup implements Group<ExampleGroup> {
 		@Override
 		public ExampleElement simplify() {
 			TreeSet<ExampleElement> operands = new TreeSet<ExampleElement>(new HashCodeComparator<ExampleElement>());
-			operands.addAll(Arrays.asList(this.operands));
+			for (ExampleElement element : this.operands) {
+				operands.add(element.simplify());
+			}
+
 			for (boolean execute = true; execute;) {
 				execute = false;
 				TreeSet<ExampleElement> newOperands = new TreeSet<ExampleElement>(
@@ -257,12 +260,7 @@ public class ExampleGroup implements Group<ExampleGroup> {
 				operands = newOperands;
 			}
 
-			TreeSet<ExampleElement> newOperands = new TreeSet<ExampleElement>(new HashCodeComparator<ExampleElement>());
-			for (ExampleElement element : operands) {
-				newOperands.add(element.simplify());
-			}
-
-			return new MultiplicationElement(newOperands.toArray(new ExampleElement[newOperands.size()]));
+			return new MultiplicationElement(operands.toArray(new ExampleElement[operands.size()]));
 		}
 	}
 
@@ -320,6 +318,14 @@ public class ExampleGroup implements Group<ExampleGroup> {
 			if (base instanceof ExponentiationElement) {
 				ExponentiationElement e = (ExponentiationElement) base;
 				return new ExponentiationElement(e.base, new MultiplicationElement(e.exponent, exponent).simplify());
+			}
+			if (base instanceof MultiplicationElement) {
+				MultiplicationElement e = (MultiplicationElement) base;
+				ExampleElement[] operands = new ExampleElement[e.operands.length];
+				for (int i = 0; i < e.operands.length; i++) {
+					operands[i] = new ExponentiationElement(e.operands[i], exponent);
+				}
+				return new MultiplicationElement(operands).simplify();
 			}
 			return new ExponentiationElement(base, exponent);
 		}

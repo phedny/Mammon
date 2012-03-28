@@ -14,7 +14,7 @@ public class ExampleSetup implements
 
 	private final ExampleSignatureHashFunction signatureHashFunction = new ExampleSignatureHashFunction(group);
 
-	private final ExamplePaymentHashFunction paymentHashFunction = new ExamplePaymentHashFunction();
+	private final ExamplePaymentHashFunction paymentHashFunction = new ExamplePaymentHashFunction(group);
 
 	private final Element<ExampleGroup>[] generators;
 

@@ -1,5 +1,7 @@
 package org.mammon.brands.example;
 
+import java.util.Date;
+
 public class Main {
 
 	/**
@@ -13,6 +15,12 @@ public class Main {
 				setup, bank);
 		ExampleUnspentCoin<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> coin = new ExampleUnspentCoin<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>(
 				setup, ah, bank);
-	}
+		System.out.println(coin);
 
+		ExampleShop<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> shop = new ExampleShop<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>(
+				setup, "SHOP");
+		ExampleSpentCoin<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> coin2 = new ExampleSpentCoin<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>(
+				coin, bank, shop, Long.valueOf(new Date().getTime()));
+		System.out.println(coin2);
+	}
 }
