@@ -1,0 +1,118 @@
+package org.mammon.sandbox;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.mammon.messaging.DirectedMessage;
+import org.mammon.messaging.Identifiable;
+import org.mammon.messaging.Message;
+import org.mammon.messaging.MessageEmitter;
+import org.mammon.messaging.Transactable;
+import org.mammon.messaging.Transitionable;
+
+public class MessagingSystem<I> {
+
+	private Map<I, Identifiable<I>> objectMap = new HashMap<I, Identifiable<I>>();
+
+	private Map<Class<?>, StateHandler<?, I>> stateHandlers = new HashMap<Class<?>, StateHandler<?, I>>();
+
+	public MessagingSystem() {
+		registerStateHandler(MessageEmitter.class, new MessageEmitterHandler());
+	}
+
+	public void addObject(Identifiable<I> object) {
+		objectMap.put(object.getIdentity(), object);
+		enteredState(object, null);
+	}
+
+	public <C> void registerStateHandler(Class<C> clazz, StateHandler<C, I> stateHandler) {
+		stateHandlers.put(clazz, stateHandler);
+	}
+
+	private <C> void enteredState(C object, I enteredBy) {
+		Class<?> clazz = object.getClass();
+		for (Entry<Class<?>, StateHandler<?, I>> entry : stateHandlers.entrySet()) {
+			if (entry.getKey().isAssignableFrom(clazz)) {
+				StateHandler<C, I> stateHandler = (StateHandler<C, I>) entry.getValue();
+				stateHandler.enteredState(object, enteredBy);
+			}
+		}
+	}
+
+	private <C> void leftState(C object) {
+		Class<?> clazz = object.getClass();
+		for (Entry<Class<?>, StateHandler<?, I>> entry : stateHandlers.entrySet()) {
+			if (entry.getKey().isAssignableFrom(clazz)) {
+				StateHandler<C, I> stateHandler = (StateHandler<C, I>) entry.getValue();
+				stateHandler.leftState(object);
+			}
+		}
+	}
+
+	public void sendMessage(DirectedMessage<I> message) {
+		sendMessage(message, message.getDestination(), null);
+	}
+
+	private void sendMessage(Message message, I destination, I replyDestination) {
+		Identifiable<I> destObj = objectMap.get(destination);
+		System.out.println("Message " + message + " to " + destination + " (" + destObj + ")");
+		Object newObject = null;
+
+		if (destObj == null) {
+			System.out.println("Discarded message");
+		} else if (destObj instanceof Transactable) {
+			Transactable t = (Transactable) destObj;
+			Object reply = t.transact(message);
+			if (reply != null) {
+				if (reply instanceof DirectedMessage<?>) {
+					sendMessage((Message) reply, ((DirectedMessage<I>) reply).getDestination(), destination);
+				} else if (reply instanceof Message && replyDestination != null) {
+					sendMessage((Message) reply, replyDestination, destination);
+				} else {
+					newObject = reply;
+				}
+			}
+		} else if (destObj instanceof Transitionable) {
+			Transitionable t = (Transitionable) destObj;
+			newObject = t.transition(message);
+			leftState(destObj);
+			objectMap.remove(destination);
+		}
+
+		if (newObject != null) {
+			I newIdentity = null;
+			if (newObject instanceof Identifiable<?>) {
+				Identifiable<I> newIdentifiable = (Identifiable<I>) newObject;
+				newIdentity = newIdentifiable.getIdentity();
+				objectMap.put(newIdentifiable.getIdentity(), newIdentifiable);
+			}
+			enteredState(newObject, replyDestination);
+		}
+	}
+
+	private class MessageEmitterHandler implements StateHandler<MessageEmitter, I> {
+
+		@Override
+		public void enteredState(MessageEmitter object, I enteredBy) {
+			Message message = object.emitMessage();
+			I identity = null;
+			if (object instanceof Identifiable<?>) {
+				identity = (I) ((Identifiable<I>) object).getIdentity();
+			}
+
+			I destination = enteredBy;
+			if (message instanceof DirectedMessage<?>) {
+				destination = ((DirectedMessage<I>) message).getDestination();
+			}
+			MessagingSystem.this.sendMessage(message, destination, identity);
+		}
+
+		@Override
+		public void leftState(MessageEmitter object) {
+			// Empty
+		}
+
+	}
+
+}

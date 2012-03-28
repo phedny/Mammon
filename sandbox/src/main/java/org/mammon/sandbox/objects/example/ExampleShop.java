@@ -1,10 +1,11 @@
-package org.mammon.sandbox;
+package org.mammon.sandbox.objects.example;
 
 import org.mammon.brands.BrandsSchemeSetup;
 import org.mammon.brands.Group;
 import org.mammon.brands.PaymentHashFunction;
 import org.mammon.brands.Shop;
 import org.mammon.brands.SignatureHashFunction;
+import org.mammon.sandbox.HashCodeUtil;
 
 public class ExampleShop<G extends Group<G>, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
 		implements Shop<G, S, T, H, H0> {

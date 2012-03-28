@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.mammon.brands.Group.Element;
+import org.mammon.sandbox.objects.example.ExampleGroup;
 
 @SuppressWarnings("unchecked")
 public class OracleHashFunction {

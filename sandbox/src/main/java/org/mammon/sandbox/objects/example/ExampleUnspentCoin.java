@@ -1,4 +1,4 @@
-package org.mammon.sandbox;
+package org.mammon.sandbox.objects.example;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -12,7 +12,8 @@ import org.mammon.brands.PaymentHashFunction;
 import org.mammon.brands.SignatureHashFunction;
 import org.mammon.brands.UnspentCoin;
 import org.mammon.brands.Group.Element;
-import org.mammon.sandbox.ExampleGroup.ExampleElement;
+import org.mammon.sandbox.HashCodeUtil;
+import org.mammon.sandbox.objects.example.ExampleGroup.ExampleElement;
 
 public class ExampleUnspentCoin<G extends Group<G>, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
 		implements UnspentCoin<G, S, T, H, H0> {
@@ -32,6 +33,19 @@ public class ExampleUnspentCoin<G extends Group<G>, S, T, H extends SignatureHas
 	private final Element<G> commitment;
 
 	private final Element<G>[] coinSignature;
+
+	public ExampleUnspentCoin(BrandsSchemeSetup<G, S, T, H, H0> setup, ExampleAccountHolder<G, S, T, H, H0> bearer,
+			ExampleBank<G, S, T, H, H0> bank, Element<G> blindingFactor, Element<G>[] payerWitness,
+			Element<G> blindedIdentity, Element<G> commitment, Element<G>[] coinSignature) {
+		this.setup = setup;
+		this.bearer = bearer;
+		this.bank = bank;
+		this.blindingFactor = blindingFactor;
+		this.payerWitness = payerWitness;
+		this.blindedIdentity = blindedIdentity;
+		this.commitment = commitment;
+		this.coinSignature = coinSignature;
+	}
 
 	@SuppressWarnings("unchecked")
 	public ExampleUnspentCoin(BrandsSchemeSetup<G, S, T, H, H0> setup, ExampleAccountHolder<G, S, T, H, H0> bearer,

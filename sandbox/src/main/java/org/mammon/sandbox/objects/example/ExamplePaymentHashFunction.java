@@ -1,7 +1,8 @@
-package org.mammon.sandbox;
+package org.mammon.sandbox.objects.example;
 
 import org.mammon.brands.PaymentHashFunction;
 import org.mammon.brands.Group.Element;
+import org.mammon.sandbox.OracleHashFunction;
 
 public class ExamplePaymentHashFunction extends OracleHashFunction implements
 		PaymentHashFunction<ExampleGroup, String, Long> {

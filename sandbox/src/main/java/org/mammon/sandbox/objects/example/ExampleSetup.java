@@ -1,4 +1,4 @@
-package org.mammon.sandbox;
+package org.mammon.sandbox.objects.example;
 
 import java.lang.reflect.Array;
 import java.security.SecureRandom;
@@ -6,6 +6,8 @@ import java.util.Arrays;
 
 import org.mammon.brands.BrandsSchemeSetup;
 import org.mammon.brands.Group.Element;
+import org.mammon.sandbox.HashCodeUtil;
+import org.mammon.sandbox.SecureRandomGenerator;
 
 public class ExampleSetup implements
 	BrandsSchemeSetup<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {

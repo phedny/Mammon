@@ -1,4 +1,4 @@
-package org.mammon.sandbox;
+package org.mammon.sandbox.objects.example;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.mammon.brands.Group;
 import org.mammon.brands.rand.RandomGenerator;
+import org.mammon.sandbox.HashCodeUtil;
 
 public class ExampleGroup implements Group<ExampleGroup> {
 
