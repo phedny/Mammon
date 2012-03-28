@@ -1,6 +1,7 @@
 package org.mammon.sandbox;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import org.mammon.IOweYou;
 import org.mammon.brands.AccountHolder;
@@ -20,8 +21,9 @@ public class Main {
 
 	/**
 	 * @param args
+	 * @throws InterruptedException
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		final MessagingSystem<String> messaging = new MessagingSystem<String>();
 
 		// Setup the environment.
@@ -64,6 +66,9 @@ public class Main {
 				ExampleSpentCoin<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> coin2 = new ExampleSpentCoin<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>(
 						coin, bank, shop, Long.valueOf(new Date().getTime()));
 				System.out.println(coin2);
+				
+				// Trigger shutdown of messaging system.
+				messaging.shutdown();
 			}
 
 			@Override
@@ -75,6 +80,10 @@ public class Main {
 		OpeningAccountHolder<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> openingAccountHolder = new OpeningAccountHolder<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>(
 				setup, bank);
 		messaging.addObject(openingAccountHolder);
+		
+		// Wait for test to be finished.
+		messaging.awaitTermination(5, TimeUnit.SECONDS);
+		System.out.println("Done!");
 
 	}
 }

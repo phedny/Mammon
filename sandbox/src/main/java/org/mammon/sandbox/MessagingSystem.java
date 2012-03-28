@@ -3,6 +3,9 @@ package org.mammon.sandbox;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.mammon.messaging.DirectedMessage;
 import org.mammon.messaging.Identifiable;
@@ -17,8 +20,18 @@ public class MessagingSystem<I> {
 
 	private Map<Class<?>, StateHandler<?, I>> stateHandlers = new HashMap<Class<?>, StateHandler<?, I>>();
 
+	private ExecutorService executor = Executors.newSingleThreadExecutor();
+
 	public MessagingSystem() {
 		registerStateHandler(MessageEmitter.class, new MessageEmitterHandler());
+	}
+
+	public void shutdown() {
+		executor.shutdown();
+	}
+
+	public void awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
+		executor.awaitTermination(timeout, unit);
 	}
 
 	public void addObject(Identifiable<I> object) {
@@ -54,41 +67,45 @@ public class MessagingSystem<I> {
 		sendMessage(message, message.getDestination(), null);
 	}
 
-	private void sendMessage(Message message, I destination, I replyDestination) {
-		Identifiable<I> destObj = objectMap.get(destination);
-		System.out.println("Message " + message + " to " + destination + " (" + destObj + ")");
-		Object newObject = null;
+	private void sendMessage(final Message message, final I destination, final I replyDestination) {
+		executor.execute(new Runnable() {
 
-		if (destObj == null) {
-			System.out.println("Discarded message");
-		} else if (destObj instanceof Transactable) {
-			Transactable t = (Transactable) destObj;
-			Object reply = t.transact(message);
-			if (reply != null) {
-				if (reply instanceof DirectedMessage<?>) {
-					sendMessage((Message) reply, ((DirectedMessage<I>) reply).getDestination(), destination);
-				} else if (reply instanceof Message && replyDestination != null) {
-					sendMessage((Message) reply, replyDestination, destination);
-				} else {
-					newObject = reply;
+			@Override
+			public void run() {
+				Identifiable<I> destObj = objectMap.get(destination);
+				System.out.println("Message " + message + " to " + destination + " (" + destObj + ")");
+				Object newObject = null;
+
+				if (destObj == null) {
+					System.out.println("Discarded message");
+				} else if (destObj instanceof Transactable) {
+					Transactable t = (Transactable) destObj;
+					Object reply = t.transact(message);
+					if (reply != null) {
+						if (reply instanceof DirectedMessage<?>) {
+							sendMessage((Message) reply, ((DirectedMessage<I>) reply).getDestination(), destination);
+						} else if (reply instanceof Message && replyDestination != null) {
+							sendMessage((Message) reply, replyDestination, destination);
+						} else {
+							newObject = reply;
+						}
+					}
+				} else if (destObj instanceof Transitionable) {
+					Transitionable t = (Transitionable) destObj;
+					newObject = t.transition(message);
+					leftState(destObj);
+					objectMap.remove(destination);
+				}
+
+				if (newObject != null) {
+					if (newObject instanceof Identifiable<?>) {
+						Identifiable<I> newIdentifiable = (Identifiable<I>) newObject;
+						objectMap.put(newIdentifiable.getIdentity(), newIdentifiable);
+					}
+					enteredState(newObject, replyDestination);
 				}
 			}
-		} else if (destObj instanceof Transitionable) {
-			Transitionable t = (Transitionable) destObj;
-			newObject = t.transition(message);
-			leftState(destObj);
-			objectMap.remove(destination);
-		}
-
-		if (newObject != null) {
-			I newIdentity = null;
-			if (newObject instanceof Identifiable<?>) {
-				Identifiable<I> newIdentifiable = (Identifiable<I>) newObject;
-				newIdentity = newIdentifiable.getIdentity();
-				objectMap.put(newIdentifiable.getIdentity(), newIdentifiable);
-			}
-			enteredState(newObject, replyDestination);
-		}
+		});
 	}
 
 	private class MessageEmitterHandler implements StateHandler<MessageEmitter, I> {
