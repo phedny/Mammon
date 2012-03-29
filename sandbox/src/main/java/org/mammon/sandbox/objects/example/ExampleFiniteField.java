@@ -3,15 +3,13 @@ package org.mammon.sandbox.objects.example;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.TreeSet;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.mammon.math.FiniteField;
 import org.mammon.sandbox.HashCodeUtil;
-import org.mammon.scheme.brands.rand.RandomGenerator;
 
 public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 
-	private final AtomicInteger nextRandom = new AtomicInteger();
+	private final ExampleRandomGenerator randomGenerator;
 
 	private final ExampleElement zero = new StaticElement("0");
 
@@ -19,20 +17,22 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 
 	private final ExampleElement last = new StaticElement("-1");
 
+	public ExampleFiniteField(ExampleRandomGenerator randomGenerator) {
+		this.randomGenerator = randomGenerator;
+	}
+	
+	public static ExampleElement last() {
+		return new ExampleFiniteField(null).last;
+	}
+
 	@Override
 	public ExampleElement getOne() {
 		return one;
 	}
 
 	@Override
-	public ExampleElement getRandomElement(RandomGenerator randomGenerator) {
-		int id = nextRandom.getAndIncrement();
-		StringBuffer value = new StringBuffer();
-		do {
-			value.append((char) ('a' + id % 26));
-			id /= 26;
-		} while (id >= 26);
-		return new StaticElement(value.reverse().toString());
+	public ExampleElement getRandomElement() {
+		return new StaticElement(randomGenerator.nextString());
 	}
 
 	@Override

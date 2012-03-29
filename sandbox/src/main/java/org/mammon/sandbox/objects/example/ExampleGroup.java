@@ -3,22 +3,22 @@ package org.mammon.sandbox.objects.example;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.TreeSet;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
 import org.mammon.sandbox.HashCodeUtil;
-import org.mammon.scheme.brands.rand.RandomGenerator;
 
 public class ExampleGroup implements Group<ExampleGroup> {
 
-	private final AtomicInteger nextRandom = new AtomicInteger();
+	private final ExampleRandomGenerator randomGenerator;
 
 	private final ExampleElement zero = new StaticElement("0");
 
 	private final ExampleElement one = new StaticElement("1");
 
-	private final ExampleElement last = new StaticElement("-1");
+	public ExampleGroup(ExampleRandomGenerator randomGenerator) {
+		this.randomGenerator = randomGenerator;
+	}
 
 	@Override
 	public ExampleElement getGenerator() {
@@ -26,14 +26,8 @@ public class ExampleGroup implements Group<ExampleGroup> {
 	}
 
 	@Override
-	public ExampleElement getRandomElement(RandomGenerator randomGenerator) {
-		int id = nextRandom.getAndIncrement();
-		StringBuffer value = new StringBuffer();
-		do {
-			value.append((char) ('a' + id % 26));
-			id /= 26;
-		} while (id >= 26);
-		return new StaticElement(value.reverse().toString());
+	public ExampleElement getRandomElement() {
+		return new StaticElement(randomGenerator.nextString());
 	}
 
 	@Override
@@ -80,8 +74,7 @@ public class ExampleGroup implements Group<ExampleGroup> {
 
 		@Override
 		public ExampleElement getInverse() {
-			// TODO: yeah, right
-			return new ExponentiationElement(this, new ExampleFiniteField().getRandomElement(null));
+			return new ExponentiationElement(this, ExampleFiniteField.last());
 		}
 
 		@Override
