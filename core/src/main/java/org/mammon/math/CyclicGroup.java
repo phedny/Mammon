@@ -2,8 +2,6 @@ package org.mammon.math;
 
 import java.math.BigDecimal;
 
-import org.mammon.scheme.brands.rand.RandomGenerator;
-
 public class CyclicGroup implements Group<CyclicGroup> {
 
 	public static Group<CyclicGroup> C(long order) {
@@ -33,7 +31,7 @@ public class CyclicGroup implements Group<CyclicGroup> {
 	}
 
 	@Override
-	public Element<CyclicGroup> getRandomElement(RandomGenerator randomGenerator) {
+	public Element<CyclicGroup> getRandomElement() {
 		// TODO Auto-generated method stub
 		return null;
 	}
