@@ -60,7 +60,7 @@ public abstract class AbstractBankPrivate<G extends Group<G>, F extends FiniteFi
 					Element.class, 2 * request.getCount());
 			for (int i = 0; i < request.getCount(); i++) {
 				final FiniteField.Element<F> w = getSetup().getFiniteField()
-						.getRandomElement(null);
+						.getRandomElement();
 				Element<G> a = getSetup().getGenerators()[0].exponentiate(w);
 				Element<G> b = identity.multiply(getSetup().getGenerators()[2])
 						.exponentiate(w);

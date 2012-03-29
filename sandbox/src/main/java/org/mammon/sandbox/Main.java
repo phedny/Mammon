@@ -31,8 +31,7 @@ public class Main {
 		final ExampleSetup setup = new ExampleSetup();
 
 		// Setup the bank.
-		final ExampleBank bank = new ExampleBank(setup, setup.getFiniteField()
-				.getRandomElement(null));
+		final ExampleBank bank = new ExampleBank(setup, setup.getFiniteField().getRandomElement());
 		messaging.addObject(bank);
 
 		// Test handler that automatically requests issuing 1 IOweYou of value
