@@ -3,22 +3,22 @@ package org.mammon.sandbox;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mammon.sandbox.objects.example.ExampleGroup;
-import org.mammon.scheme.brands.Group.Element;
+import org.mammon.math.FiniteField;
+import org.mammon.sandbox.objects.example.ExampleFiniteField;
 
 @SuppressWarnings("unchecked")
 public class OracleHashFunction {
 
-	protected final ExampleGroup g;
+	protected final ExampleFiniteField f;
 	private Map map = new HashMap();
 	private int d;
 
-	public OracleHashFunction(ExampleGroup g, int depth) {
-		this.g = g;
+	public OracleHashFunction(ExampleFiniteField f, int depth) {
+		this.f = f;
 		d = depth - 1;
 	}
 
-	protected Element<ExampleGroup> oracle(Object... val) {
+	protected FiniteField.Element<ExampleFiniteField> oracle(Object... val) {
 		Map curr = map;
 		for (int i = 0; i < d; i++) {
 			Map next = (Map) curr.get(Integer.valueOf(val[i].hashCode()));
@@ -29,9 +29,11 @@ public class OracleHashFunction {
 			curr = next;
 		}
 		if (curr.containsKey(Integer.valueOf(val[d].hashCode()))) {
-			return (Element<ExampleGroup>) curr.get(Integer.valueOf(val[d].hashCode()));
+			return (FiniteField.Element<ExampleFiniteField>) curr.get(Integer
+					.valueOf(val[d].hashCode()));
 		} else {
-			Element<ExampleGroup> element = g.getRandomElement(null);
+			FiniteField.Element<ExampleFiniteField> element = f
+					.getRandomElement(null);
 			curr.put(Integer.valueOf(val[d].hashCode()), element);
 			return element;
 		}

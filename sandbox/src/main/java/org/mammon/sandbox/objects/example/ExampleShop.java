@@ -1,20 +1,21 @@
 package org.mammon.sandbox.objects.example;
 
+import org.mammon.math.FiniteField;
+import org.mammon.math.Group;
 import org.mammon.sandbox.HashCodeUtil;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
-import org.mammon.scheme.brands.Group;
 import org.mammon.scheme.brands.PaymentHashFunction;
 import org.mammon.scheme.brands.SignatureHashFunction;
 import org.mammon.scheme.brands.shop.Shop;
 
-public class ExampleShop<G extends Group<G>, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
-		implements Shop<G, S, T, H, H0> {
+public class ExampleShop<G extends Group<G>, F extends FiniteField<F>, S, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, S, T>>
+		implements Shop<G, F, S, T, H, H0> {
 
-	private final BrandsSchemeSetup<G, S, T, H, H0> setup;
+	private final BrandsSchemeSetup<G, F, S, T, H, H0> setup;
 
 	private final S identity;
 
-	public ExampleShop(BrandsSchemeSetup<G, S, T, H, H0> setup, S identity) {
+	public ExampleShop(BrandsSchemeSetup<G, F, S, T, H, H0> setup, S identity) {
 		this.setup = setup;
 		this.identity = identity;
 	}
@@ -25,16 +26,16 @@ public class ExampleShop<G extends Group<G>, S, T, H extends SignatureHashFuncti
 	}
 
 	@Override
-	public BrandsSchemeSetup<G, S, T, H, H0> getSetup() {
+	public BrandsSchemeSetup<G, F, S, T, H, H0> getSetup() {
 		return setup;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof ExampleShop<?, ?, ?, ?, ?>)) {
+		if (obj == null || !(obj instanceof ExampleShop<?, ?, ?, ?, ?, ?>)) {
 			return false;
 		}
-		ExampleShop<?, ?, ?, ?, ?> other = (ExampleShop<?, ?, ?, ?, ?>) obj;
+		ExampleShop<?, ?, ?, ?, ?, ?> other = (ExampleShop<?, ?, ?, ?, ?, ?>) obj;
 		return setup.equals(other.setup) && identity.equals(other.identity);
 	}
 
@@ -48,7 +49,8 @@ public class ExampleShop<G extends Group<G>, S, T, H extends SignatureHashFuncti
 
 	@Override
 	public String toString() {
-		return "ExampleShop(" + setup.hashCode() + "," + identity.toString() + ")";
+		return "ExampleShop(" + setup.hashCode() + "," + identity.toString()
+				+ ")";
 	}
 
 }

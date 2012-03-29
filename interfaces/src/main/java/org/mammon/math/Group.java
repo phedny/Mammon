@@ -1,4 +1,4 @@
-package org.mammon.scheme.brands;
+package org.mammon.math;
 
 import org.mammon.scheme.brands.rand.RandomGenerator;
 
@@ -12,14 +12,14 @@ import org.mammon.scheme.brands.rand.RandomGenerator;
 public interface Group<G extends Group<G>> {
 
 	/**
-	 * @return the zero element of this group.
+	 * @return the identity element of this group.
 	 */
-	Element<G> getZero();
+	Element<G> getIdentity();
 
 	/**
 	 * @return the unit (one) element of this group.
 	 */
-	Element<G> getOne();
+	Element<G> getGenerator();
 
 	/**
 	 * @param random
@@ -45,13 +45,6 @@ public interface Group<G extends Group<G>> {
 
 		/**
 		 * @param other
-		 *            an element from the same group to add together.
-		 * @return the sum of this element and the other element.
-		 */
-		Element<G> add(Element<G> other);
-
-		/**
-		 * @param other
 		 *            an element from the same group to multiply together.
 		 * @return the multiplication of this element and the other element.
 		 */
@@ -62,7 +55,8 @@ public interface Group<G extends Group<G>> {
 		 *            an element from the same group to use as exponent.
 		 * @return the exponentiation of this element by the exponent.
 		 */
-		Element<G> exponentiate(Element<G> exponent);
+		<F extends FiniteField<F>> Element<G> exponentiate(
+				FiniteField.Element<F> exponent);
 
 	}
 

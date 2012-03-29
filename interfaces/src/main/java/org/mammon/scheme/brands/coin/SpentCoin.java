@@ -1,6 +1,7 @@
 package org.mammon.scheme.brands.coin;
 
-import org.mammon.scheme.brands.Group;
+import org.mammon.math.FiniteField;
+import org.mammon.math.Group;
 import org.mammon.scheme.brands.PaymentHashFunction;
 import org.mammon.scheme.brands.SignatureHashFunction;
 import org.mammon.scheme.brands.shop.Shop;
@@ -10,8 +11,8 @@ import org.mammon.scheme.brands.shop.Shop;
  * bearer that must be a Shop. The isSellable() method of any implementation of
  * this interface must return <code>false</code>.
  */
-public interface SpentCoin<G extends Group<G>, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
-		extends Coin<G, S, T, H, H0> {
+public interface SpentCoin<G extends Group<G>, F extends FiniteField<F>, S, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, S, T>>
+		extends Coin<G, F, S, T, H, H0> {
 
 	/**
 	 * The bearer of an IOU is the entity that currently holds the IOU and is
@@ -20,7 +21,7 @@ public interface SpentCoin<G extends Group<G>, S, T, H extends SignatureHashFunc
 	 * @return the current bearer of this IOU.
 	 */
 	@Override
-	Shop<G, S, T, H, H0> getBearer();
+	Shop<G, F, S, T, H, H0> getBearer();
 
 	/**
 	 * @return the time when the payment protocol of the Brands scheme has been
@@ -33,6 +34,6 @@ public interface SpentCoin<G extends Group<G>, S, T, H extends SignatureHashFunc
 	 *         to prove that the coin has been spent by the original
 	 *         AccountHolderPrivate.
 	 */
-	Group.Element<G>[] getSpendingCommitments();
+	FiniteField.Element<F>[] getSpendingCommitments();
 
 }

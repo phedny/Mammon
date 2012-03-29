@@ -1,6 +1,7 @@
 package org.mammon.scheme.brands.accountholder;
 
-import org.mammon.scheme.brands.Group;
+import org.mammon.math.FiniteField;
+import org.mammon.math.Group;
 import org.mammon.scheme.brands.PaymentHashFunction;
 import org.mammon.scheme.brands.SignatureHashFunction;
 
@@ -9,8 +10,8 @@ import org.mammon.scheme.brands.SignatureHashFunction;
  * isSellable() method on IOweYou objects hold by an AccountHolderPrivate must
  * return <code>true</code>.
  */
-public interface AccountHolderForBank<G extends Group<G>, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
-		extends AccountHolder<G, S, T, H, H0> {
+public interface AccountHolderForBank<G extends Group<G>, F extends FiniteField<F>, S, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, S, T>>
+		extends AccountHolder<G, F, S, T, H, H0> {
 
 	/**
 	 * @return the public key or identity $I$ of the Account Holder, which

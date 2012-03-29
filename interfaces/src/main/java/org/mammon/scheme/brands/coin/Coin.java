@@ -1,19 +1,20 @@
 package org.mammon.scheme.brands.coin;
 
 import org.mammon.IOweYou;
+import org.mammon.math.FiniteField;
+import org.mammon.math.Group;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
-import org.mammon.scheme.brands.Group;
 import org.mammon.scheme.brands.PaymentHashFunction;
 import org.mammon.scheme.brands.SignatureHashFunction;
 import org.mammon.scheme.brands.bank.Bank;
 
-public interface Coin<G extends Group<G>, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>>
+public interface Coin<G extends Group<G>, F extends FiniteField<F>, S, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, S, T>>
 		extends IOweYou {
 
 	/**
 	 * @return the setup instantiation used by this object.
 	 */
-	BrandsSchemeSetup<G, S, T, H, H0> getSetup();
+	BrandsSchemeSetup<G, F, S, T, H, H0> getSetup();
 
 	/**
 	 * The issuer of an IOU is the entity that has created the promise to pay
@@ -22,7 +23,7 @@ public interface Coin<G extends Group<G>, S, T, H extends SignatureHashFunction<
 	 * @return the issuer of this IOU.
 	 */
 	@Override
-	Bank<G, S, T, H, H0> getIssuer();
+	Bank<G, F, S, T, H, H0> getIssuer();
 
 	/**
 	 * @return the blinded identity $A$ of the AccountHolderPrivate that
@@ -42,6 +43,6 @@ public interface Coin<G extends Group<G>, S, T, H extends SignatureHashFunction<
 	 *         coin has been correctly issued by the BankPrivate and must
 	 *         therefore be valid.
 	 */
-	Group.Element<G>[] getCoinSignature();
+	Object[] getCoinSignature();
 
 }

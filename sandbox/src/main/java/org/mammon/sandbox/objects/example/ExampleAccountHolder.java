@@ -1,17 +1,20 @@
 package org.mammon.sandbox.objects.example;
 
+import org.mammon.math.FiniteField;
+import org.mammon.math.Group;
 import org.mammon.sandbox.generic.accountholder.AbstractAccountHolderPrivate;
 import org.mammon.sandbox.generic.coin.AbstractWithdrawingCoinOne;
 import org.mammon.sandbox.messages.ObtainCoinsMessage;
 import org.mammon.sandbox.objects.accountholder.WithdrawingCoinOne;
-import org.mammon.scheme.brands.Group.Element;
 
 public class ExampleAccountHolder
 		extends
-		AbstractAccountHolderPrivate<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction, String> {
+		AbstractAccountHolderPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction, String> {
 
-	public ExampleAccountHolder(ExampleSetup setup, Element<ExampleGroup> privateKey, Element<ExampleGroup> publicKey,
-			Element<ExampleGroup> blindedIdentity, ExampleBank bank) {
+	public ExampleAccountHolder(ExampleSetup setup,
+			FiniteField.Element<ExampleFiniteField> privateKey,
+			Group.Element<ExampleGroup> publicKey,
+			Group.Element<ExampleGroup> blindedIdentity, ExampleBank bank) {
 		super(setup, privateKey, publicKey, blindedIdentity, bank);
 	}
 
@@ -21,9 +24,10 @@ public class ExampleAccountHolder
 	}
 
 	@Override
-	protected AbstractWithdrawingCoinOne<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction, String> newWithdrawingCoinOne(
+	protected AbstractWithdrawingCoinOne<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction, String> newWithdrawingCoinOne(
 			ObtainCoinsMessage<String> request) {
-		return new WithdrawingCoinOne(this, (ExampleBank) getBank(), getPublicKey(), request.getCount());
+		return new WithdrawingCoinOne(this, (ExampleBank) getBank(),
+				getPublicKey(), request.getCount());
 	}
 
 }

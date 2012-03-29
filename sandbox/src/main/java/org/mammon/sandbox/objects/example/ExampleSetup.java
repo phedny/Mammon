@@ -4,21 +4,24 @@ import java.lang.reflect.Array;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
+import org.mammon.math.Group.Element;
 import org.mammon.sandbox.HashCodeUtil;
 import org.mammon.sandbox.SecureRandomGenerator;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
-import org.mammon.scheme.brands.Group.Element;
 
 public class ExampleSetup implements
-		BrandsSchemeSetup<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
+		BrandsSchemeSetup<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	private final ExampleGroup group = new ExampleGroup();
+	
+	private final ExampleFiniteField field = new ExampleFiniteField();
 
-	private final ExampleSignatureHashFunction signatureHashFunction = new ExampleSignatureHashFunction(group);
+	private final ExampleSignatureHashFunction signatureHashFunction = new ExampleSignatureHashFunction(group, field);
 
-	private final ExamplePaymentHashFunction paymentHashFunction = new ExamplePaymentHashFunction(group);
+	private final ExamplePaymentHashFunction paymentHashFunction = new ExamplePaymentHashFunction(group, field);
 
 	private final Element<ExampleGroup>[] generators;
+
 
 	@SuppressWarnings("unchecked")
 	public ExampleSetup() {
@@ -37,6 +40,11 @@ public class ExampleSetup implements
 	@Override
 	public ExampleGroup getGroup() {
 		return group;
+	}
+
+	@Override
+	public ExampleFiniteField getFiniteField() {
+		return field;
 	}
 
 	@Override

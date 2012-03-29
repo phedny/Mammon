@@ -3,39 +3,43 @@ package org.mammon.sandbox.generic.coin;
 import java.util.Arrays;
 
 import org.mammon.AssetType;
+import org.mammon.math.FiniteField;
+import org.mammon.math.Group;
+import org.mammon.math.Group.Element;
 import org.mammon.sandbox.HashCodeUtil;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
-import org.mammon.scheme.brands.Group;
 import org.mammon.scheme.brands.PaymentHashFunction;
 import org.mammon.scheme.brands.SignatureHashFunction;
-import org.mammon.scheme.brands.Group.Element;
 import org.mammon.scheme.brands.accountholder.AccountHolder;
 import org.mammon.scheme.brands.accountholder.AccountHolderPrivate;
 import org.mammon.scheme.brands.bank.Bank;
 import org.mammon.scheme.brands.coin.UnspentCoin;
 
-public abstract class AbstractUnspentCoin<G extends Group<G>, S, T, H extends SignatureHashFunction<G>, H0 extends PaymentHashFunction<G, S, T>, I>
-		implements UnspentCoin<G, S, T, H, H0> {
+public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteField<F>, S, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, S, T>, I>
+		implements UnspentCoin<G, F, S, T, H, H0> {
 
-	private final BrandsSchemeSetup<G, S, T, H, H0> setup;
+	private final BrandsSchemeSetup<G, F, S, T, H, H0> setup;
 
-	private final AccountHolderPrivate<G, S, T, H, H0> bearer;
+	private final AccountHolderPrivate<G, F, S, T, H, H0> bearer;
 
-	private final Bank<G, S, T, H, H0> bank;
+	private final Bank<G, F, S, T, H, H0> bank;
 
-	private final Element<G> blindingFactor;
+	private final FiniteField.Element<F> blindingFactor;
 
-	private final Element<G>[] payerWitness;
+	private final FiniteField.Element<F>[] payerWitness;
 
 	private final Element<G> blindedIdentity;
 
 	private final Element<G> commitment;
 
-	private final Element<G>[] coinSignature;
+	private final Object[] coinSignature;
 
-	protected AbstractUnspentCoin(BrandsSchemeSetup<G, S, T, H, H0> setup, AccountHolderPrivate<G, S, T, H, H0> bearer,
-			Bank<G, S, T, H, H0> bank, Element<G> blindingFactor, Element<G>[] payerWitness,
-			Element<G> blindedIdentity, Element<G> commitment, Element<G>[] coinSignature) {
+	protected AbstractUnspentCoin(BrandsSchemeSetup<G, F, S, T, H, H0> setup,
+			AccountHolderPrivate<G, F, S, T, H, H0> bearer,
+			Bank<G, F, S, T, H, H0> bank,
+			FiniteField.Element<F> blindingFactor,
+			FiniteField.Element<F>[] payerWitness, Element<G> blindedIdentity,
+			Element<G> commitment, Object[] coinSignature) {
 		this.setup = setup;
 		this.bearer = bearer;
 		this.bank = bank;
@@ -47,17 +51,17 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, S, T, H extends Si
 	}
 
 	@Override
-	public AccountHolder<G, S, T, H, H0> getBearer() {
+	public AccountHolder<G, F, S, T, H, H0> getBearer() {
 		return bearer;
 	}
 
 	@Override
-	public Element<G> getBlindingFactor() {
+	public FiniteField.Element<F> getBlindingFactor() {
 		return blindingFactor;
 	}
 
 	@Override
-	public Element<G>[] getPayerWitness() {
+	public FiniteField.Element<F>[] getPayerWitness() {
 		return payerWitness.clone();
 	}
 
@@ -67,7 +71,7 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, S, T, H extends Si
 	}
 
 	@Override
-	public Element<G>[] getCoinSignature() {
+	public Object[] getCoinSignature() {
 		return coinSignature;
 	}
 
@@ -77,12 +81,12 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, S, T, H extends Si
 	}
 
 	@Override
-	public Bank<G, S, T, H, H0> getIssuer() {
+	public Bank<G, F, S, T, H, H0> getIssuer() {
 		return bank;
 	}
 
 	@Override
-	public BrandsSchemeSetup<G, S, T, H, H0> getSetup() {
+	public BrandsSchemeSetup<G, F, S, T, H, H0> getSetup() {
 		return setup;
 	}
 
@@ -109,12 +113,15 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, S, T, H extends Si
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof AbstractUnspentCoin<?, ?, ?, ?, ?, ?>)) {
+		if (obj == null
+				|| !(obj instanceof AbstractUnspentCoin<?, ?, ?, ?, ?, ?, ?>)) {
 			return false;
 		}
-		AbstractUnspentCoin<?, ?, ?, ?, ?, ?> other = (AbstractUnspentCoin<?, ?, ?, ?, ?, ?>) obj;
-		return setup.equals(other.setup) && bank.equals(other.bank) && bearer.equals(other.bearer)
-				&& blindingFactor.equals(other.blindingFactor) && Arrays.deepEquals(payerWitness, other.payerWitness);
+		AbstractUnspentCoin<?, ?, ?, ?, ?, ?, ?> other = (AbstractUnspentCoin<?, ?, ?, ?, ?, ?, ?>) obj;
+		return setup.equals(other.setup) && bank.equals(other.bank)
+				&& bearer.equals(other.bearer)
+				&& blindingFactor.equals(other.blindingFactor)
+				&& Arrays.deepEquals(payerWitness, other.payerWitness);
 	}
 
 	@Override

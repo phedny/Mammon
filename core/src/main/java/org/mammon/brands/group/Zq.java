@@ -2,8 +2,9 @@ package org.mammon.brands.group;
 
 import java.math.BigDecimal;
 
-import org.mammon.brands.Group;
-import org.mammon.brands.rand.RandomGenerator;
+import org.mammon.math.FiniteField;
+import org.mammon.math.Group;
+import org.mammon.scheme.brands.rand.RandomGenerator;
 
 public class Zq implements Group<Zq> {
 
@@ -16,7 +17,7 @@ public class Zq implements Group<Zq> {
 	}
 
 	@Override
-	public Element<Zq> getZero() {
+	public Element<Zq> getIdentity() {
 		return element(0L);
 	}
 
@@ -29,7 +30,7 @@ public class Zq implements Group<Zq> {
 	}
 
 	@Override
-	public Element<Zq> getOne() {
+	public Element<Zq> getGenerator() {
 		return element(1L);
 	}
 
@@ -57,19 +58,13 @@ public class Zq implements Group<Zq> {
 		}
 
 		@Override
-		public Element<Zq> add(Element<Zq> other) {
+		public Element<Zq> multiply(Element<Zq> other) {
 			return element(this.element.add(((ZqElement) other).element));
 		}
 
 		@Override
-		public Element<Zq> multiply(Element<Zq> other) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public Element<Zq> exponentiate(Element<Zq> exponent) {
-			// TODO Auto-generated method stub
+		public <F extends FiniteField<F>> Element<Zq> exponentiate(
+				FiniteField.Element<F> exponent) {
 			return null;
 		}
 
@@ -78,7 +73,8 @@ public class Zq implements Group<Zq> {
 			final int prime = 31;
 			int result = 1;
 			result = prime * result + getOuterType().hashCode();
-			result = prime * result + ((element == null) ? 0 : element.hashCode());
+			result = prime * result
+					+ ((element == null) ? 0 : element.hashCode());
 			return result;
 		}
 

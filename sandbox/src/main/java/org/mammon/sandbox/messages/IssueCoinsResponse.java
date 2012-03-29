@@ -1,18 +1,17 @@
 package org.mammon.sandbox.messages;
 
+import org.mammon.math.FiniteField;
 import org.mammon.messaging.Message;
-import org.mammon.scheme.brands.Group;
-import org.mammon.scheme.brands.Group.Element;
 
-public class IssueCoinsResponse<G extends Group<G>> implements Message {
+public class IssueCoinsResponse<F extends FiniteField<F>> implements Message {
 
-	private final Group.Element<G>[] response;
+	private final FiniteField.Element<F>[] response;
 
-	public IssueCoinsResponse(Element<G>[] response) {
+	public IssueCoinsResponse(FiniteField.Element<F>[] response) {
 		this.response = response;
 	}
 
-	public Group.Element<G>[] getResponse() {
+	public FiniteField.Element<F>[] getResponse() {
 		return response;
 	}
 

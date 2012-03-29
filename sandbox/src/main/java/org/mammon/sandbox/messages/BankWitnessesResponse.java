@@ -1,8 +1,8 @@
 package org.mammon.sandbox.messages;
 
+import org.mammon.math.Group;
+import org.mammon.math.Group.Element;
 import org.mammon.messaging.Message;
-import org.mammon.scheme.brands.Group;
-import org.mammon.scheme.brands.Group.Element;
 
 public class BankWitnessesResponse<G extends Group<G>> implements Message {
 

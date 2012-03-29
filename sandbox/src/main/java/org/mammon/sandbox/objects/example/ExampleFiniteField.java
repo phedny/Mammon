@@ -6,11 +6,10 @@ import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.mammon.math.FiniteField;
-import org.mammon.math.Group;
 import org.mammon.sandbox.HashCodeUtil;
 import org.mammon.scheme.brands.rand.RandomGenerator;
 
-public class ExampleGroup implements Group<ExampleGroup> {
+public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 
 	private final AtomicInteger nextRandom = new AtomicInteger();
 
@@ -21,7 +20,7 @@ public class ExampleGroup implements Group<ExampleGroup> {
 	private final ExampleElement last = new StaticElement("-1");
 
 	@Override
-	public ExampleElement getGenerator() {
+	public ExampleElement getOne() {
 		return one;
 	}
 
@@ -37,13 +36,13 @@ public class ExampleGroup implements Group<ExampleGroup> {
 	}
 
 	@Override
-	public ExampleElement getIdentity() {
+	public ExampleElement getZero() {
 		return zero;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof ExampleGroup)) {
+		if (obj == null || !(obj instanceof ExampleFiniteField)) {
 			return false;
 		}
 		return this == obj;
@@ -51,22 +50,21 @@ public class ExampleGroup implements Group<ExampleGroup> {
 
 	@Override
 	public int hashCode() {
-		return ExampleGroup.class.getName().hashCode();
+		return ExampleFiniteField.class.getName().hashCode();
 	}
 
 	@Override
 	public String toString() {
-		return ExampleGroup.class.getSimpleName();
+		return ExampleFiniteField.class.getSimpleName();
 	}
 
-	public abstract class ExampleElement implements Group.Element<ExampleGroup> {
+	public abstract class ExampleElement implements
+			FiniteField.Element<ExampleFiniteField> {
 
 		@Override
-		public <F extends FiniteField<F>> ExampleElement exponentiate(
-				FiniteField.Element<F> exponent) {
+		public ExampleElement add(Element<ExampleFiniteField> other) {
 			try {
-				return new ExponentiationElement(this,
-						(ExampleFiniteField.ExampleElement) exponent);
+				return new AdditionElement(this, (ExampleElement) other);
 			} catch (ClassCastException e) {
 				throw new IllegalArgumentException(
 						"Argument must be of type ExampleElement");
@@ -74,24 +72,34 @@ public class ExampleGroup implements Group<ExampleGroup> {
 		}
 
 		@Override
-		public ExampleGroup getGroup() {
-			return ExampleGroup.this;
+		public ExampleFiniteField getFiniteField() {
+			return ExampleFiniteField.this;
 		}
 
 		@Override
 		public ExampleElement getInverse() {
-			// TODO: yeah, right
-			return new ExponentiationElement(this, new ExampleFiniteField().getRandomElement(null));
+			return new ExponentiationElement(this, last);
 		}
 
 		@Override
-		public ExampleElement multiply(Element<ExampleGroup> other) {
+		public ExampleElement multiply(Element<ExampleFiniteField> other) {
 			try {
 				return new MultiplicationElement(this, (ExampleElement) other);
 			} catch (ClassCastException e) {
 				throw new IllegalArgumentException(
 						"Argument must be of type ExampleElement");
 			}
+		}
+
+		@Override
+		public Element<ExampleFiniteField> getOpposite() {
+			return new MultiplicationElement(this, last);
+		}
+
+		@Override
+		public org.mammon.math.FiniteField.Element<ExampleFiniteField> exponentiate(
+				org.mammon.math.FiniteField.Element<ExampleFiniteField> other) {
+			return new ExponentiationElement(this, (ExampleElement)other);
 		}
 
 		public abstract ExampleElement simplify();
@@ -172,34 +180,33 @@ public class ExampleGroup implements Group<ExampleGroup> {
 
 		@Override
 		public ExampleElement simplify() {
-			return this;
-//			TreeSet<ExampleElement> operands = new TreeSet<ExampleElement>(
-//					new HashCodeComparator<ExampleElement>());
-//			operands.addAll(Arrays.asList(this.operands));
-//			for (boolean execute = true; execute;) {
-//				execute = false;
-//				TreeSet<ExampleElement> newOperands = new TreeSet<ExampleElement>(
-//						new HashCodeComparator<ExampleElement>());
-//				for (ExampleElement element : operands) {
-//					if (element instanceof AdditionElement) {
-//						newOperands.addAll(Arrays
-//								.asList(((AdditionElement) element).operands));
-//						execute = true;
-//					} else {
-//						newOperands.add(element);
-//					}
-//				}
-//				operands = newOperands;
-//			}
-//
-//			TreeSet<ExampleElement> newOperands = new TreeSet<ExampleElement>(
-//					new HashCodeComparator<ExampleElement>());
-//			for (ExampleElement element : operands) {
-//				newOperands.add(element.simplify());
-//			}
-//
-//			return new AdditionElement(
-//					newOperands.toArray(new ExampleElement[newOperands.size()]));
+			TreeSet<ExampleElement> operands = new TreeSet<ExampleElement>(
+					new HashCodeComparator<ExampleElement>());
+			operands.addAll(Arrays.asList(this.operands));
+			for (boolean execute = true; execute;) {
+				execute = false;
+				TreeSet<ExampleElement> newOperands = new TreeSet<ExampleElement>(
+						new HashCodeComparator<ExampleElement>());
+				for (ExampleElement element : operands) {
+					if (element instanceof AdditionElement) {
+						newOperands.addAll(Arrays
+								.asList(((AdditionElement) element).operands));
+						execute = true;
+					} else {
+						newOperands.add(element);
+					}
+				}
+				operands = newOperands;
+			}
+
+			TreeSet<ExampleElement> newOperands = new TreeSet<ExampleElement>(
+					new HashCodeComparator<ExampleElement>());
+			for (ExampleElement element : operands) {
+				newOperands.add(element.simplify());
+			}
+
+			return new AdditionElement(
+					newOperands.toArray(new ExampleElement[newOperands.size()]));
 		}
 
 	}
@@ -245,32 +252,31 @@ public class ExampleGroup implements Group<ExampleGroup> {
 
 		@Override
 		public ExampleElement simplify() {
-			return this;
-//			TreeSet<ExampleElement> operands = new TreeSet<ExampleElement>(
-//					new HashCodeComparator<ExampleElement>());
-//			for (ExampleElement element : this.operands) {
-//				operands.add(element.simplify());
-//			}
-//
-//			for (boolean execute = true; execute;) {
-//				execute = false;
-//				TreeSet<ExampleElement> newOperands = new TreeSet<ExampleElement>(
-//						new HashCodeComparator<ExampleElement>());
-//				for (ExampleElement element : operands) {
-//					if (element instanceof MultiplicationElement) {
-//						newOperands
-//								.addAll(Arrays
-//										.asList(((MultiplicationElement) element).operands));
-//						execute = true;
-//					} else {
-//						newOperands.add(element);
-//					}
-//				}
-//				operands = newOperands;
-//			}
-//
-//			return new MultiplicationElement(
-//					operands.toArray(new ExampleElement[operands.size()]));
+			TreeSet<ExampleElement> operands = new TreeSet<ExampleElement>(
+					new HashCodeComparator<ExampleElement>());
+			for (ExampleElement element : this.operands) {
+				operands.add(element.simplify());
+			}
+
+			for (boolean execute = true; execute;) {
+				execute = false;
+				TreeSet<ExampleElement> newOperands = new TreeSet<ExampleElement>(
+						new HashCodeComparator<ExampleElement>());
+				for (ExampleElement element : operands) {
+					if (element instanceof MultiplicationElement) {
+						newOperands
+								.addAll(Arrays
+										.asList(((MultiplicationElement) element).operands));
+						execute = true;
+					} else {
+						newOperands.add(element);
+					}
+				}
+				operands = newOperands;
+			}
+
+			return new MultiplicationElement(
+					operands.toArray(new ExampleElement[operands.size()]));
 		}
 	}
 
@@ -278,10 +284,10 @@ public class ExampleGroup implements Group<ExampleGroup> {
 
 		private final ExampleElement base;
 
-		private final ExampleFiniteField.ExampleElement exponent;
+		private final ExampleElement exponent;
 
 		private ExponentiationElement(ExampleElement base,
-				ExampleFiniteField.ExampleElement exponent) {
+				ExampleElement exponent) {
 			this.base = base;
 			this.exponent = exponent;
 		}
@@ -316,33 +322,32 @@ public class ExampleGroup implements Group<ExampleGroup> {
 
 		@Override
 		public ExampleElement simplify() {
-			return this;
-//			ExampleElement base = this.base.simplify();
-//			ExampleFiniteField.ExampleElement exponent = this.exponent.simplify();
-//			if (exponent instanceof AdditionElement) {
-//				AdditionElement e = (AdditionElement) exponent;
-//				ExampleElement[] operands = new ExampleElement[e.operands.length];
-//				for (int i = 0; i < e.operands.length; i++) {
-//					operands[i] = new ExponentiationElement(base, e.operands[i]);
-//				}
-//				return new MultiplicationElement(operands).simplify();
-//			}
-//			if (base instanceof ExponentiationElement) {
-//				ExponentiationElement e = (ExponentiationElement) base;
-//				return new ExponentiationElement(e.base,
-//						new MultiplicationElement(e.exponent, exponent)
-//								.simplify());
-//			}
-//			if (base instanceof MultiplicationElement) {
-//				MultiplicationElement e = (MultiplicationElement) base;
-//				ExampleElement[] operands = new ExampleElement[e.operands.length];
-//				for (int i = 0; i < e.operands.length; i++) {
-//					operands[i] = new ExponentiationElement(e.operands[i],
-//							exponent);
-//				}
-//				return new MultiplicationElement(operands).simplify();
-//			}
-//			return new ExponentiationElement(base, exponent);
+			ExampleElement base = this.base.simplify();
+			ExampleElement exponent = this.exponent.simplify();
+			if (exponent instanceof AdditionElement) {
+				AdditionElement e = (AdditionElement) exponent;
+				ExampleElement[] operands = new ExampleElement[e.operands.length];
+				for (int i = 0; i < e.operands.length; i++) {
+					operands[i] = new ExponentiationElement(base, e.operands[i]);
+				}
+				return new MultiplicationElement(operands).simplify();
+			}
+			if (base instanceof ExponentiationElement) {
+				ExponentiationElement e = (ExponentiationElement) base;
+				return new ExponentiationElement(e.base,
+						new MultiplicationElement(e.exponent, exponent)
+								.simplify());
+			}
+			if (base instanceof MultiplicationElement) {
+				MultiplicationElement e = (MultiplicationElement) base;
+				ExampleElement[] operands = new ExampleElement[e.operands.length];
+				for (int i = 0; i < e.operands.length; i++) {
+					operands[i] = new ExponentiationElement(e.operands[i],
+							exponent);
+				}
+				return new MultiplicationElement(operands).simplify();
+			}
+			return new ExponentiationElement(base, exponent);
 		}
 	}
 

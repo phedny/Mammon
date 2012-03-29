@@ -1,21 +1,22 @@
 package org.mammon.sandbox.objects.accountholder;
 
+import org.mammon.math.Group.Element;
 import org.mammon.sandbox.generic.accountholder.AbstractOpeningAccountHolder;
 import org.mammon.sandbox.objects.example.ExampleAccountHolder;
 import org.mammon.sandbox.objects.example.ExampleBank;
+import org.mammon.sandbox.objects.example.ExampleFiniteField;
 import org.mammon.sandbox.objects.example.ExampleGroup;
 import org.mammon.sandbox.objects.example.ExamplePaymentHashFunction;
 import org.mammon.sandbox.objects.example.ExampleSetup;
 import org.mammon.sandbox.objects.example.ExampleSignatureHashFunction;
-import org.mammon.scheme.brands.Group.Element;
 import org.mammon.scheme.brands.accountholder.AccountHolderPrivate;
 
 public class OpeningAccountHolder
 		extends
-		AbstractOpeningAccountHolder<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction, String> {
+		AbstractOpeningAccountHolder<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction, String> {
 
 	public OpeningAccountHolder(ExampleSetup setup, ExampleBank bank) {
-		super(setup, bank, setup.getGroup().getRandomElement(null));
+		super(setup, bank, setup.getFiniteField().getRandomElement(null));
 	}
 
 	@Override
@@ -24,9 +25,10 @@ public class OpeningAccountHolder
 	}
 
 	@Override
-	protected AccountHolderPrivate<ExampleGroup, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newAccountHolder(
+	protected AccountHolderPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newAccountHolder(
 			Element<ExampleGroup> blindedIdentity) {
-		return new ExampleAccountHolder((ExampleSetup) getSetup(), getPrivateKey(), getPublicKey(), blindedIdentity,
+		return new ExampleAccountHolder((ExampleSetup) getSetup(),
+				getPrivateKey(), getPublicKey(), blindedIdentity,
 				(ExampleBank) getBank());
 	}
 

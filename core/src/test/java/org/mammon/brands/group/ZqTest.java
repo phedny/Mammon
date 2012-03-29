@@ -1,12 +1,12 @@
 package org.mammon.brands.group;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.mammon.brands.Group;
-import org.mammon.brands.Group.Element;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mammon.math.Group;
+import org.mammon.math.Group.Element;
 
 public class ZqTest {
 	private Group<Zq> group;
@@ -23,14 +23,14 @@ public class ZqTest {
 
 	@Test
 	public void shouldBeAbleToReturnZeroOfTheGroup() {
-		Element<Zq> zero = group.getZero();
+		Element<Zq> zero = group.getIdentity();
 
 		assertEquals(group, zero.getGroup());
 	}
 
 	@Test
 	public void shouldBeAbleToReturnOneOfTheGroup() {
-		Element<Zq> one = group.getOne();
+		Element<Zq> one = group.getGenerator();
 
 		assertEquals(group, one.getGroup());
 	}
