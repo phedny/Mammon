@@ -2,7 +2,6 @@ package org.mammon.sandbox.generic.accountholder;
 
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
-import org.mammon.math.Group.Element;
 import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.MessageEmitter;
 import org.mammon.messaging.Transitionable;
@@ -59,6 +58,6 @@ public abstract class AbstractOpeningAccountHolder<G extends Group<G>, F extends
 		return bank;
 	}
 
-	protected abstract AccountHolderPrivate<G, F, S, T, H, H0> newAccountHolder(Element<G> element);
+	protected abstract AccountHolderPrivate<G, F, S, T, H, H0> newAccountHolder(Group.Element<G> element);
 
 }

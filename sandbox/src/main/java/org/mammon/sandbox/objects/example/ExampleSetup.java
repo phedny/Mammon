@@ -3,7 +3,7 @@ package org.mammon.sandbox.objects.example;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 
-import org.mammon.math.Group.Element;
+import org.mammon.math.Group;
 import org.mammon.sandbox.HashCodeUtil;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
 
@@ -21,18 +21,18 @@ public class ExampleSetup
 
 	private final ExamplePaymentHashFunction paymentHashFunction = new ExamplePaymentHashFunction(group, field);
 
-	private final Element<ExampleGroup>[] generators;
+	private final Group.Element<ExampleGroup>[] generators;
 
 	@SuppressWarnings("unchecked")
 	public ExampleSetup() {
-		generators = (Element<ExampleGroup>[]) Array.newInstance(Element.class, 3);
+		generators = (Group.Element<ExampleGroup>[]) Array.newInstance(Group.Element.class, 3);
 		generators[0] = group.getRandomElement();
 		generators[1] = group.getRandomElement();
 		generators[2] = group.getRandomElement();
 	}
 
 	@Override
-	public Element<ExampleGroup>[] getGenerators() {
+	public Group.Element<ExampleGroup>[] getGenerators() {
 		return generators.clone();
 	}
 

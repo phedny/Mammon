@@ -1,7 +1,7 @@
 package org.mammon.sandbox.objects.example;
 
 import org.mammon.math.FiniteField;
-import org.mammon.math.Group.Element;
+import org.mammon.math.Group;
 import org.mammon.sandbox.OracleHashFunction;
 import org.mammon.scheme.brands.SignatureHashFunction;
 
@@ -14,9 +14,9 @@ public class ExampleSignatureHashFunction extends OracleHashFunction implements
 
 	@Override
 	public FiniteField.Element<ExampleFiniteField> hash(
-			Element<ExampleGroup> blindedIdentity,
-			Element<ExampleGroup> commitment,
-			Element<ExampleGroup>... secretValues) {
+			Group.Element<ExampleGroup> blindedIdentity,
+			Group.Element<ExampleGroup> commitment,
+			Group.Element<ExampleGroup>... secretValues) {
 		return oracle(blindedIdentity, commitment, secretValues[0],
 				secretValues[1], secretValues[2]);
 	}

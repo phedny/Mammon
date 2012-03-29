@@ -5,7 +5,6 @@ import java.lang.reflect.Array;
 import org.mammon.AssetType;
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
-import org.mammon.math.Group.Element;
 import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.Message;
 import org.mammon.messaging.MessageEmitter;
@@ -31,68 +30,74 @@ public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends F
 
 	private final Bank<G, F, S, T, H, H0> bank;
 
-	private final Element<G> publicKey;
+	private final Group.Element<G> publicKey;
 
 	private final int count;
 
-	private final FiniteField.Element<F>[] blindingFactor;
+	private final FiniteField.Element<F> s;
 
-	private final FiniteField.Element<F>[] payerWitness;
+	private final FiniteField.Element<F> x1;
 
-	private final FiniteField.Element<F>[] secondWitness;
+	private final FiniteField.Element<F> x2;
 
-	private final Element<G>[] blindedIdentity;
+	private final FiniteField.Element<F> u;
 
-	private final Element<G>[] commitment;
+	private final FiniteField.Element<F> v;
 
-	private final Element<G>[] witnesses;
+	private final Group.Element<G> bigA;
 
-	private final FiniteField.Element<F>[] challenges;
+	private final Group.Element<G> bigB;
+
+	private final Group.Element<G> a;
+
+	private final Group.Element<G> b;
+
+	private final FiniteField.Element<F> c;
 
 	public AbstractWithdrawingCoinTwo(BrandsSchemeSetup<G, F, S, T, H, H0> setup,
-			AccountHolderForBank<G, F, S, T, H, H0> accountHolder, Bank<G, F, S, T, H, H0> bank, Element<G> publicKey,
-			int count, FiniteField.Element<F>[] blindingFactor, FiniteField.Element<F>[] payerWitness,
-			FiniteField.Element<F>[] secondWitness, Element<G>[] blindedIdentity, Element<G>[] commitment,
-			Element<G>[] witnesses, FiniteField.Element<F>[] challenges) {
+			AccountHolderForBank<G, F, S, T, H, H0> accountHolder, Bank<G, F, S, T, H, H0> bank,
+			Group.Element<G> publicKey, int count, FiniteField.Element<F> s, FiniteField.Element<F> x1,
+			FiniteField.Element<F> x2, FiniteField.Element<F> u, FiniteField.Element<F> v, Group.Element<G> bigA,
+			Group.Element<G> bigB, Group.Element<G> a, Group.Element<G> b, FiniteField.Element<F> c) {
 		this.setup = setup;
 		this.accountHolder = accountHolder;
 		this.bank = bank;
 		this.publicKey = publicKey;
 		this.count = count;
-		this.blindingFactor = blindingFactor;
-		this.payerWitness = payerWitness;
-		this.secondWitness = secondWitness;
-		this.blindedIdentity = blindedIdentity;
-		this.commitment = commitment;
-		this.witnesses = witnesses;
-		this.challenges = challenges;
+		this.s = s;
+		this.x1 = x1;
+		this.x2 = x2;
+		this.u = u;
+		this.v = v;
+		this.bigA = bigA;
+		this.bigB = bigB;
+		this.a = a;
+		this.b = b;
+		this.c = c;
 	}
 
 	public Object transition(IssueCoinsResponse<F> response) {
 
 		// Tested by account holder
 		ExampleGroup.ExampleElement left = (ExampleElement) setup.getGenerators()[0].exponentiate(response
-				.getResponse()[0]);
-		ExampleGroup.ExampleElement right = (ExampleElement) bank.getPublicKey().exponentiate(challenges[0]).multiply(
-				witnesses[0]);
+				.getResponse());
+		ExampleGroup.ExampleElement right = (ExampleElement) bank.getPublicKey().exponentiate(c).multiply(a);
 		System.out.println(left.simplify() + " <= from: " + left);
 		System.out.println(right.simplify() + " <= from: " + right);
 		System.out.println(left.simplify().equals(right.simplify()));
 
 		// Tested by account holder
 		left = (ExampleElement) accountHolder.getPublicKey().multiply(setup.getGenerators()[2]).exponentiate(
-				response.getResponse()[0]);
-		right = (ExampleElement) accountHolder.getBlindedIdentity().exponentiate(challenges[0]).multiply(witnesses[1]);
+				response.getResponse());
+		right = (ExampleElement) accountHolder.getBlindedIdentity().exponentiate(c).multiply(b);
 		System.out.println(left.simplify() + " <= from: " + left);
 		System.out.println(right.simplify() + " <= from: " + right);
 		System.out.println(left.simplify().equals(right.simplify()));
 
-		Element<G> z_ = accountHolder.getBlindedIdentity().exponentiate(blindingFactor[0]);
-		Element<G> a_ = witnesses[0].exponentiate(secondWitness[0]).multiply(
-				setup.getGenerators()[0].exponentiate(secondWitness[1]));
-		Element<G> b_ = witnesses[1].exponentiate(blindingFactor[0].multiply(secondWitness[0])).multiply(
-				blindedIdentity[0].exponentiate(secondWitness[1]));
-		FiniteField.Element<F> r_ = response.getResponse()[0].multiply(secondWitness[0]).add(secondWitness[1]);
+		Group.Element<G> z_ = accountHolder.getBlindedIdentity().exponentiate(s);
+		Group.Element<G> a_ = a.exponentiate(u).multiply(setup.getGenerators()[0].exponentiate(v));
+		Group.Element<G> b_ = b.exponentiate(s.multiply(u)).multiply(bigA.exponentiate(v));
+		FiniteField.Element<F> r_ = response.getResponse().multiply(u).add(v);
 		Object[] coinSignature = (Object[]) Array.newInstance(Object.class, 4);
 		coinSignature[0] = z_;
 		coinSignature[1] = a_;
@@ -103,19 +108,13 @@ public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends F
 
 	@Override
 	public Message emitMessage() {
-		final int numOfWitnesses = witnesses.length / 2;
-		Element<G>[] firstWitnesses = (Element<G>[]) Array.newInstance(Element.class, numOfWitnesses);
-		for (int i = 0; i < numOfWitnesses; i++) {
-			firstWitnesses[i] = witnesses[2 * i];
-		}
-
 		return new IssueCoinsRequest<G, F>(new AssetType() {
 
 			@Override
 			public String getCallSign() {
 				return "EUR";
 			}
-		}, 1, firstWitnesses, challenges);
+		}, 1, a, c);
 	}
 
 	protected BrandsSchemeSetup<G, F, S, T, H, H0> getSetup() {
@@ -130,7 +129,7 @@ public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends F
 		return bank;
 	}
 
-	protected Element<G> getPublicKey() {
+	protected Group.Element<G> getPublicKey() {
 		return publicKey;
 	}
 
@@ -138,32 +137,44 @@ public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends F
 		return count;
 	}
 
-	protected FiniteField.Element<F>[] getBlindingFactor() {
-		return blindingFactor;
+	protected FiniteField.Element<F> getBlindingFactor() {
+		return s;
 	}
 
-	protected FiniteField.Element<F>[] getPayerWitness() {
-		return payerWitness;
+	protected FiniteField.Element<F> getX1() {
+		return x1;
 	}
 
-	protected FiniteField.Element<F>[] getSecondWitness() {
-		return secondWitness;
+	protected FiniteField.Element<F> getX2() {
+		return x2;
 	}
 
-	protected Element<G>[] getBlindedIdentity() {
-		return blindedIdentity;
+	protected FiniteField.Element<F> getU() {
+		return u;
 	}
 
-	protected Element<G>[] getCommitment() {
-		return commitment;
+	protected FiniteField.Element<F> getV() {
+		return v;
 	}
 
-	protected Element<G>[] getWitnesses() {
-		return witnesses;
+	protected Group.Element<G> getBigA() {
+		return bigA;
 	}
 
-	protected FiniteField.Element<F>[] getChallenges() {
-		return challenges;
+	protected Group.Element<G> getBigB() {
+		return bigB;
+	}
+
+	protected Group.Element<G> getA() {
+		return a;
+	}
+	
+	protected Group.Element<G> getB() {
+		return b;
+	}
+
+	protected FiniteField.Element<F> getC() {
+		return c;
 	}
 
 	protected abstract ExampleUnspentCoin newUnspentCoin(Object[] coinSignature);

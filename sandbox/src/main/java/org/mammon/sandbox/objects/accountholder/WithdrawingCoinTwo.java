@@ -18,19 +18,14 @@ public class WithdrawingCoinTwo
 
 	private final String identity;
 
-	public WithdrawingCoinTwo(ExampleSetup setup,
-			ExampleAccountHolder accountHolder, String identity,
+	public WithdrawingCoinTwo(ExampleSetup setup, ExampleAccountHolder accountHolder, String identity,
 			ExampleBank bank, Group.Element<ExampleGroup> publicKey, int count,
-			FiniteField.Element<ExampleFiniteField>[] blindingFactor,
-			FiniteField.Element<ExampleFiniteField>[] payerWitness,
-			FiniteField.Element<ExampleFiniteField>[] secondWitness,
-			Group.Element<ExampleGroup>[] blindedIdentity,
-			Group.Element<ExampleGroup>[] commitment,
-			Group.Element<ExampleGroup>[] witnesses,
-			FiniteField.Element<ExampleFiniteField>[] challenges) {
-		super(setup, accountHolder, bank, publicKey, count, blindingFactor,
-				payerWitness, secondWitness, blindedIdentity, commitment,
-				witnesses, challenges);
+			FiniteField.Element<ExampleFiniteField> s, FiniteField.Element<ExampleFiniteField> x1,
+			FiniteField.Element<ExampleFiniteField> x2, FiniteField.Element<ExampleFiniteField> u,
+			FiniteField.Element<ExampleFiniteField> v, Group.Element<ExampleGroup> bigA,
+			Group.Element<ExampleGroup> bigB, Group.Element<ExampleGroup> a, Group.Element<ExampleGroup> b,
+			FiniteField.Element<ExampleFiniteField> c) {
+		super(setup, accountHolder, bank, publicKey, count, s, x1, x2, u, v, bigA, bigB, a, b, c);
 		this.identity = identity;
 	}
 
@@ -41,11 +36,8 @@ public class WithdrawingCoinTwo
 
 	@Override
 	protected ExampleUnspentCoin newUnspentCoin(Object[] coinSignature) {
-		return new ExampleUnspentCoin((ExampleSetup) getSetup(),
-				(ExampleAccountHolder) getAccountHolder(),
-				(ExampleBank) getBank(), getBlindingFactor()[0],
-				getPayerWitness(), getBlindedIdentity()[0], getCommitment()[0],
-				coinSignature);
+		return new ExampleUnspentCoin((ExampleSetup) getSetup(), (ExampleAccountHolder) getAccountHolder(),
+				(ExampleBank) getBank(), getBlindingFactor(), getX1(), getX2(), getBigA(), getBigB(), coinSignature);
 	}
 
 }

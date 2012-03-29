@@ -1,6 +1,6 @@
 package org.mammon.sandbox.objects.accountholder;
 
-import org.mammon.math.Group.Element;
+import org.mammon.math.Group;
 import org.mammon.sandbox.generic.accountholder.AbstractOpeningAccountHolder;
 import org.mammon.sandbox.objects.example.ExampleAccountHolder;
 import org.mammon.sandbox.objects.example.ExampleBank;
@@ -26,9 +26,8 @@ public class OpeningAccountHolder
 
 	@Override
 	protected AccountHolderPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newAccountHolder(
-			Element<ExampleGroup> blindedIdentity) {
-		return new ExampleAccountHolder((ExampleSetup) getSetup(),
-				getPrivateKey(), getPublicKey(), blindedIdentity,
+			Group.Element<ExampleGroup> blindedIdentity) {
+		return new ExampleAccountHolder((ExampleSetup) getSetup(), getPrivateKey(), getPublicKey(), blindedIdentity,
 				(ExampleBank) getBank());
 	}
 

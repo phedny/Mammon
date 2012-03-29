@@ -2,7 +2,6 @@ package org.mammon.sandbox.generic.accountholder;
 
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
-import org.mammon.math.Group.Element;
 import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.Transactable;
 import org.mammon.sandbox.generic.coin.AbstractWithdrawingCoinOne;
@@ -22,7 +21,7 @@ public abstract class AbstractAccountHolderPrivate<G extends Group<G>, F extends
 	private final Bank<G, F, S, T, H, H0> bank;
 
 	protected AbstractAccountHolderPrivate(BrandsSchemeSetup<G, F, S, T, H, H0> setup,
-			FiniteField.Element<F> privateKey, Element<G> publicKey, Element<G> blindedIdentity,
+			FiniteField.Element<F> privateKey, Group.Element<G> publicKey, Group.Element<G> blindedIdentity,
 			Bank<G, F, S, T, H, H0> bank) {
 		super(setup, publicKey, blindedIdentity);
 		this.privateKey = privateKey;

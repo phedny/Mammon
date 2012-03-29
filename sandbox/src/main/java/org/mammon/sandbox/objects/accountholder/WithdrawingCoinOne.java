@@ -3,7 +3,7 @@ package org.mammon.sandbox.objects.accountholder;
 import java.util.UUID;
 
 import org.mammon.math.FiniteField;
-import org.mammon.math.Group.Element;
+import org.mammon.math.Group;
 import org.mammon.sandbox.generic.coin.AbstractWithdrawingCoinOne;
 import org.mammon.sandbox.generic.coin.AbstractWithdrawingCoinTwo;
 import org.mammon.sandbox.objects.example.ExampleAccountHolder;
@@ -20,8 +20,8 @@ public class WithdrawingCoinOne
 
 	private final String identity = UUID.randomUUID().toString();
 
-	public WithdrawingCoinOne(ExampleAccountHolder accountHolder,
-			ExampleBank bank, Element<ExampleGroup> publicKey, int count) {
+	public WithdrawingCoinOne(ExampleAccountHolder accountHolder, ExampleBank bank,
+			Group.Element<ExampleGroup> publicKey, int count) {
 		super(accountHolder, bank, publicKey, count);
 	}
 
@@ -32,18 +32,14 @@ public class WithdrawingCoinOne
 
 	@Override
 	protected AbstractWithdrawingCoinTwo<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction, String> newWithdrawingCoinTwo(
-			Element<ExampleGroup>[] witnesses,
-			FiniteField.Element<ExampleFiniteField>[] challenges,
-			FiniteField.Element<ExampleFiniteField>[] blindingFactor,
-			FiniteField.Element<ExampleFiniteField>[] payerWitness,
-			FiniteField.Element<ExampleFiniteField>[] secondWitness,
-			Element<ExampleGroup>[] blindedIdentity,
-			Element<ExampleGroup>[] commitment) {
-		return new WithdrawingCoinTwo((ExampleSetup) getSetup(),
-				(ExampleAccountHolder) getAccountHolder(), getIdentity(),
-				(ExampleBank) getBank(), getPublicKey(), getCount(),
-				blindingFactor, payerWitness, secondWitness, blindedIdentity,
-				commitment, witnesses, challenges);
+			Group.Element<ExampleGroup> a, Group.Element<ExampleGroup> b, FiniteField.Element<ExampleFiniteField> c,
+			FiniteField.Element<ExampleFiniteField> s, FiniteField.Element<ExampleFiniteField> x1,
+			FiniteField.Element<ExampleFiniteField> x2, FiniteField.Element<ExampleFiniteField> u,
+			FiniteField.Element<ExampleFiniteField> v, Group.Element<ExampleGroup> bigA,
+			Group.Element<ExampleGroup> bigB) {
+		return new WithdrawingCoinTwo((ExampleSetup) getSetup(), (ExampleAccountHolder) getAccountHolder(),
+				getIdentity(), (ExampleBank) getBank(), getPublicKey(), getCount(), s, x1, x2, u, v, bigA, bigB, a, b,
+				c);
 	}
 
 }

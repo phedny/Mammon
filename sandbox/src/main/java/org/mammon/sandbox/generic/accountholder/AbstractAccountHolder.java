@@ -2,7 +2,6 @@ package org.mammon.sandbox.generic.accountholder;
 
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
-import org.mammon.math.Group.Element;
 import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.Transactable;
 import org.mammon.sandbox.HashCodeUtil;
@@ -16,15 +15,15 @@ public abstract class AbstractAccountHolder<G extends Group<G>, F extends Finite
 		extends AbstractTransactable implements AccountHolder<G, F, S, T, H, H0>, Identifiable<I>, Transactable {
 
 	private final BrandsSchemeSetup<G, F, S, T, H, H0> setup;
-	private final Element<G> blindedIdentity;
+	private final Group.Element<G> blindedIdentity;
 
-	public AbstractAccountHolder(BrandsSchemeSetup<G, F, S, T, H, H0> setup, Element<G> blindedIdentity) {
+	public AbstractAccountHolder(BrandsSchemeSetup<G, F, S, T, H, H0> setup, Group.Element<G> blindedIdentity) {
 		this.setup = setup;
 		this.blindedIdentity = blindedIdentity;
 	}
 
 	@Override
-	public Element<G> getBlindedIdentity() {
+	public Group.Element<G> getBlindedIdentity() {
 		return blindedIdentity;
 	}
 

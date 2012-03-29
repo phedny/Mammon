@@ -1,7 +1,7 @@
 package org.mammon.sandbox.objects.example;
 
 import org.mammon.math.FiniteField;
-import org.mammon.math.Group.Element;
+import org.mammon.math.Group;
 import org.mammon.sandbox.OracleHashFunction;
 import org.mammon.scheme.brands.PaymentHashFunction;
 
@@ -14,8 +14,8 @@ public class ExamplePaymentHashFunction extends OracleHashFunction implements
 
 	@Override
 	public FiniteField.Element<ExampleFiniteField> hash(
-			Element<ExampleGroup> blindedIdentity,
-			Element<ExampleGroup> commitment, String shopIdentity, Long time) {
+			Group.Element<ExampleGroup> blindedIdentity,
+			Group.Element<ExampleGroup> commitment, String shopIdentity, Long time) {
 		return oracle(blindedIdentity, commitment, shopIdentity, time);
 	}
 

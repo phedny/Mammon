@@ -1,6 +1,5 @@
 package org.mammon.sandbox.generic;
 
-import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -8,7 +7,6 @@ import java.util.Set;
 
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
-import org.mammon.math.Group.Element;
 import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.Transactable;
 import org.mammon.sandbox.messages.BankWitnessesRequest;
@@ -27,7 +25,7 @@ public abstract class AbstractBankPrivate<G extends Group<G>, F extends FiniteFi
 		Transactable {
 
 	private final FiniteField.Element<F> privateKey;
-	private Set<Element<G>> knownIdentities = new HashSet<Element<G>>();
+	private Set<Group.Element<G>> knownIdentities = new HashSet<Group.Element<G>>();
 	private Map<Group.Element<G>, FiniteField.Element<F>> issuedWitnesses = new HashMap<Group.Element<G>, FiniteField.Element<F>>();
 
 	protected AbstractBankPrivate(BrandsSchemeSetup<G, F, S, T, H, H0> setup, FiniteField.Element<F> privateKey) {
@@ -47,38 +45,28 @@ public abstract class AbstractBankPrivate<G extends Group<G>, F extends FiniteFi
 	}
 
 	public BankWitnessesResponse<G> transact(BankWitnessesRequest<G, ?> request) {
-		final Element<G> identity = request.getIdentity();
+		final Group.Element<G> identity = request.getIdentity();
 		if (!knownIdentities.contains(identity)) {
-			return new BankWitnessesResponse<G>(null);
+			return new BankWitnessesResponse<G>(null, null);
 		}
-		Element<G>[] witnesses = (Element<G>[]) Array.newInstance(Element.class, 2 * request.getCount());
 		for (int i = 0; i < request.getCount(); i++) {
 			final FiniteField.Element<F> w = getSetup().getFiniteField().getRandomElement();
-			Element<G> a = getSetup().getGenerators()[0].exponentiate(w);
-			Element<G> b = identity.multiply(getSetup().getGenerators()[2]).exponentiate(w);
-
+			Group.Element<G> a = getSetup().getGenerators()[0].exponentiate(w);
+			Group.Element<G> b = identity.multiply(getSetup().getGenerators()[2]).exponentiate(w);
 			issuedWitnesses.put(a, w);
-			witnesses[2 * i] = a;
-			witnesses[2 * i + 1] = b;
+			return new BankWitnessesResponse<G>(a, b);
 		}
-		return new BankWitnessesResponse<G>(witnesses);
+		return new BankWitnessesResponse<G>(null, null);
 	}
 
 	public IssueCoinsResponse<F> transact(IssueCoinsRequest<G, F> request) {
-		if (request.getFirstWitness().length != request.getBlindedChallenge().length) {
-			return new IssueCoinsResponse<F>(null);
+		Group.Element<G> witness = request.getFirstWitness();
+		FiniteField.Element<F> secretWitness = issuedWitnesses.get(witness);
+		if (secretWitness != null) {
+			issuedWitnesses.remove(witness);
+			return new IssueCoinsResponse<F>(request.getBlindedChallenge().multiply(privateKey).add(secretWitness));
 		}
-		FiniteField.Element<F>[] response = (FiniteField.Element<F>[]) Array.newInstance(FiniteField.Element.class,
-				request.getBlindedChallenge().length);
-		for (int i = 0; i < request.getBlindedChallenge().length; i++) {
-			Element<G> witness = request.getFirstWitness()[i];
-			FiniteField.Element<F> secretWitness = issuedWitnesses.get(witness);
-			if (secretWitness != null) {
-				issuedWitnesses.remove(witness);
-				response[i] = request.getBlindedChallenge()[i].multiply(privateKey).add(secretWitness);
-			}
-		}
-		return new IssueCoinsResponse<F>(response);
+		return new IssueCoinsResponse<F>(null);
 	}
 
 }

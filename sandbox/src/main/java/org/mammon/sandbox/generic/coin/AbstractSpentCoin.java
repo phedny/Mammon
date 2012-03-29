@@ -6,7 +6,6 @@ import java.util.Arrays;
 import org.mammon.AssetType;
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
-import org.mammon.math.Group.Element;
 import org.mammon.sandbox.HashCodeUtil;
 import org.mammon.sandbox.generic.accountholder.AbstractAccountHolderPrivate;
 import org.mammon.sandbox.objects.example.ExampleGroup.ExampleElement;
@@ -101,7 +100,7 @@ public class AbstractSpentCoin<G extends Group<G>, F extends FiniteField<F>, S, 
 	}
 
 	@Override
-	public Element<G> getBlindedIdentity() {
+	public Group.Element<G> getBlindedIdentity() {
 		return blindedIdentity;
 	}
 
@@ -111,7 +110,7 @@ public class AbstractSpentCoin<G extends Group<G>, F extends FiniteField<F>, S, 
 	}
 
 	@Override
-	public Element<G> getCommitment() {
+	public Group.Element<G> getCommitment() {
 		return commitment;
 	}
 

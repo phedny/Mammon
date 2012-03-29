@@ -1,6 +1,7 @@
 package org.mammon.sandbox.objects.example;
 
-import org.mammon.math.Group.Element;
+import org.mammon.math.FiniteField;
+import org.mammon.math.Group;
 import org.mammon.sandbox.generic.coin.AbstractUnspentCoin;
 
 public class ExampleUnspentCoin
@@ -9,11 +10,12 @@ public class ExampleUnspentCoin
 
 	public ExampleUnspentCoin(ExampleSetup setup, ExampleAccountHolder bearer,
 			ExampleBank bank,
-			org.mammon.math.FiniteField.Element<ExampleFiniteField> element,
-			org.mammon.math.FiniteField.Element<ExampleFiniteField>[] elements,
-			Element<ExampleGroup> blindedIdentity,
-			Element<ExampleGroup> commitment, Object[] coinSignature) {
-		super(setup, bearer, bank, element, elements, blindedIdentity,
+			FiniteField.Element<ExampleFiniteField> blindingFactor,
+			FiniteField.Element<ExampleFiniteField> x1,
+			FiniteField.Element<ExampleFiniteField> x2,
+			Group.Element<ExampleGroup> blindedIdentity,
+			Group.Element<ExampleGroup> commitment, Object[] coinSignature) {
+		super(setup, bearer, bank, blindingFactor, x1, x2, blindedIdentity,
 				commitment, coinSignature);
 	}
 

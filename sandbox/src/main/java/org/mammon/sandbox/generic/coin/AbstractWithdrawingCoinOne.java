@@ -1,10 +1,7 @@
 package org.mammon.sandbox.generic.coin;
 
-import java.lang.reflect.Array;
-
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
-import org.mammon.math.Group.Element;
 import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.Message;
 import org.mammon.messaging.MessageEmitter;
@@ -41,57 +38,32 @@ public abstract class AbstractWithdrawingCoinOne<G extends Group<G>, F extends F
 	}
 
 	public AbstractWithdrawingCoinTwo<G, F, S, T, H, H0, I> transition(BankWitnessesResponse<G> response) {
-		Element<G>[] witnesses = response.getWitness();
-		if (witnesses.length % 2 == 0) {
-			final int numOfWitnesses = witnesses.length / 2;
-			FiniteField.Element<F>[] challenges = (FiniteField.Element<F>[]) Array.newInstance(
-					FiniteField.Element.class, numOfWitnesses);
-			FiniteField.Element<F>[] blindingFactor = (FiniteField.Element<F>[]) Array.newInstance(
-					FiniteField.Element.class, numOfWitnesses);
-			FiniteField.Element<F>[] payerWitness = (FiniteField.Element<F>[]) Array.newInstance(
-					FiniteField.Element.class, 2 * numOfWitnesses);
-			FiniteField.Element<F>[] secondWitness = (FiniteField.Element<F>[]) Array.newInstance(
-					FiniteField.Element.class, 2 * numOfWitnesses);
-			Element<G>[] blindedIdentity = (Element<G>[]) Array.newInstance(Element.class, numOfWitnesses);
-			Element<G>[] commitment = (Element<G>[]) Array.newInstance(Element.class, numOfWitnesses);
+		Group.Element<G> a = response.getValA();
+		Group.Element<G> b = response.getValB();
 
-			for (int i = 0; i < numOfWitnesses; i++) {
-				Element<G> a = witnesses[2 * i];
-				Element<G> b = witnesses[2 * i + 1];
+		FiniteField.Element<F> s = setup.getFiniteField().getRandomElement();
+		FiniteField.Element<F> x1 = setup.getFiniteField().getRandomElement();
+		FiniteField.Element<F> x2 = setup.getFiniteField().getRandomElement();
+		FiniteField.Element<F> u = setup.getFiniteField().getRandomElement();
+		FiniteField.Element<F> v = setup.getFiniteField().getRandomElement();
 
-				blindingFactor[i] = setup.getFiniteField().getRandomElement();
-				payerWitness[2 * i] = setup.getFiniteField().getRandomElement(); // x_1
-				payerWitness[2 * i + 1] = setup.getFiniteField().getRandomElement(); // x_2
-				FiniteField.Element<F> u = setup.getFiniteField().getRandomElement();
-				FiniteField.Element<F> v = setup.getFiniteField().getRandomElement();
+		Group.Element<G> bigA = accountHolder.getPublicKey().multiply(setup.getGenerators()[2]).exponentiate(s);
+		Group.Element<G> z_ = accountHolder.getBlindedIdentity().exponentiate(s);
+		Group.Element<G> bigB = setup.getGenerators()[1].exponentiate(x1).multiply(
+				setup.getGenerators()[2].exponentiate(x2));
 
-				blindedIdentity[i] = accountHolder.getPublicKey().multiply(setup.getGenerators()[2]).exponentiate(
-						blindingFactor[i]); // A
-				Element<G> z_ = accountHolder.getBlindedIdentity().exponentiate(blindingFactor[i]);
-				commitment[i] = setup.getGenerators()[1].exponentiate(payerWitness[0]).multiply(
-						setup.getGenerators()[2].exponentiate(payerWitness[1])); // B
+		Group.Element<G> a_ = a.exponentiate(u).multiply(setup.getGenerators()[0].exponentiate(v));
+		Group.Element<G> b_ = b.exponentiate(s.multiply(u)).multiply(bigA.exponentiate(v));
 
-				Element<G> a_ = a.exponentiate(u).multiply(setup.getGenerators()[0].exponentiate(v));
-				Element<G> b_ = b.exponentiate(blindingFactor[i].multiply(u)).multiply(
-						blindedIdentity[i].exponentiate(v));
-
-				FiniteField.Element<F> c_ = setup.getSignatureHash()
-						.hash(blindedIdentity[i], commitment[i], z_, a_, b_);
-				FiniteField.Element<F> c = c_.multiply(u.getInverse());
-				challenges[i] = c;
-				secondWitness[2 * i] = u;
-				secondWitness[2 * i + 1] = v;
-			}
-			return newWithdrawingCoinTwo(witnesses, challenges, blindingFactor, payerWitness, secondWitness,
-					blindedIdentity, commitment);
-		}
-		return null;
+		FiniteField.Element<F> c_ = setup.getSignatureHash().hash(bigA, bigB, z_, a_, b_);
+		FiniteField.Element<F> c = c_.multiply(u.getInverse());
+		return newWithdrawingCoinTwo(a, b, c, s, x1, x2, u, v, bigA, bigB);
 	}
 
-	protected abstract AbstractWithdrawingCoinTwo<G, F, S, T, H, H0, I> newWithdrawingCoinTwo(Element<G>[] witnesses,
-			FiniteField.Element<F>[] challenges, FiniteField.Element<F>[] blindingFactor,
-			FiniteField.Element<F>[] payerWitness, FiniteField.Element<F>[] secondWitness,
-			Element<G>[] blindedIdentity, Element<G>[] commitment);
+	protected abstract AbstractWithdrawingCoinTwo<G, F, S, T, H, H0, I> newWithdrawingCoinTwo(Group.Element<G> a,
+			Group.Element<G> b, FiniteField.Element<F> c, FiniteField.Element<F> s, FiniteField.Element<F> x1,
+			FiniteField.Element<F> x2, FiniteField.Element<F> u, FiniteField.Element<F> v, Group.Element<G> bigA,
+			Group.Element<G> bigB);
 
 	@Override
 	public Message emitMessage() {
@@ -110,7 +82,7 @@ public abstract class AbstractWithdrawingCoinOne<G extends Group<G>, F extends F
 		return bank;
 	}
 
-	protected Element<G> getPublicKey() {
+	protected Group.Element<G> getPublicKey() {
 		return publicKey;
 	}
 
