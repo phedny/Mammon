@@ -5,16 +5,14 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mammon.math.Group;
-import org.mammon.math.Zq;
 import org.mammon.math.Group.Element;
 
-public class ZqTest {
-	private Group<Zq> group;
+public class CyclicGroupTest {
+	private Group<CyclicGroup> group;
 
 	@Before
 	public void createGroup() {
-		group = Zq.Z(5);
+		group = CyclicGroup.C(5);
 	}
 
 	@Test
@@ -24,14 +22,14 @@ public class ZqTest {
 
 	@Test
 	public void shouldBeAbleToReturnZeroOfTheGroup() {
-		Element<Zq> zero = group.getIdentity();
+		Element<CyclicGroup> zero = group.getIdentity();
 
 		assertEquals(group, zero.getGroup());
 	}
 
 	@Test
 	public void shouldBeAbleToReturnOneOfTheGroup() {
-		Element<Zq> one = group.getGenerator();
+		Element<CyclicGroup> one = group.getGenerator();
 
 		assertEquals(group, one.getGroup());
 	}

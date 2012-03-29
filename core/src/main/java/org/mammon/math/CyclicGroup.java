@@ -2,26 +2,24 @@ package org.mammon.math;
 
 import java.math.BigDecimal;
 
-import org.mammon.math.FiniteField;
-import org.mammon.math.Group;
 import org.mammon.scheme.brands.rand.RandomGenerator;
 
-public class Zq implements Group<Zq> {
+public class CyclicGroup implements Group<CyclicGroup> {
 
-	public static Group<Zq> Z(long order) {
-		return new Zq(BigDecimal.valueOf(order));
+	public static Group<CyclicGroup> C(long order) {
+		return new CyclicGroup(BigDecimal.valueOf(order));
 	}
 
-	public Zq(BigDecimal valueOf) {
+	public CyclicGroup(BigDecimal valueOf) {
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public Element<Zq> getIdentity() {
+	public Element<CyclicGroup> getIdentity() {
 		return element(0L);
 	}
 
-	private Element<Zq> element(long element) {
+	private Element<CyclicGroup> element(long element) {
 		return element(BigDecimal.valueOf(element));
 	}
 
@@ -30,17 +28,17 @@ public class Zq implements Group<Zq> {
 	}
 
 	@Override
-	public Element<Zq> getGenerator() {
+	public Element<CyclicGroup> getGenerator() {
 		return element(1L);
 	}
 
 	@Override
-	public Element<Zq> getRandomElement(RandomGenerator randomGenerator) {
+	public Element<CyclicGroup> getRandomElement(RandomGenerator randomGenerator) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	class ZqElement implements Element<Zq> {
+	class ZqElement implements Element<CyclicGroup> {
 		private final BigDecimal element;
 
 		public ZqElement(BigDecimal element) {
@@ -48,22 +46,22 @@ public class Zq implements Group<Zq> {
 		}
 
 		@Override
-		public Zq getGroup() {
-			return Zq.this;
+		public CyclicGroup getGroup() {
+			return CyclicGroup.this;
 		}
 
 		@Override
-		public Element<Zq> getInverse() {
+		public Element<CyclicGroup> getInverse() {
 			return element(this.element.negate());
 		}
 
 		@Override
-		public Element<Zq> multiply(Element<Zq> other) {
+		public Element<CyclicGroup> multiply(Element<CyclicGroup> other) {
 			return element(this.element.add(((ZqElement) other).element));
 		}
 
 		@Override
-		public <F extends FiniteField<F>> Element<Zq> exponentiate(
+		public <F extends FiniteField<F>> Element<CyclicGroup> exponentiate(
 				FiniteField.Element<F> exponent) {
 			return null;
 		}
@@ -97,8 +95,8 @@ public class Zq implements Group<Zq> {
 			return true;
 		}
 
-		private Zq getOuterType() {
-			return Zq.this;
+		private CyclicGroup getOuterType() {
+			return CyclicGroup.this;
 		}
 
 	}

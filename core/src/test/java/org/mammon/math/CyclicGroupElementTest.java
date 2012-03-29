@@ -1,21 +1,19 @@
 package org.mammon.math;
 
 import static org.junit.Assert.assertEquals;
-import static org.mammon.math.Zq.Z;
+import static org.mammon.math.CyclicGroup.C;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mammon.math.Group;
-import org.mammon.math.Zq;
 import org.mammon.math.Group.Element;
 
-public class ZqElementTest {
-	private Element<Zq> identity;
-	private Element<Zq> generator;
+public class CyclicGroupElementTest {
+	private Element<CyclicGroup> identity;
+	private Element<CyclicGroup> generator;
 
 	@Before
 	public void createElements() {
-		Group<Zq> group = Z(5);
+		Group<CyclicGroup> group = C(5);
 		identity = group.getIdentity();
 		generator = group.getGenerator();
 	}
