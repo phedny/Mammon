@@ -95,7 +95,7 @@ public abstract class AbstractWithdrawingCoinOne<G extends Group<G>, F extends F
 
 	@Override
 	public Message emitMessage() {
-		return new BankWitnessesRequest<G, String>(((Identifiable<String>) bank).getIdentity(), publicKey, count);
+		return new BankWitnessesRequest<G, I>(((Identifiable<I>) bank).getIdentity(), publicKey, count);
 	}
 
 	protected BrandsSchemeSetup<G, F, S, T, H, H0> getSetup() {

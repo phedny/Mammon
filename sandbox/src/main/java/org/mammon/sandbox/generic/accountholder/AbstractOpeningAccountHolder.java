@@ -39,8 +39,8 @@ public abstract class AbstractOpeningAccountHolder<G extends Group<G>, F extends
 	}
 
 	@Override
-	public BlindedIdentityRequest<G, String> emitMessage() {
-		return new BlindedIdentityRequest<G, String>(((Identifiable<String>) bank).getIdentity(), publicKey);
+	public BlindedIdentityRequest<G, I> emitMessage() {
+		return new BlindedIdentityRequest<G, I>(((Identifiable<I>) bank).getIdentity(), publicKey);
 	}
 
 	protected BrandsSchemeSetup<G, F, S, T, H, H0> getSetup() {
