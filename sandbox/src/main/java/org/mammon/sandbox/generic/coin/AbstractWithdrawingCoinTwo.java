@@ -10,11 +10,12 @@ import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.Message;
 import org.mammon.messaging.MessageEmitter;
 import org.mammon.messaging.Transitionable;
+import org.mammon.sandbox.generic.messaging.AbstractTransitionable;
 import org.mammon.sandbox.messages.IssueCoinsRequest;
 import org.mammon.sandbox.messages.IssueCoinsResponse;
 import org.mammon.sandbox.objects.example.ExampleGroup;
-import org.mammon.sandbox.objects.example.ExampleGroup.ExampleElement;
 import org.mammon.sandbox.objects.example.ExampleUnspentCoin;
+import org.mammon.sandbox.objects.example.ExampleGroup.ExampleElement;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
 import org.mammon.scheme.brands.PaymentHashFunction;
 import org.mammon.scheme.brands.SignatureHashFunction;
@@ -22,7 +23,7 @@ import org.mammon.scheme.brands.accountholder.AccountHolderForBank;
 import org.mammon.scheme.brands.bank.Bank;
 
 public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends FiniteField<F>, S, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, S, T>, I>
-		implements Identifiable<I>, Transitionable, MessageEmitter {
+		extends AbstractTransitionable implements Identifiable<I>, Transitionable, MessageEmitter {
 
 	private final BrandsSchemeSetup<G, F, S, T, H, H0> setup;
 
@@ -48,14 +49,10 @@ public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends F
 
 	private final FiniteField.Element<F>[] challenges;
 
-	public AbstractWithdrawingCoinTwo(
-			BrandsSchemeSetup<G, F, S, T, H, H0> setup,
-			AccountHolderForBank<G, F, S, T, H, H0> accountHolder,
-			Bank<G, F, S, T, H, H0> bank, Element<G> publicKey, int count,
-			FiniteField.Element<F>[] blindingFactor,
-			FiniteField.Element<F>[] payerWitness,
-			FiniteField.Element<F>[] secondWitness,
-			Element<G>[] blindedIdentity, Element<G>[] commitment,
+	public AbstractWithdrawingCoinTwo(BrandsSchemeSetup<G, F, S, T, H, H0> setup,
+			AccountHolderForBank<G, F, S, T, H, H0> accountHolder, Bank<G, F, S, T, H, H0> bank, Element<G> publicKey,
+			int count, FiniteField.Element<F>[] blindingFactor, FiniteField.Element<F>[] payerWitness,
+			FiniteField.Element<F>[] secondWitness, Element<G>[] blindedIdentity, Element<G>[] commitment,
 			Element<G>[] witnesses, FiniteField.Element<F>[] challenges) {
 		this.setup = setup;
 		this.accountHolder = accountHolder;
@@ -71,58 +68,43 @@ public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends F
 		this.challenges = challenges;
 	}
 
-	@Override
-	public Object transition(Message message) {
-		if (message instanceof IssueCoinsResponse<?>) {
-			IssueCoinsResponse<F> response = (IssueCoinsResponse<F>) message;
+	public Object transition(IssueCoinsResponse<F> response) {
 
-			// Tested by account holder
-			ExampleGroup.ExampleElement left = (ExampleElement) setup
-					.getGenerators()[0].exponentiate(response.getResponse()[0]);
-			ExampleGroup.ExampleElement right = (ExampleElement) bank
-					.getPublicKey().exponentiate(challenges[0])
-					.multiply(witnesses[0]);
-			System.out.println(left.simplify() + " <= from: " + left);
-			System.out.println(right.simplify() + " <= from: " + right);
-			System.out.println(left.simplify().equals(right.simplify()));
+		// Tested by account holder
+		ExampleGroup.ExampleElement left = (ExampleElement) setup.getGenerators()[0].exponentiate(response
+				.getResponse()[0]);
+		ExampleGroup.ExampleElement right = (ExampleElement) bank.getPublicKey().exponentiate(challenges[0]).multiply(
+				witnesses[0]);
+		System.out.println(left.simplify() + " <= from: " + left);
+		System.out.println(right.simplify() + " <= from: " + right);
+		System.out.println(left.simplify().equals(right.simplify()));
 
-			// Tested by account holder
-			left = (ExampleElement) accountHolder.getPublicKey()
-					.multiply(setup.getGenerators()[2])
-					.exponentiate(response.getResponse()[0]);
-			right = (ExampleElement) accountHolder.getBlindedIdentity()
-					.exponentiate(challenges[0]).multiply(witnesses[1]);
-			System.out.println(left.simplify() + " <= from: " + left);
-			System.out.println(right.simplify() + " <= from: " + right);
-			System.out.println(left.simplify().equals(right.simplify()));
+		// Tested by account holder
+		left = (ExampleElement) accountHolder.getPublicKey().multiply(setup.getGenerators()[2]).exponentiate(
+				response.getResponse()[0]);
+		right = (ExampleElement) accountHolder.getBlindedIdentity().exponentiate(challenges[0]).multiply(witnesses[1]);
+		System.out.println(left.simplify() + " <= from: " + left);
+		System.out.println(right.simplify() + " <= from: " + right);
+		System.out.println(left.simplify().equals(right.simplify()));
 
-			Element<G> z_ = accountHolder.getBlindedIdentity().exponentiate(
-					blindingFactor[0]);
-			Element<G> a_ = witnesses[0].exponentiate(secondWitness[0])
-					.multiply(
-							setup.getGenerators()[0]
-									.exponentiate(secondWitness[1]));
-			Element<G> b_ = witnesses[1].exponentiate(
-					blindingFactor[0].multiply(secondWitness[0])).multiply(
-					blindedIdentity[0].exponentiate(secondWitness[1]));
-			FiniteField.Element<F> r_ = response.getResponse()[0].multiply(
-					secondWitness[0]).add(secondWitness[1]);
-			Object[] coinSignature = (Object[]) Array.newInstance(Object.class,
-					4);
-			coinSignature[0] = z_;
-			coinSignature[1] = a_;
-			coinSignature[2] = b_;
-			coinSignature[3] = r_;
-			return newUnspentCoin(coinSignature);
-		}
-		return null;
+		Element<G> z_ = accountHolder.getBlindedIdentity().exponentiate(blindingFactor[0]);
+		Element<G> a_ = witnesses[0].exponentiate(secondWitness[0]).multiply(
+				setup.getGenerators()[0].exponentiate(secondWitness[1]));
+		Element<G> b_ = witnesses[1].exponentiate(blindingFactor[0].multiply(secondWitness[0])).multiply(
+				blindedIdentity[0].exponentiate(secondWitness[1]));
+		FiniteField.Element<F> r_ = response.getResponse()[0].multiply(secondWitness[0]).add(secondWitness[1]);
+		Object[] coinSignature = (Object[]) Array.newInstance(Object.class, 4);
+		coinSignature[0] = z_;
+		coinSignature[1] = a_;
+		coinSignature[2] = b_;
+		coinSignature[3] = r_;
+		return newUnspentCoin(coinSignature);
 	}
 
 	@Override
 	public Message emitMessage() {
 		final int numOfWitnesses = witnesses.length / 2;
-		Element<G>[] firstWitnesses = (Element<G>[]) Array.newInstance(
-				Element.class, numOfWitnesses);
+		Element<G>[] firstWitnesses = (Element<G>[]) Array.newInstance(Element.class, numOfWitnesses);
 		for (int i = 0; i < numOfWitnesses; i++) {
 			firstWitnesses[i] = witnesses[2 * i];
 		}

@@ -3,11 +3,10 @@ package org.mammon.sandbox.generic.accountholder;
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
 import org.mammon.math.Group.Element;
-import org.mammon.messaging.DirectedMessage;
 import org.mammon.messaging.Identifiable;
-import org.mammon.messaging.Message;
 import org.mammon.messaging.MessageEmitter;
 import org.mammon.messaging.Transitionable;
+import org.mammon.sandbox.generic.messaging.AbstractTransitionable;
 import org.mammon.sandbox.messages.BlindedIdentityRequest;
 import org.mammon.sandbox.messages.BlindedIdentityResponse;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
@@ -17,7 +16,7 @@ import org.mammon.scheme.brands.accountholder.AccountHolderPrivate;
 import org.mammon.scheme.brands.bank.Bank;
 
 public abstract class AbstractOpeningAccountHolder<G extends Group<G>, F extends FiniteField<F>, S, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, S, T>, I>
-		implements Identifiable<I>, Transitionable, MessageEmitter {
+		extends AbstractTransitionable implements Identifiable<I>, Transitionable, MessageEmitter {
 
 	private final BrandsSchemeSetup<G, F, S, T, H, H0> setup;
 
@@ -35,17 +34,12 @@ public abstract class AbstractOpeningAccountHolder<G extends Group<G>, F extends
 		publicKey = setup.getGenerators()[1].exponentiate(privateKey);
 	}
 
-	@Override
-	public Object transition(Message message) {
-		if (message instanceof BlindedIdentityResponse<?>) {
-			BlindedIdentityResponse<G> response = (BlindedIdentityResponse<G>) message;
-			return newAccountHolder(response.getBlindedIdentity());
-		}
-		return null;
+	public Object transition(BlindedIdentityResponse<G> response) {
+		return newAccountHolder(response.getBlindedIdentity());
 	}
 
 	@Override
-	public DirectedMessage emitMessage() {
+	public BlindedIdentityRequest<G, String> emitMessage() {
 		return new BlindedIdentityRequest<G, String>(((Identifiable<String>) bank).getIdentity(), publicKey);
 	}
 

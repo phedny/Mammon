@@ -5,13 +5,14 @@ import org.mammon.math.Group;
 import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.Transactable;
 import org.mammon.sandbox.HashCodeUtil;
+import org.mammon.sandbox.generic.messaging.AbstractTransactable;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
 import org.mammon.scheme.brands.PaymentHashFunction;
 import org.mammon.scheme.brands.SignatureHashFunction;
 import org.mammon.scheme.brands.bank.Bank;
 
 public abstract class AbstractBank<G extends Group<G>, F extends FiniteField<F>, S, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, S, T>, I>
-		implements Bank<G, F, S, T, H, H0>, Identifiable<I>, Transactable {
+		extends AbstractTransactable implements Bank<G, F, S, T, H, H0>, Identifiable<I>, Transactable {
 
 	private final BrandsSchemeSetup<G, F, S, T, H, H0> setup;
 	private final Group.Element<G> publicKey;
