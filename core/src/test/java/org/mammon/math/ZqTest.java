@@ -1,4 +1,4 @@
-package org.mammon.brands.group;
+package org.mammon.math;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.mammon.math.Group;
+import org.mammon.math.Zq;
 import org.mammon.math.Group.Element;
 
 public class ZqTest {

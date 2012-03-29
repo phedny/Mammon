@@ -1,4 +1,4 @@
-package org.mammon.brands.group;
+package org.mammon.math;
 
 import java.math.BigDecimal;
 

@@ -1,11 +1,12 @@
-package org.mammon.brands.group;
+package org.mammon.math;
 
 import static org.junit.Assert.assertEquals;
-import static org.mammon.brands.group.Zq.Z;
+import static org.mammon.math.Zq.Z;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mammon.math.Group;
+import org.mammon.math.Zq;
 import org.mammon.math.Group.Element;
 
 public class ZqElementTest {
