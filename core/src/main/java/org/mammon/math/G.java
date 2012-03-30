@@ -9,19 +9,19 @@ public class G implements Group<G> {
 	private final BigInteger q;
 	private final BigInteger p;
 	private Group.Element<G> primitiveRoot;
-	private List<BigInteger> factorsOfP;
+	private List<BigInteger> factorsOftotientP;
 
 	public G(int q, int p) {
 		this(BigInteger.valueOf(q), BigInteger.valueOf(p));
 	}
 
 	public G(BigInteger q, BigInteger p) {
-		qShouldDividePminus1(q, p);
+		qShouldDivideTotientP(q, p);
 		this.q = q;
 		this.p = p;
 	}
 
-	private void qShouldDividePminus1(BigInteger q, BigInteger p) {
+	private void qShouldDivideTotientP(BigInteger q, BigInteger p) {
 		BigInteger[] divmod = p.subtract(BigInteger.ONE).divideAndRemainder(q);
 		if (!divmod[1].equals(BigInteger.ZERO)) {
 			throw new IllegalArgumentException("q should divide p-1");
@@ -40,7 +40,7 @@ public class G implements Group<G> {
 	@Override
 	public Group.Element<G> getGenerator() {
 		Group.Element<G> primitiveRoot = getPrimitiveRoot();
-		return primitiveRoot; // TODO exponentiate with p / q
+		return primitiveRoot; // TODO exponentiate with totient(p) / q
 	}
 
 	private Group.Element<G> getPrimitiveRoot() {
@@ -59,7 +59,7 @@ public class G implements Group<G> {
 	}
 
 	private boolean isPrimitiveRoot(BigInteger candidate) {
-		List<BigInteger> factors = factorsOfP();
+		List<BigInteger> factors = factorsOfTotientP();
 		for (BigInteger factor : factors) {
 			if (p.mod(factor).equals(BigInteger.ZERO)) {
 				return false;
@@ -68,12 +68,12 @@ public class G implements Group<G> {
 		return true;
 	}
 
-	private List<BigInteger> factorsOfP() {
-		if (factorsOfP == null) {
-			factorsOfP = new ArrayList<BigInteger>();
+	private List<BigInteger> factorsOfTotientP() {
+		if (factorsOftotientP == null) {
+			factorsOftotientP = new ArrayList<BigInteger>();
 
 		}
-		return factorsOfP;
+		return factorsOftotientP;
 	}
 
 	@Override
