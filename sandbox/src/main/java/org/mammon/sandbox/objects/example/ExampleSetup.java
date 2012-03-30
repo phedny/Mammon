@@ -1,20 +1,21 @@
 package org.mammon.sandbox.objects.example;
 
 import java.lang.reflect.Array;
-import java.security.SecureRandom;
 import java.util.Arrays;
 
 import org.mammon.math.Group.Element;
 import org.mammon.sandbox.HashCodeUtil;
-import org.mammon.sandbox.SecureRandomGenerator;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
 
-public class ExampleSetup implements
+public class ExampleSetup
+		implements
 		BrandsSchemeSetup<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
-	private final ExampleGroup group = new ExampleGroup();
-	
-	private final ExampleFiniteField field = new ExampleFiniteField();
+	private final ExampleRandomGenerator randomGenerator = new ExampleRandomGenerator();
+
+	private final ExampleGroup group = new ExampleGroup(randomGenerator);
+
+	private final ExampleFiniteField field = new ExampleFiniteField(randomGenerator);
 
 	private final ExampleSignatureHashFunction signatureHashFunction = new ExampleSignatureHashFunction(group, field);
 
@@ -22,14 +23,12 @@ public class ExampleSetup implements
 
 	private final Element<ExampleGroup>[] generators;
 
-
 	@SuppressWarnings("unchecked")
 	public ExampleSetup() {
-		SecureRandomGenerator r = new SecureRandomGenerator(new SecureRandom());
 		generators = (Element<ExampleGroup>[]) Array.newInstance(Element.class, 3);
-		generators[0] = group.getRandomElement(r);
-		generators[1] = group.getRandomElement(r);
-		generators[2] = group.getRandomElement(r);
+		generators[0] = group.getRandomElement();
+		generators[1] = group.getRandomElement();
+		generators[2] = group.getRandomElement();
 	}
 
 	@Override

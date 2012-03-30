@@ -16,7 +16,7 @@ public class OpeningAccountHolder
 		AbstractOpeningAccountHolder<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction, String> {
 
 	public OpeningAccountHolder(ExampleSetup setup, ExampleBank bank) {
-		super(setup, bank, setup.getFiniteField().getRandomElement(null));
+		super(setup, bank, setup.getFiniteField().getRandomElement());
 	}
 
 	@Override

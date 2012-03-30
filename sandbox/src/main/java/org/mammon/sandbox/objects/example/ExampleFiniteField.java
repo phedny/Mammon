@@ -3,15 +3,13 @@ package org.mammon.sandbox.objects.example;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.TreeSet;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.mammon.math.FiniteField;
 import org.mammon.sandbox.HashCodeUtil;
-import org.mammon.scheme.brands.rand.RandomGenerator;
 
 public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 
-	private final AtomicInteger nextRandom = new AtomicInteger();
+	private final ExampleRandomGenerator randomGenerator;
 
 	private final ExampleElement zero = new StaticElement("0");
 
@@ -19,20 +17,22 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 
 	private final ExampleElement last = new StaticElement("-1");
 
+	public ExampleFiniteField(ExampleRandomGenerator randomGenerator) {
+		this.randomGenerator = randomGenerator;
+	}
+	
+	public static ExampleElement last() {
+		return new ExampleFiniteField(null).last;
+	}
+
 	@Override
 	public ExampleElement getOne() {
 		return one;
 	}
 
 	@Override
-	public ExampleElement getRandomElement(RandomGenerator randomGenerator) {
-		int id = nextRandom.getAndIncrement();
-		StringBuffer value = new StringBuffer();
-		do {
-			value.append((char) ('a' + id % 26));
-			id /= 26;
-		} while (id >= 26);
-		return new StaticElement(value.reverse().toString());
+	public ExampleElement getRandomElement() {
+		return new StaticElement(randomGenerator.nextString());
 	}
 
 	@Override
@@ -58,16 +58,14 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 		return ExampleFiniteField.class.getSimpleName();
 	}
 
-	public abstract class ExampleElement implements
-			FiniteField.Element<ExampleFiniteField> {
+	public abstract class ExampleElement implements FiniteField.Element<ExampleFiniteField> {
 
 		@Override
 		public ExampleElement add(Element<ExampleFiniteField> other) {
 			try {
 				return new AdditionElement(this, (ExampleElement) other);
 			} catch (ClassCastException e) {
-				throw new IllegalArgumentException(
-						"Argument must be of type ExampleElement");
+				throw new IllegalArgumentException("Argument must be of type ExampleElement");
 			}
 		}
 
@@ -86,8 +84,7 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 			try {
 				return new MultiplicationElement(this, (ExampleElement) other);
 			} catch (ClassCastException e) {
-				throw new IllegalArgumentException(
-						"Argument must be of type ExampleElement");
+				throw new IllegalArgumentException("Argument must be of type ExampleElement");
 			}
 		}
 
@@ -99,18 +96,18 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 		@Override
 		public org.mammon.math.FiniteField.Element<ExampleFiniteField> exponentiate(
 				org.mammon.math.FiniteField.Element<ExampleFiniteField> other) {
-			return new ExponentiationElement(this, (ExampleElement)other);
+			return new ExponentiationElement(this, (ExampleElement) other);
 		}
 
 		public abstract ExampleElement simplify();
 
 	}
 
-	private class StaticElement extends ExampleElement {
+	public class StaticElement extends ExampleElement {
 
 		private final String value;
 
-		private StaticElement(String value) {
+		public StaticElement(String value) {
 			this.value = value;
 		}
 
@@ -139,7 +136,7 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 
 	}
 
-	private class AdditionElement extends ExampleElement {
+	public class AdditionElement extends ExampleElement {
 
 		private final ExampleElement[] operands;
 
@@ -147,9 +144,12 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 			this.operands = operands;
 		}
 
-		private AdditionElement(ExampleElement firstOperand,
-				ExampleElement secondOperand) {
+		private AdditionElement(ExampleElement firstOperand, ExampleElement secondOperand) {
 			operands = new ExampleElement[] { firstOperand, secondOperand };
+		}
+
+		public ExampleElement[] getOperands() {
+			return operands.clone();
 		}
 
 		@Override
@@ -180,8 +180,7 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 
 		@Override
 		public ExampleElement simplify() {
-			TreeSet<ExampleElement> operands = new TreeSet<ExampleElement>(
-					new HashCodeComparator<ExampleElement>());
+			TreeSet<ExampleElement> operands = new TreeSet<ExampleElement>(new HashCodeComparator<ExampleElement>());
 			operands.addAll(Arrays.asList(this.operands));
 			for (boolean execute = true; execute;) {
 				execute = false;
@@ -189,8 +188,7 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 						new HashCodeComparator<ExampleElement>());
 				for (ExampleElement element : operands) {
 					if (element instanceof AdditionElement) {
-						newOperands.addAll(Arrays
-								.asList(((AdditionElement) element).operands));
+						newOperands.addAll(Arrays.asList(((AdditionElement) element).operands));
 						execute = true;
 					} else {
 						newOperands.add(element);
@@ -199,19 +197,17 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 				operands = newOperands;
 			}
 
-			TreeSet<ExampleElement> newOperands = new TreeSet<ExampleElement>(
-					new HashCodeComparator<ExampleElement>());
+			TreeSet<ExampleElement> newOperands = new TreeSet<ExampleElement>(new HashCodeComparator<ExampleElement>());
 			for (ExampleElement element : operands) {
 				newOperands.add(element.simplify());
 			}
 
-			return new AdditionElement(
-					newOperands.toArray(new ExampleElement[newOperands.size()]));
+			return new AdditionElement(newOperands.toArray(new ExampleElement[newOperands.size()]));
 		}
 
 	}
 
-	private class MultiplicationElement extends ExampleElement {
+	public class MultiplicationElement extends ExampleElement {
 
 		private final ExampleElement[] operands;
 
@@ -219,8 +215,7 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 			this.operands = operands;
 		}
 
-		private MultiplicationElement(ExampleElement firstOperand,
-				ExampleElement secondOperand) {
+		private MultiplicationElement(ExampleElement firstOperand, ExampleElement secondOperand) {
 			operands = new ExampleElement[] { firstOperand, secondOperand };
 		}
 
@@ -252,8 +247,7 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 
 		@Override
 		public ExampleElement simplify() {
-			TreeSet<ExampleElement> operands = new TreeSet<ExampleElement>(
-					new HashCodeComparator<ExampleElement>());
+			TreeSet<ExampleElement> operands = new TreeSet<ExampleElement>(new HashCodeComparator<ExampleElement>());
 			for (ExampleElement element : this.operands) {
 				operands.add(element.simplify());
 			}
@@ -264,9 +258,7 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 						new HashCodeComparator<ExampleElement>());
 				for (ExampleElement element : operands) {
 					if (element instanceof MultiplicationElement) {
-						newOperands
-								.addAll(Arrays
-										.asList(((MultiplicationElement) element).operands));
+						newOperands.addAll(Arrays.asList(((MultiplicationElement) element).operands));
 						execute = true;
 					} else {
 						newOperands.add(element);
@@ -275,19 +267,17 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 				operands = newOperands;
 			}
 
-			return new MultiplicationElement(
-					operands.toArray(new ExampleElement[operands.size()]));
+			return new MultiplicationElement(operands.toArray(new ExampleElement[operands.size()]));
 		}
 	}
 
-	private class ExponentiationElement extends ExampleElement {
+	public class ExponentiationElement extends ExampleElement {
 
 		private final ExampleElement base;
 
 		private final ExampleElement exponent;
 
-		private ExponentiationElement(ExampleElement base,
-				ExampleElement exponent) {
+		private ExponentiationElement(ExampleElement base, ExampleElement exponent) {
 			this.base = base;
 			this.exponent = exponent;
 		}
@@ -334,16 +324,13 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 			}
 			if (base instanceof ExponentiationElement) {
 				ExponentiationElement e = (ExponentiationElement) base;
-				return new ExponentiationElement(e.base,
-						new MultiplicationElement(e.exponent, exponent)
-								.simplify());
+				return new ExponentiationElement(e.base, new MultiplicationElement(e.exponent, exponent).simplify());
 			}
 			if (base instanceof MultiplicationElement) {
 				MultiplicationElement e = (MultiplicationElement) base;
 				ExampleElement[] operands = new ExampleElement[e.operands.length];
 				for (int i = 0; i < e.operands.length; i++) {
-					operands[i] = new ExponentiationElement(e.operands[i],
-							exponent);
+					operands[i] = new ExponentiationElement(e.operands[i], exponent);
 				}
 				return new MultiplicationElement(operands).simplify();
 			}

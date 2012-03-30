@@ -66,16 +66,11 @@ public abstract class AbstractWithdrawingCoinOne<G extends Group<G>, F extends F
 					Element<G> a = witnesses[2 * i];
 					Element<G> b = witnesses[2 * i + 1];
 
-					blindingFactor[i] = setup.getFiniteField()
-							.getRandomElement(null);
-					payerWitness[2 * i] = setup.getFiniteField()
-							.getRandomElement(null); // x_1
-					payerWitness[2 * i + 1] = setup.getFiniteField()
-							.getRandomElement(null); // x_2
-					FiniteField.Element<F> u = setup.getFiniteField()
-							.getRandomElement(null);
-					FiniteField.Element<F> v = setup.getFiniteField()
-							.getRandomElement(null);
+					blindingFactor[i] = setup.getFiniteField().getRandomElement();
+					payerWitness[2 * i] = setup.getFiniteField().getRandomElement(); // x_1
+					payerWitness[2 * i + 1] = setup.getFiniteField().getRandomElement(); // x_2
+					FiniteField.Element<F> u = setup.getFiniteField().getRandomElement();
+					FiniteField.Element<F> v = setup.getFiniteField().getRandomElement();
 
 					blindedIdentity[i] = accountHolder.getPublicKey()
 							.multiply(setup.getGenerators()[2])

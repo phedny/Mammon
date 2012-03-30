@@ -1,6 +1,5 @@
 package org.mammon.math;
 
-import org.mammon.scheme.brands.rand.RandomGenerator;
 
 /**
  * This interface can be used for generic typing, to bind classes of an actual
@@ -22,11 +21,9 @@ public interface Group<G extends Group<G>> {
 	Element<G> getGenerator();
 
 	/**
-	 * @param random
-	 *            randomization source.
 	 * @return a random element from this group.
 	 */
-	Element<G> getRandomElement(RandomGenerator randomGenerator);
+	Element<G> getRandomElement();
 
 	/**
 	 * This interface represents an element from a group.
@@ -55,8 +52,7 @@ public interface Group<G extends Group<G>> {
 		 *            an element from the same group to use as exponent.
 		 * @return the exponentiation of this element by the exponent.
 		 */
-		<F extends FiniteField<F>> Element<G> exponentiate(
-				FiniteField.Element<F> exponent);
+		<F extends FiniteField<F>> Element<G> exponentiate(FiniteField.Element<F> exponent);
 
 	}
 

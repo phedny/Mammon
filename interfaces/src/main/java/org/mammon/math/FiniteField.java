@@ -1,6 +1,5 @@
 package org.mammon.math;
 
-import org.mammon.scheme.brands.rand.RandomGenerator;
 
 /**
  * This interface can be used for generic typing, to bind classes of an actual
@@ -19,11 +18,9 @@ public interface FiniteField<F extends FiniteField<F>> {
 	Element<F> getOne();
 
 	/**
-	 * @param random
-	 *            randomization source.
 	 * @return a random element from this finite field.
 	 */
-	Element<F> getRandomElement(RandomGenerator random);
+	Element<F> getRandomElement();
 
 	/**
 	 * This interface represents an element from a finite field.
@@ -59,7 +56,6 @@ public interface FiniteField<F extends FiniteField<F>> {
 		 * @return the inverse of this element.
 		 */
 		Element<F> getInverse();
-		
 
 		/**
 		 * @param exponent

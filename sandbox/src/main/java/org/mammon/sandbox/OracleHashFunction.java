@@ -29,11 +29,9 @@ public class OracleHashFunction {
 			curr = next;
 		}
 		if (curr.containsKey(Integer.valueOf(val[d].hashCode()))) {
-			return (FiniteField.Element<ExampleFiniteField>) curr.get(Integer
-					.valueOf(val[d].hashCode()));
+			return (FiniteField.Element<ExampleFiniteField>) curr.get(Integer.valueOf(val[d].hashCode()));
 		} else {
-			FiniteField.Element<ExampleFiniteField> element = f
-					.getRandomElement(null);
+			FiniteField.Element<ExampleFiniteField> element = f.getRandomElement();
 			curr.put(Integer.valueOf(val[d].hashCode()), element);
 			return element;
 		}
