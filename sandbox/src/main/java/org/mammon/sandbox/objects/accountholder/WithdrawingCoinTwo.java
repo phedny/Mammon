@@ -2,15 +2,19 @@ package org.mammon.sandbox.objects.accountholder;
 
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
+import org.mammon.math.Group.Element;
+import org.mammon.sandbox.generic.coin.AbstractCoinSignature;
 import org.mammon.sandbox.generic.coin.AbstractWithdrawingCoinTwo;
 import org.mammon.sandbox.objects.example.ExampleAccountHolder;
 import org.mammon.sandbox.objects.example.ExampleBank;
+import org.mammon.sandbox.objects.example.ExampleCoinSignature;
 import org.mammon.sandbox.objects.example.ExampleFiniteField;
 import org.mammon.sandbox.objects.example.ExampleGroup;
 import org.mammon.sandbox.objects.example.ExamplePaymentHashFunction;
 import org.mammon.sandbox.objects.example.ExampleSetup;
 import org.mammon.sandbox.objects.example.ExampleSignatureHashFunction;
 import org.mammon.sandbox.objects.example.ExampleUnspentCoin;
+import org.mammon.scheme.brands.coin.CoinSignature;
 
 public class WithdrawingCoinTwo
 		extends
@@ -35,10 +39,17 @@ public class WithdrawingCoinTwo
 	}
 
 	@Override
-	protected ExampleUnspentCoin newUnspentCoin(FiniteField.Element<ExampleFiniteField> r, Object[] coinSignature) {
+	protected ExampleUnspentCoin newUnspentCoin(FiniteField.Element<ExampleFiniteField> r,
+			CoinSignature<ExampleGroup, ExampleFiniteField> coinSignature) {
 		return new ExampleUnspentCoin((ExampleSetup) getSetup(), (ExampleAccountHolder) getAccountHolder(),
 				(ExampleBank) getBank(), identity, getBlindingFactor(), getX1(), getX2(), getBigA(), getBigB(), r,
 				coinSignature);
+	}
+
+	@Override
+	protected AbstractCoinSignature<ExampleGroup, ExampleFiniteField> newCoinSignature(Element<ExampleGroup> z,
+			Element<ExampleGroup> a, Element<ExampleGroup> b, org.mammon.math.FiniteField.Element<ExampleFiniteField> r) {
+		return new ExampleCoinSignature(z, a, b, r);
 	}
 
 }

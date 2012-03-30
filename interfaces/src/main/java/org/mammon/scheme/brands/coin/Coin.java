@@ -43,6 +43,6 @@ public interface Coin<G extends Group<G>, F extends FiniteField<F>, S, T, H exte
 	 *         coin has been correctly issued by the BankPrivate and must
 	 *         therefore be valid.
 	 */
-	Object[] getCoinSignature();
+	CoinSignature<G, F> getCoinSignature();
 
 }

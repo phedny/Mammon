@@ -14,6 +14,7 @@ import org.mammon.scheme.brands.BrandsSchemeSetup;
 import org.mammon.scheme.brands.PaymentHashFunction;
 import org.mammon.scheme.brands.SignatureHashFunction;
 import org.mammon.scheme.brands.bank.Bank;
+import org.mammon.scheme.brands.coin.CoinSignature;
 import org.mammon.scheme.brands.coin.SpentCoin;
 import org.mammon.scheme.brands.coin.UnspentCoin;
 import org.mammon.scheme.brands.shop.Shop;
@@ -33,7 +34,7 @@ public class AbstractSpentCoin<G extends Group<G>, F extends FiniteField<F>, I, 
 
 	private final Group.Element<G> commitment;
 
-	private final Object[] coinSignature;
+	private final CoinSignature<G, F> coinSignature;
 
 	private final FiniteField.Element<F>[] spendingCommitments;
 
@@ -105,7 +106,7 @@ public class AbstractSpentCoin<G extends Group<G>, F extends FiniteField<F>, I, 
 	}
 
 	@Override
-	public Object[] getCoinSignature() {
+	public CoinSignature<G, F> getCoinSignature() {
 		return coinSignature;
 	}
 
@@ -150,7 +151,7 @@ public class AbstractSpentCoin<G extends Group<G>, F extends FiniteField<F>, I, 
 				&& bearer.equals(other.bearer)
 				&& blindedIdentity.equals(other.blindedIdentity)
 				&& commitment.equals(other.commitment)
-				&& Arrays.deepEquals(coinSignature, other.coinSignature);
+				&& coinSignature.equals(other.coinSignature);
 	}
 
 	@Override

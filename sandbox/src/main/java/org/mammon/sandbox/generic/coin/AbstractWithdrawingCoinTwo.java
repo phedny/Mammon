@@ -1,7 +1,5 @@
 package org.mammon.sandbox.generic.coin;
 
-import java.lang.reflect.Array;
-
 import org.mammon.AssetType;
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
@@ -21,6 +19,7 @@ import org.mammon.scheme.brands.PaymentHashFunction;
 import org.mammon.scheme.brands.SignatureHashFunction;
 import org.mammon.scheme.brands.accountholder.AccountHolderForBank;
 import org.mammon.scheme.brands.bank.Bank;
+import org.mammon.scheme.brands.coin.CoinSignature;
 
 public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
 		extends AbstractTransitionable<I> implements Identifiable<I>, Transitionable<I>, MessageEmitter {
@@ -99,12 +98,7 @@ public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends F
 		Group.Element<G> a_ = a.exponentiate(u).multiply(setup.getGenerators()[0].exponentiate(v));
 		Group.Element<G> b_ = b.exponentiate(s.multiply(u)).multiply(bigA.exponentiate(v));
 		FiniteField.Element<F> r_ = r.multiply(u).add(v);
-		Object[] coinSignature = (Object[]) Array.newInstance(Object.class, 4);
-		coinSignature[0] = z_;
-		coinSignature[1] = a_;
-		coinSignature[2] = b_;
-		coinSignature[3] = r_;
-		return newUnspentCoin(r, coinSignature);
+		return newUnspentCoin(r, newCoinSignature(z_, a_, b_, r_));
 	}
 	
 	public AbstractWithdrawingCoinTwo<G, F, I, T, H, H0> transition(BankWitnessesResponse<G> response) {
@@ -186,6 +180,8 @@ public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends F
 		return c;
 	}
 
-	protected abstract ExampleUnspentCoin newUnspentCoin(FiniteField.Element<F> r, Object[] coinSignature);
+	protected abstract ExampleUnspentCoin newUnspentCoin(FiniteField.Element<F> r, CoinSignature<G, F> coinSignature);
 
+	protected abstract AbstractCoinSignature<G, F> newCoinSignature(Group.Element<G> z, Group.Element<G> a, Group.Element<G> b, FiniteField.Element<F> r);
+	
 }

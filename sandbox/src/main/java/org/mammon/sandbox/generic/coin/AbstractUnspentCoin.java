@@ -17,6 +17,7 @@ import org.mammon.scheme.brands.SignatureHashFunction;
 import org.mammon.scheme.brands.accountholder.AccountHolder;
 import org.mammon.scheme.brands.accountholder.AccountHolderPrivate;
 import org.mammon.scheme.brands.bank.Bank;
+import org.mammon.scheme.brands.coin.CoinSignature;
 import org.mammon.scheme.brands.coin.UnspentCoin;
 
 public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
@@ -42,15 +43,16 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteFi
 	private final Group.Element<G> blindedIdentity;
 
 	private final Group.Element<G> commitment;
-	
+
 	private final FiniteField.Element<F> r;
 
-	private final Object[] coinSignature;
+	private final CoinSignature<G, F> coinSignature;
 
 	protected AbstractUnspentCoin(BrandsSchemeSetup<G, F, I, T, H, H0> setup,
 			AccountHolderPrivate<G, F, I, T, H, H0> bearer, Bank<G, F, I, T, H, H0> bank, I identity, I dualIdentity,
 			FiniteField.Element<F> blindingFactor, FiniteField.Element<F> x1, FiniteField.Element<F> x2,
-			Group.Element<G> blindedIdentity, Group.Element<G> commitment, FiniteField.Element<F> r, Object[] coinSignature) {
+			Group.Element<G> blindedIdentity, Group.Element<G> commitment, FiniteField.Element<F> r,
+			CoinSignature<G, F> coinSignature) {
 		this.setup = setup;
 		this.bearer = bearer;
 		this.bank = bank;
@@ -90,7 +92,7 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteFi
 	}
 
 	@Override
-	public Object[] getCoinSignature() {
+	public CoinSignature<G, F> getCoinSignature() {
 		return coinSignature;
 	}
 
