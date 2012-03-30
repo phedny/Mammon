@@ -1,8 +1,9 @@
 package org.mammon.math;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
+
+import org.mammon.math.util.PrimeFactors;
 
 public class G implements Group<G> {
 
@@ -70,7 +71,7 @@ public class G implements Group<G> {
 
 	private List<BigInteger> factorsOfTotientP() {
 		if (factorsOftotientP == null) {
-			factorsOftotientP = new ArrayList<BigInteger>();
+			factorsOftotientP = PrimeFactors.of(p.subtract(BigInteger.ONE));
 
 		}
 		return factorsOftotientP;
