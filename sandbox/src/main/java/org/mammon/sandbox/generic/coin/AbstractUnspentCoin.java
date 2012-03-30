@@ -15,7 +15,8 @@ import org.mammon.scheme.brands.bank.Bank;
 import org.mammon.scheme.brands.coin.UnspentCoin;
 
 public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteField<F>, S, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, S, T>, I>
-		implements UnspentCoin<G, F, S, T, H, H0> {
+		extends AbstractTransitionable<I> implements UnspentCoin<G, F, S, T, H, H0>, Identifiable<I>,
+		Transitionable<I>, DualIdentityTransitionable<I> {
 
 	private final BrandsSchemeSetup<G, F, S, T, H, H0> setup;
 

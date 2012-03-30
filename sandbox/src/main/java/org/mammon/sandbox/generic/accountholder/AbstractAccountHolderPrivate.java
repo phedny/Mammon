@@ -14,7 +14,7 @@ import org.mammon.scheme.brands.bank.Bank;
 
 public abstract class AbstractAccountHolderPrivate<G extends Group<G>, F extends FiniteField<F>, S, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, S, T>, I>
 		extends AbstractAccountHolderForBank<G, F, S, T, H, H0, I> implements AccountHolderPrivate<G, F, S, T, H, H0>,
-		Identifiable<I>, Transactable {
+		Identifiable<I>, Transactable<I> {
 
 	private final FiniteField.Element<F> privateKey;
 

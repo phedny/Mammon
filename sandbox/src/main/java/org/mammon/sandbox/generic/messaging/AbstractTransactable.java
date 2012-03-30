@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 import org.mammon.messaging.Message;
 import org.mammon.messaging.Transactable;
 
-public abstract class AbstractTransactable implements Transactable {
+public abstract class AbstractTransactable<I> implements Transactable<I> {
 
 	@Override
 	public final Object transact(Message message) {

@@ -15,7 +15,7 @@ import org.mammon.scheme.brands.accountholder.AccountHolderPrivate;
 import org.mammon.scheme.brands.bank.Bank;
 
 public abstract class AbstractOpeningAccountHolder<G extends Group<G>, F extends FiniteField<F>, S, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, S, T>, I>
-		extends AbstractTransitionable implements Identifiable<I>, Transitionable, MessageEmitter {
+		extends AbstractTransitionable<I> implements Identifiable<I>, Transitionable<I>, MessageEmitter {
 
 	private final BrandsSchemeSetup<G, F, S, T, H, H0> setup;
 

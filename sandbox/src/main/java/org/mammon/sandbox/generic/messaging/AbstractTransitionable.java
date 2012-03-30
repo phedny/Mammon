@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 import org.mammon.messaging.Message;
 import org.mammon.messaging.Transitionable;
 
-public abstract class AbstractTransitionable implements Transitionable {
+public abstract class AbstractTransitionable<I> implements Transitionable<I> {
 
 	@Override
 	public final Object transition(Message message) {

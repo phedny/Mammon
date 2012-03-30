@@ -22,7 +22,7 @@ import org.mammon.scheme.brands.bank.BankPrivate;
 
 public abstract class AbstractBankPrivate<G extends Group<G>, F extends FiniteField<F>, S, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, S, T>, I>
 		extends AbstractBank<G, F, S, T, H, H0, I> implements BankPrivate<G, F, S, T, H, H0>, Identifiable<I>,
-		Transactable {
+		Transactable<I> {
 
 	private final FiniteField.Element<F> privateKey;
 	private Set<Group.Element<G>> knownIdentities = new HashSet<Group.Element<G>>();
