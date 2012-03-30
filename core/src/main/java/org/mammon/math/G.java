@@ -1,13 +1,15 @@
 package org.mammon.math;
 
 import java.math.BigInteger;
-
-import org.mammon.scheme.brands.rand.RandomGenerator;
+import java.util.ArrayList;
+import java.util.List;
 
 public class G implements Group<G> {
 
 	private final BigInteger q;
 	private final BigInteger p;
+	private Group.Element<G> primitiveRoot;
+	private List<BigInteger> factorsOfP;
 
 	public G(int q, int p) {
 		this(BigInteger.valueOf(q), BigInteger.valueOf(p));
@@ -37,11 +39,45 @@ public class G implements Group<G> {
 
 	@Override
 	public Group.Element<G> getGenerator() {
-		return null;
+		Group.Element<G> primitiveRoot = getPrimitiveRoot();
+		return primitiveRoot; // TODO exponentiate with p / q
+	}
+
+	private Group.Element<G> getPrimitiveRoot() {
+		if (primitiveRoot == null) {
+			primitiveRoot = generatePrimitiveRoot();
+		}
+		return primitiveRoot;
+	}
+
+	private Group.Element<G> generatePrimitiveRoot() {
+		BigInteger candidate = BigInteger.valueOf(2);
+		while (!isPrimitiveRoot(candidate)) {
+			candidate = candidate.add(BigInteger.ONE);
+		}
+		return element(candidate);
+	}
+
+	private boolean isPrimitiveRoot(BigInteger candidate) {
+		List<BigInteger> factors = factorsOfP();
+		for (BigInteger factor : factors) {
+			if (p.mod(factor).equals(BigInteger.ZERO)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private List<BigInteger> factorsOfP() {
+		if (factorsOfP == null) {
+			factorsOfP = new ArrayList<BigInteger>();
+
+		}
+		return factorsOfP;
 	}
 
 	@Override
-	public Group.Element<G> getRandomElement(RandomGenerator randomGenerator) {
+	public Group.Element<G> getRandomElement() {
 		// TODO Auto-generated method stub
 		return null;
 	}

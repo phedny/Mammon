@@ -30,4 +30,11 @@ public class GTest {
 
 		assertEquals(group, identity.getGroup());
 	}
+
+	@Test
+	public void shouldBeAbleToReturnTheGeneratorOfTheGroup() {
+		Group.Element<G> generator = group.getGenerator();
+
+		assertEquals(group, generator.getGroup());
+	}
 }
