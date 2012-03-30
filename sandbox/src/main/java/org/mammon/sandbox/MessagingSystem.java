@@ -101,6 +101,13 @@ public class MessagingSystem<I> {
 					if (newObject instanceof Identifiable<?>) {
 						Identifiable<I> newIdentifiable = (Identifiable<I>) newObject;
 						objectMap.put(newIdentifiable.getIdentity(), newIdentifiable);
+						if (newObject instanceof Transitionable && destination.equals(newIdentifiable.getIdentity())) {
+							Object testState = ((Transitionable) newObject).transition(message);
+							if (testState == null || !testState.equals(newObject)) {
+								System.err.println(message + " transitioned " + destObj + " into " + newObject
+										+ ", but fails Redeliverable requirement");
+							}
+						}
 					}
 					enteredState(newObject, replyDestination);
 				}
