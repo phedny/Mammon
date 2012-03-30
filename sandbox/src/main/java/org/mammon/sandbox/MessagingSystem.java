@@ -8,6 +8,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.mammon.messaging.DirectedMessage;
+import org.mammon.messaging.DualIdentityTransitionable;
 import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.Message;
 import org.mammon.messaging.MessageEmitter;
@@ -95,14 +96,25 @@ public class MessagingSystem<I> {
 					newObject = t.transition(message);
 					leftState(destObj);
 					objectMap.remove(destination);
+					if (destObj instanceof DualIdentityTransitionable<?>) {
+						Transitionable<I> secT = ((DualIdentityTransitionable<I>) destObj).getSecondaryTransitionable();
+						objectMap.remove(secT.getIdentity());
+					}
 				}
 
 				if (newObject != null) {
 					if (newObject instanceof Identifiable<?>) {
 						Identifiable<I> newIdentifiable = (Identifiable<I>) newObject;
 						objectMap.put(newIdentifiable.getIdentity(), newIdentifiable);
-						if (newObject instanceof Transitionable && destination.equals(newIdentifiable.getIdentity())) {
-							Object testState = ((Transitionable) newObject).transition(message);
+						Identifiable<I> testObj = newIdentifiable;
+						if (newObject instanceof DualIdentityTransitionable<?>) {
+							Transitionable<I> secT = ((DualIdentityTransitionable<I>) newObject)
+									.getSecondaryTransitionable();
+							objectMap.put(secT.getIdentity(), secT);
+							testObj = secT;
+						}
+						if (newObject instanceof Transitionable && destination.equals(testObj.getIdentity())) {
+							Object testState = ((Transitionable) testObj).transition(message);
 							if (testState == null || !testState.equals(newObject)) {
 								System.err.println(message + " transitioned " + destObj + " into " + newObject
 										+ ", but fails Redeliverable requirement");

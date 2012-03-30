@@ -5,7 +5,12 @@ import java.lang.reflect.Array;
 import org.mammon.AssetType;
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
+import org.mammon.messaging.DualIdentityTransitionable;
+import org.mammon.messaging.Identifiable;
+import org.mammon.messaging.Transitionable;
 import org.mammon.sandbox.HashCodeUtil;
+import org.mammon.sandbox.generic.messaging.AbstractTransitionable;
+import org.mammon.sandbox.messages.IssueCoinsResponse;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
 import org.mammon.scheme.brands.PaymentHashFunction;
 import org.mammon.scheme.brands.SignatureHashFunction;
@@ -24,6 +29,10 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteFi
 
 	private final Bank<G, F, S, T, H, H0> bank;
 
+	private final I identity;
+
+	private final I dualIdentity;
+
 	private final FiniteField.Element<F> s;
 
 	private final FiniteField.Element<F> x1;
@@ -33,21 +42,26 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteFi
 	private final Group.Element<G> blindedIdentity;
 
 	private final Group.Element<G> commitment;
+	
+	private final FiniteField.Element<F> r;
 
 	private final Object[] coinSignature;
 
 	protected AbstractUnspentCoin(BrandsSchemeSetup<G, F, S, T, H, H0> setup,
-			AccountHolderPrivate<G, F, S, T, H, H0> bearer, Bank<G, F, S, T, H, H0> bank,
+			AccountHolderPrivate<G, F, S, T, H, H0> bearer, Bank<G, F, S, T, H, H0> bank, I identity, I dualIdentity,
 			FiniteField.Element<F> blindingFactor, FiniteField.Element<F> x1, FiniteField.Element<F> x2,
-			Group.Element<G> blindedIdentity, Group.Element<G> commitment, Object[] coinSignature) {
+			Group.Element<G> blindedIdentity, Group.Element<G> commitment, FiniteField.Element<F> r, Object[] coinSignature) {
 		this.setup = setup;
 		this.bearer = bearer;
 		this.bank = bank;
+		this.identity = identity;
+		this.dualIdentity = dualIdentity;
 		this.s = blindingFactor;
 		this.x1 = x1;
 		this.x2 = x2;
 		this.blindedIdentity = blindedIdentity;
 		this.commitment = commitment;
+		this.r = r;
 		this.coinSignature = coinSignature;
 	}
 
@@ -117,6 +131,16 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteFi
 	}
 
 	@Override
+	public I getIdentity() {
+		return identity;
+	}
+
+	@Override
+	public Transitionable<I> getSecondaryTransitionable() {
+		return new SecondaryTransitionable();
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == null || !(obj instanceof AbstractUnspentCoin<?, ?, ?, ?, ?, ?, ?>)) {
 			return false;
@@ -136,6 +160,21 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteFi
 		hashCode = HashCodeUtil.hash(hashCode, x1);
 		hashCode = HashCodeUtil.hash(hashCode, x2);
 		return hashCode;
+	}
+
+	protected final class SecondaryTransitionable extends AbstractTransitionable<I> {
+		@Override
+		public I getIdentity() {
+			return dualIdentity;
+		}
+
+		public Object transition(IssueCoinsResponse<F> response) {
+			if (r.equals(response.getResponse())) {
+				return AbstractUnspentCoin.this;
+			} else {
+				return null;
+			}
+		}
 	}
 
 }

@@ -35,9 +35,10 @@ public class WithdrawingCoinTwo
 	}
 
 	@Override
-	protected ExampleUnspentCoin newUnspentCoin(Object[] coinSignature) {
+	protected ExampleUnspentCoin newUnspentCoin(FiniteField.Element<ExampleFiniteField> r, Object[] coinSignature) {
 		return new ExampleUnspentCoin((ExampleSetup) getSetup(), (ExampleAccountHolder) getAccountHolder(),
-				(ExampleBank) getBank(), getBlindingFactor(), getX1(), getX2(), getBigA(), getBigB(), coinSignature);
+				(ExampleBank) getBank(), identity, getBlindingFactor(), getX1(), getX2(), getBigA(), getBigB(), r,
+				coinSignature);
 	}
 
 }

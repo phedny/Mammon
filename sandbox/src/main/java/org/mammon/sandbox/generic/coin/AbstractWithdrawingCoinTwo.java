@@ -80,8 +80,8 @@ public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends F
 	public Object transition(IssueCoinsResponse<F> response) {
 
 		// Tested by account holder
-		ExampleGroup.ExampleElement left = (ExampleElement) setup.getGenerators()[0].exponentiate(response
-				.getResponse());
+		FiniteField.Element<F> r = response.getResponse();
+		ExampleGroup.ExampleElement left = (ExampleElement) setup.getGenerators()[0].exponentiate(r);
 		ExampleGroup.ExampleElement right = (ExampleElement) bank.getPublicKey().exponentiate(c).multiply(a);
 		System.out.println(left.simplify() + " <= from: " + left);
 		System.out.println(right.simplify() + " <= from: " + right);
@@ -89,7 +89,7 @@ public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends F
 
 		// Tested by account holder
 		left = (ExampleElement) accountHolder.getPublicKey().multiply(setup.getGenerators()[2]).exponentiate(
-				response.getResponse());
+				r);
 		right = (ExampleElement) accountHolder.getBlindedIdentity().exponentiate(c).multiply(b);
 		System.out.println(left.simplify() + " <= from: " + left);
 		System.out.println(right.simplify() + " <= from: " + right);
@@ -98,13 +98,13 @@ public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends F
 		Group.Element<G> z_ = accountHolder.getBlindedIdentity().exponentiate(s);
 		Group.Element<G> a_ = a.exponentiate(u).multiply(setup.getGenerators()[0].exponentiate(v));
 		Group.Element<G> b_ = b.exponentiate(s.multiply(u)).multiply(bigA.exponentiate(v));
-		FiniteField.Element<F> r_ = response.getResponse().multiply(u).add(v);
+		FiniteField.Element<F> r_ = r.multiply(u).add(v);
 		Object[] coinSignature = (Object[]) Array.newInstance(Object.class, 4);
 		coinSignature[0] = z_;
 		coinSignature[1] = a_;
 		coinSignature[2] = b_;
 		coinSignature[3] = r_;
-		return newUnspentCoin(coinSignature);
+		return newUnspentCoin(r, coinSignature);
 	}
 	
 	public AbstractWithdrawingCoinTwo<G, F, S, T, H, H0, I> transition(BankWitnessesResponse<G> response) {
@@ -186,6 +186,6 @@ public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends F
 		return c;
 	}
 
-	protected abstract ExampleUnspentCoin newUnspentCoin(Object[] coinSignature);
+	protected abstract ExampleUnspentCoin newUnspentCoin(FiniteField.Element<F> r, Object[] coinSignature);
 
 }
