@@ -1,56 +1,13 @@
 package org.mammon.sandbox.objects.example;
 
-import org.mammon.math.FiniteField;
-import org.mammon.math.Group;
-import org.mammon.sandbox.HashCodeUtil;
-import org.mammon.scheme.brands.BrandsSchemeSetup;
-import org.mammon.scheme.brands.PaymentHashFunction;
-import org.mammon.scheme.brands.SignatureHashFunction;
-import org.mammon.scheme.brands.shop.Shop;
+import org.mammon.sandbox.generic.shop.AbstractShop;
 
-public class ExampleShop<G extends Group<G>, F extends FiniteField<F>, S, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, S, T>>
-		implements Shop<G, F, S, T, H, H0> {
+public class ExampleShop
+		extends
+		AbstractShop<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
-	private final BrandsSchemeSetup<G, F, S, T, H, H0> setup;
-
-	private final S identity;
-
-	public ExampleShop(BrandsSchemeSetup<G, F, S, T, H, H0> setup, S identity) {
-		this.setup = setup;
-		this.identity = identity;
-	}
-
-	@Override
-	public S getIdentity() {
-		return identity;
-	}
-
-	@Override
-	public BrandsSchemeSetup<G, F, S, T, H, H0> getSetup() {
-		return setup;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof ExampleShop<?, ?, ?, ?, ?, ?>)) {
-			return false;
-		}
-		ExampleShop<?, ?, ?, ?, ?, ?> other = (ExampleShop<?, ?, ?, ?, ?, ?>) obj;
-		return setup.equals(other.setup) && identity.equals(other.identity);
-	}
-
-	@Override
-	public int hashCode() {
-		int hashCode = HashCodeUtil.SEED;
-		hashCode = HashCodeUtil.hash(hashCode, setup);
-		hashCode = HashCodeUtil.hash(hashCode, identity);
-		return hashCode;
-	}
-
-	@Override
-	public String toString() {
-		return "ExampleShop(" + setup.hashCode() + "," + identity.toString()
-				+ ")";
+	public ExampleShop(ExampleSetup setup, String identity) {
+		super(setup, identity);
 	}
 
 }

@@ -20,15 +20,15 @@ import org.mammon.scheme.brands.PaymentHashFunction;
 import org.mammon.scheme.brands.SignatureHashFunction;
 import org.mammon.scheme.brands.bank.BankPrivate;
 
-public abstract class AbstractBankPrivate<G extends Group<G>, F extends FiniteField<F>, S, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, S, T>, I>
-		extends AbstractBank<G, F, S, T, H, H0, I> implements BankPrivate<G, F, S, T, H, H0>, Identifiable<I>,
+public abstract class AbstractBankPrivate<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
+		extends AbstractBank<G, F, I, T, H, H0> implements BankPrivate<G, F, I, T, H, H0>, Identifiable<I>,
 		Transactable<I> {
 
 	private final FiniteField.Element<F> privateKey;
 	private Set<Group.Element<G>> knownIdentities = new HashSet<Group.Element<G>>();
 	private Map<Group.Element<G>, FiniteField.Element<F>> issuedWitnesses = new HashMap<Group.Element<G>, FiniteField.Element<F>>();
 
-	protected AbstractBankPrivate(BrandsSchemeSetup<G, F, S, T, H, H0> setup, FiniteField.Element<F> privateKey) {
+	protected AbstractBankPrivate(BrandsSchemeSetup<G, F, I, T, H, H0> setup, FiniteField.Element<F> privateKey) {
 		super(setup, setup.getGenerators()[0].exponentiate(privateKey));
 		this.privateKey = privateKey;
 	}

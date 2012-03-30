@@ -12,17 +12,17 @@ import org.mammon.scheme.brands.SignatureHashFunction;
 import org.mammon.scheme.brands.accountholder.AccountHolderPrivate;
 import org.mammon.scheme.brands.bank.Bank;
 
-public abstract class AbstractAccountHolderPrivate<G extends Group<G>, F extends FiniteField<F>, S, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, S, T>, I>
-		extends AbstractAccountHolderForBank<G, F, S, T, H, H0, I> implements AccountHolderPrivate<G, F, S, T, H, H0>,
+public abstract class AbstractAccountHolderPrivate<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
+		extends AbstractAccountHolderForBank<G, F, I, T, H, H0> implements AccountHolderPrivate<G, F, I, T, H, H0>,
 		Identifiable<I>, Transactable<I> {
 
 	private final FiniteField.Element<F> privateKey;
 
-	private final Bank<G, F, S, T, H, H0> bank;
+	private final Bank<G, F, I, T, H, H0> bank;
 
-	protected AbstractAccountHolderPrivate(BrandsSchemeSetup<G, F, S, T, H, H0> setup,
+	protected AbstractAccountHolderPrivate(BrandsSchemeSetup<G, F, I, T, H, H0> setup,
 			FiniteField.Element<F> privateKey, Group.Element<G> publicKey, Group.Element<G> blindedIdentity,
-			Bank<G, F, S, T, H, H0> bank) {
+			Bank<G, F, I, T, H, H0> bank) {
 		super(setup, publicKey, blindedIdentity);
 		this.privateKey = privateKey;
 		this.bank = bank;
@@ -33,15 +33,15 @@ public abstract class AbstractAccountHolderPrivate<G extends Group<G>, F extends
 		return privateKey;
 	}
 
-	public AbstractWithdrawingCoinOne<G, F, S, T, H, H0, I> transact(ObtainCoinsMessage<String> request) {
+	public AbstractWithdrawingCoinOne<G, F, I, T, H, H0> transact(ObtainCoinsMessage<String> request) {
 		return newWithdrawingCoinOne(request);
 	}
 
-	protected Bank<G, F, S, T, H, H0> getBank() {
+	protected Bank<G, F, I, T, H, H0> getBank() {
 		return bank;
 	}
 
-	protected abstract AbstractWithdrawingCoinOne<G, F, S, T, H, H0, I> newWithdrawingCoinOne(
+	protected abstract AbstractWithdrawingCoinOne<G, F, I, T, H, H0> newWithdrawingCoinOne(
 			ObtainCoinsMessage<String> request);
 
 }

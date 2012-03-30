@@ -14,7 +14,7 @@ import org.mammon.sandbox.objects.example.ExampleUnspentCoin;
 
 public class WithdrawingCoinTwo
 		extends
-		AbstractWithdrawingCoinTwo<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction, String> {
+		AbstractWithdrawingCoinTwo<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	private final String identity;
 

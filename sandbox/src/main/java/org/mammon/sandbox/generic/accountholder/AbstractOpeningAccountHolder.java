@@ -14,18 +14,18 @@ import org.mammon.scheme.brands.SignatureHashFunction;
 import org.mammon.scheme.brands.accountholder.AccountHolderPrivate;
 import org.mammon.scheme.brands.bank.Bank;
 
-public abstract class AbstractOpeningAccountHolder<G extends Group<G>, F extends FiniteField<F>, S, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, S, T>, I>
+public abstract class AbstractOpeningAccountHolder<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
 		extends AbstractTransitionable<I> implements Identifiable<I>, Transitionable<I>, MessageEmitter {
 
-	private final BrandsSchemeSetup<G, F, S, T, H, H0> setup;
+	private final BrandsSchemeSetup<G, F, I, T, H, H0> setup;
 
 	private final FiniteField.Element<F> privateKey;
 
 	private final Group.Element<G> publicKey;
 
-	private final Bank<G, F, S, T, H, H0> bank;
+	private final Bank<G, F, I, T, H, H0> bank;
 
-	public AbstractOpeningAccountHolder(BrandsSchemeSetup<G, F, S, T, H, H0> setup, Bank<G, F, S, T, H, H0> bank,
+	public AbstractOpeningAccountHolder(BrandsSchemeSetup<G, F, I, T, H, H0> setup, Bank<G, F, I, T, H, H0> bank,
 			FiniteField.Element<F> privateKey) {
 		this.setup = setup;
 		this.bank = bank;
@@ -42,7 +42,7 @@ public abstract class AbstractOpeningAccountHolder<G extends Group<G>, F extends
 		return new BlindedIdentityRequest<G, I>(((Identifiable<I>) bank).getIdentity(), publicKey);
 	}
 
-	protected BrandsSchemeSetup<G, F, S, T, H, H0> getSetup() {
+	protected BrandsSchemeSetup<G, F, I, T, H, H0> getSetup() {
 		return setup;
 	}
 
@@ -54,10 +54,10 @@ public abstract class AbstractOpeningAccountHolder<G extends Group<G>, F extends
 		return publicKey;
 	}
 
-	protected Bank<G, F, S, T, H, H0> getBank() {
+	protected Bank<G, F, I, T, H, H0> getBank() {
 		return bank;
 	}
 
-	protected abstract AccountHolderPrivate<G, F, S, T, H, H0> newAccountHolder(Group.Element<G> element);
+	protected abstract AccountHolderPrivate<G, F, I, T, H, H0> newAccountHolder(Group.Element<G> element);
 
 }

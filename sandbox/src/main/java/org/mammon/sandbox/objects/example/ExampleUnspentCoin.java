@@ -8,7 +8,7 @@ import org.mammon.sandbox.generic.coin.AbstractUnspentCoin;
 
 public class ExampleUnspentCoin
 		extends
-		AbstractUnspentCoin<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction, String> {
+		AbstractUnspentCoin<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	public ExampleUnspentCoin(ExampleSetup setup, ExampleAccountHolder bearer, ExampleBank bank, String dualIdentity,
 			FiniteField.Element<ExampleFiniteField> blindingFactor, FiniteField.Element<ExampleFiniteField> x1,

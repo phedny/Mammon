@@ -8,8 +8,8 @@ import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
 import org.mammon.sandbox.HashCodeUtil;
 import org.mammon.sandbox.generic.accountholder.AbstractAccountHolderPrivate;
+import org.mammon.sandbox.generic.shop.AbstractShop;
 import org.mammon.sandbox.objects.example.ExampleGroup.ExampleElement;
-import org.mammon.sandbox.objects.example.ExampleShop;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
 import org.mammon.scheme.brands.PaymentHashFunction;
 import org.mammon.scheme.brands.SignatureHashFunction;
@@ -18,14 +18,14 @@ import org.mammon.scheme.brands.coin.SpentCoin;
 import org.mammon.scheme.brands.coin.UnspentCoin;
 import org.mammon.scheme.brands.shop.Shop;
 
-public class AbstractSpentCoin<G extends Group<G>, F extends FiniteField<F>, S, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, S, T>, I>
-		implements SpentCoin<G, F, S, T, H, H0> {
+public class AbstractSpentCoin<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
+		implements SpentCoin<G, F, I, T, H, H0> {
 
-	private final BrandsSchemeSetup<G, F, S, T, H, H0> setup;
+	private final BrandsSchemeSetup<G, F, I, T, H, H0> setup;
 
-	private final Bank<G, F, S, T, H, H0> bank;
+	private final Bank<G, F, I, T, H, H0> bank;
 
-	private final Shop<G, F, S, T, H, H0> bearer;
+	private final Shop<G, F, I, T, H, H0> bearer;
 
 	private final T time;
 
@@ -42,9 +42,9 @@ public class AbstractSpentCoin<G extends Group<G>, F extends FiniteField<F>, S, 
 	private final Number faceValue;
 
 	@SuppressWarnings("unchecked")
-	public AbstractSpentCoin(UnspentCoin<G, F, S, T, H, H0> basedOnCoin,
-			Bank<G, F, S, T, H, H0> bank,
-			ExampleShop<G, F, S, T, H, H0> bearer, T time) {
+	public AbstractSpentCoin(UnspentCoin<G, F, I, T, H, H0> basedOnCoin,
+			Bank<G, F, I, T, H, H0> bank,
+			AbstractShop<G, F, I, T, H, H0> bearer, T time) {
 		setup = basedOnCoin.getSetup();
 		this.bank = bank;
 		this.bearer = bearer;
@@ -65,7 +65,7 @@ public class AbstractSpentCoin<G extends Group<G>, F extends FiniteField<F>, S, 
 				FiniteField.Element.class, 2);
 		spendingCommitments[0] = d
 				.multiply(
-						((AbstractAccountHolderPrivate<G, F, S, T, H, H0, I>) basedOnCoin
+						((AbstractAccountHolderPrivate<G, F, I, T, H, H0>) basedOnCoin
 								.getBearer()).getPrivateKey())
 				.multiply(basedOnCoin.getBlindingFactor())
 				.add(basedOnCoin.getPayerWitness()[0]);
@@ -85,7 +85,7 @@ public class AbstractSpentCoin<G extends Group<G>, F extends FiniteField<F>, S, 
 	}
 
 	@Override
-	public Shop<G, F, S, T, H, H0> getBearer() {
+	public Shop<G, F, I, T, H, H0> getBearer() {
 		return bearer;
 	}
 
@@ -115,12 +115,12 @@ public class AbstractSpentCoin<G extends Group<G>, F extends FiniteField<F>, S, 
 	}
 
 	@Override
-	public Bank<G, F, S, T, H, H0> getIssuer() {
+	public Bank<G, F, I, T, H, H0> getIssuer() {
 		return bank;
 	}
 
 	@Override
-	public BrandsSchemeSetup<G, F, S, T, H, H0> getSetup() {
+	public BrandsSchemeSetup<G, F, I, T, H, H0> getSetup() {
 		return setup;
 	}
 
@@ -142,10 +142,10 @@ public class AbstractSpentCoin<G extends Group<G>, F extends FiniteField<F>, S, 
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null
-				|| !(obj instanceof AbstractSpentCoin<?, ?, ?, ?, ?, ?, ?>)) {
+				|| !(obj instanceof AbstractSpentCoin<?, ?, ?, ?, ?, ?>)) {
 			return false;
 		}
-		AbstractSpentCoin<?, ?, ?, ?, ?, ?, ?> other = (AbstractSpentCoin<?, ?, ?, ?, ?, ?, ?>) obj;
+		AbstractSpentCoin<?, ?, ?, ?, ?, ?> other = (AbstractSpentCoin<?, ?, ?, ?, ?, ?>) obj;
 		return setup.equals(other.setup) && bank.equals(other.bank)
 				&& bearer.equals(other.bearer)
 				&& blindedIdentity.equals(other.blindedIdentity)

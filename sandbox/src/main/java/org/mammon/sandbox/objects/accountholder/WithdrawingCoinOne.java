@@ -16,7 +16,7 @@ import org.mammon.sandbox.objects.example.ExampleSignatureHashFunction;
 
 public class WithdrawingCoinOne
 		extends
-		AbstractWithdrawingCoinOne<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction, String> {
+		AbstractWithdrawingCoinOne<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	private final String identity = UUID.randomUUID().toString();
 
@@ -31,7 +31,7 @@ public class WithdrawingCoinOne
 	}
 
 	@Override
-	protected AbstractWithdrawingCoinTwo<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction, String> newWithdrawingCoinTwo(
+	protected AbstractWithdrawingCoinTwo<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newWithdrawingCoinTwo(
 			Group.Element<ExampleGroup> a, Group.Element<ExampleGroup> b, FiniteField.Element<ExampleFiniteField> c,
 			FiniteField.Element<ExampleFiniteField> s, FiniteField.Element<ExampleFiniteField> x1,
 			FiniteField.Element<ExampleFiniteField> x2, FiniteField.Element<ExampleFiniteField> u,

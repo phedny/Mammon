@@ -9,7 +9,7 @@ import org.mammon.sandbox.objects.accountholder.WithdrawingCoinOne;
 
 public class ExampleAccountHolder
 		extends
-		AbstractAccountHolderPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction, String> {
+		AbstractAccountHolderPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	public ExampleAccountHolder(ExampleSetup setup,
 			FiniteField.Element<ExampleFiniteField> privateKey,
@@ -24,7 +24,7 @@ public class ExampleAccountHolder
 	}
 
 	@Override
-	protected AbstractWithdrawingCoinOne<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction, String> newWithdrawingCoinOne(
+	protected AbstractWithdrawingCoinOne<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newWithdrawingCoinOne(
 			ObtainCoinsMessage<String> request) {
 		return new WithdrawingCoinOne(this, (ExampleBank) getBank(),
 				getPublicKey(), request.getCount());

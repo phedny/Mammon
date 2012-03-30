@@ -19,15 +19,15 @@ import org.mammon.scheme.brands.accountholder.AccountHolderPrivate;
 import org.mammon.scheme.brands.bank.Bank;
 import org.mammon.scheme.brands.coin.UnspentCoin;
 
-public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteField<F>, S, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, S, T>, I>
-		extends AbstractTransitionable<I> implements UnspentCoin<G, F, S, T, H, H0>, Identifiable<I>,
+public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
+		extends AbstractTransitionable<I> implements UnspentCoin<G, F, I, T, H, H0>, Identifiable<I>,
 		Transitionable<I>, DualIdentityTransitionable<I> {
 
-	private final BrandsSchemeSetup<G, F, S, T, H, H0> setup;
+	private final BrandsSchemeSetup<G, F, I, T, H, H0> setup;
 
-	private final AccountHolderPrivate<G, F, S, T, H, H0> bearer;
+	private final AccountHolderPrivate<G, F, I, T, H, H0> bearer;
 
-	private final Bank<G, F, S, T, H, H0> bank;
+	private final Bank<G, F, I, T, H, H0> bank;
 
 	private final I identity;
 
@@ -47,8 +47,8 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteFi
 
 	private final Object[] coinSignature;
 
-	protected AbstractUnspentCoin(BrandsSchemeSetup<G, F, S, T, H, H0> setup,
-			AccountHolderPrivate<G, F, S, T, H, H0> bearer, Bank<G, F, S, T, H, H0> bank, I identity, I dualIdentity,
+	protected AbstractUnspentCoin(BrandsSchemeSetup<G, F, I, T, H, H0> setup,
+			AccountHolderPrivate<G, F, I, T, H, H0> bearer, Bank<G, F, I, T, H, H0> bank, I identity, I dualIdentity,
 			FiniteField.Element<F> blindingFactor, FiniteField.Element<F> x1, FiniteField.Element<F> x2,
 			Group.Element<G> blindedIdentity, Group.Element<G> commitment, FiniteField.Element<F> r, Object[] coinSignature) {
 		this.setup = setup;
@@ -66,7 +66,7 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteFi
 	}
 
 	@Override
-	public AccountHolder<G, F, S, T, H, H0> getBearer() {
+	public AccountHolder<G, F, I, T, H, H0> getBearer() {
 		return bearer;
 	}
 
@@ -100,12 +100,12 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteFi
 	}
 
 	@Override
-	public Bank<G, F, S, T, H, H0> getIssuer() {
+	public Bank<G, F, I, T, H, H0> getIssuer() {
 		return bank;
 	}
 
 	@Override
-	public BrandsSchemeSetup<G, F, S, T, H, H0> getSetup() {
+	public BrandsSchemeSetup<G, F, I, T, H, H0> getSetup() {
 		return setup;
 	}
 
@@ -142,10 +142,10 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteFi
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof AbstractUnspentCoin<?, ?, ?, ?, ?, ?, ?>)) {
+		if (obj == null || !(obj instanceof AbstractUnspentCoin<?, ?, ?, ?, ?, ?>)) {
 			return false;
 		}
-		AbstractUnspentCoin<?, ?, ?, ?, ?, ?, ?> other = (AbstractUnspentCoin<?, ?, ?, ?, ?, ?, ?>) obj;
+		AbstractUnspentCoin<?, ?, ?, ?, ?, ?> other = (AbstractUnspentCoin<?, ?, ?, ?, ?, ?>) obj;
 		return setup.equals(other.setup) && bank.equals(other.bank) && bearer.equals(other.bearer) && s.equals(other.s)
 				&& x1.equals(other.x1) && x2.equals(other.x2);
 	}

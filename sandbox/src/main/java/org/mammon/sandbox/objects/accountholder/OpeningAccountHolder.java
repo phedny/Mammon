@@ -13,7 +13,7 @@ import org.mammon.scheme.brands.accountholder.AccountHolderPrivate;
 
 public class OpeningAccountHolder
 		extends
-		AbstractOpeningAccountHolder<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction, String> {
+		AbstractOpeningAccountHolder<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	public OpeningAccountHolder(ExampleSetup setup, ExampleBank bank) {
 		super(setup, bank, setup.getFiniteField().getRandomElement());
