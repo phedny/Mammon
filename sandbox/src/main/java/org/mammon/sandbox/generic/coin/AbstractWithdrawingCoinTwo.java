@@ -10,6 +10,7 @@ import org.mammon.messaging.Message;
 import org.mammon.messaging.MessageEmitter;
 import org.mammon.messaging.Transitionable;
 import org.mammon.sandbox.generic.messaging.AbstractTransitionable;
+import org.mammon.sandbox.messages.BankWitnessesResponse;
 import org.mammon.sandbox.messages.IssueCoinsRequest;
 import org.mammon.sandbox.messages.IssueCoinsResponse;
 import org.mammon.sandbox.objects.example.ExampleGroup;
@@ -104,6 +105,14 @@ public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends F
 		coinSignature[2] = b_;
 		coinSignature[3] = r_;
 		return newUnspentCoin(coinSignature);
+	}
+	
+	public AbstractWithdrawingCoinTwo<G, F, S, T, H, H0, I> transition(BankWitnessesResponse<G> response) {
+		if (a.equals(response.getValA()) && b.equals(response.getValB())) {
+			return this;
+		} else {
+			return null;
+		}
 	}
 
 	@Override
