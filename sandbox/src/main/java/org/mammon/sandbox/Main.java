@@ -60,10 +60,12 @@ public class Main {
 				System.out.println("New IOU: " + object.toString() + " (by " + enteredBy + ")");
 				ExampleUnspentCoin coin = (ExampleUnspentCoin) object;
 				System.out.println("         " + coin);
+				System.out.println("Validity:" + coin.verifyCoinSignature());
 
 				ExampleShop shop = new ExampleShop(setup, "SHOP");
 				ExampleSpentCoin coin2 = new ExampleSpentCoin(coin, bank, shop, Long.valueOf(new Date().getTime()));
 				System.out.println("         " + coin2);
+				System.out.println("Validity:" + coin2.verifyCoinSignature());
 
 				// Trigger shutdown of messaging system.
 				messaging.shutdown();
