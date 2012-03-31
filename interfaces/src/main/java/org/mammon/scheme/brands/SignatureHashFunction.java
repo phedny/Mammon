@@ -18,12 +18,15 @@ public interface SignatureHashFunction<G extends Group<G>, F extends FiniteField
 	 * @param commitment
 	 *            the commitment $B$ to the secret values of the coin known to
 	 *            the AccountHolderPrivate.
-	 * @param secretValues
-	 *            array of length 3 containing the secret values $z'$, $a'$ and
-	 *            $b'$.
+	 * @param z
+	 *            the value $z$ for the signature.
+	 * @param a
+	 *            the value $b$ for the signature.
+	 * @param b
+	 *            the value $a$ for the signature.
 	 * @return hashed value.
 	 */
-	FiniteField.Element<F> hash(Group.Element<G> blindedIdentity,
-			Group.Element<G> commitment, Group.Element<G>... secretValues);
+	FiniteField.Element<F> hash(Group.Element<G> blindedIdentity, Group.Element<G> commitment, Group.Element<G> z,
+			Group.Element<G> a, Group.Element<G> b);
 
 }

@@ -24,7 +24,7 @@ public class ExampleUnspentCoin
 	public String toString() {
 		return "I, " + getIssuer() + ", owe the bearer of this IOU, " + getBearer() + ", the repayment of "
 				+ getAssetType().getCallSign() + " " + getFaceValue() + " [BF=" + getBlindingFactor() + ", PW=("
-				+ getPayerWitness()[0] + "," + getPayerWitness()[1] + "), COIN=(" + getBlindedIdentity() + ","
+				+ getPayerWitness1() + "," + getPayerWitness2() + "), COIN=(" + getBlindedIdentity() + ","
 				+ getCommitment() + ",(" + getCoinSignature().getValZ() + "," + getCoinSignature().getValA() + ","
 				+ getCoinSignature().getValB() + "," + getCoinSignature().getValR() + "))]";
 	}

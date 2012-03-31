@@ -1,7 +1,5 @@
 package org.mammon.scheme.brands.generic.coin;
 
-import java.lang.reflect.Array;
-
 import org.mammon.AssetType;
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
@@ -78,12 +76,13 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteFi
 	}
 
 	@Override
-	public FiniteField.Element<F>[] getPayerWitness() {
-		FiniteField.Element<F>[] payerWitnesses = (FiniteField.Element<F>[]) Array.newInstance(
-				FiniteField.Element.class, 2);
-		payerWitnesses[0] = x1;
-		payerWitnesses[1] = x2;
-		return payerWitnesses;
+	public FiniteField.Element<F> getPayerWitness1() {
+		return x1;
+	}
+
+	@Override
+	public FiniteField.Element<F> getPayerWitness2() {
+		return x2;
 	}
 
 	@Override

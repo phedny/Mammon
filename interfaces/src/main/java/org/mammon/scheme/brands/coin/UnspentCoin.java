@@ -30,9 +30,13 @@ public interface UnspentCoin<G extends Group<G>, F extends FiniteField<F>, S, T,
 	FiniteField.Element<F> getBlindingFactor();
 
 	/**
-	 * @return an array of length 2, containing the payer witnesses $x_1$ and
-	 *         $x_2$.
+	 * @return the payer witnesses $x_1$.
 	 */
-	FiniteField.Element<F>[] getPayerWitness();
+	FiniteField.Element<F> getPayerWitness1();
+
+	/**
+	 * @return the payer witnesses $x_2$.
+	 */
+	FiniteField.Element<F> getPayerWitness2();
 
 }

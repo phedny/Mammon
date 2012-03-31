@@ -11,6 +11,7 @@ import org.mammon.scheme.brands.PaymentHashFunction;
 import org.mammon.scheme.brands.SignatureHashFunction;
 import org.mammon.scheme.brands.accountholder.AccountHolderForBank;
 import org.mammon.scheme.brands.bank.Bank;
+import org.mammon.scheme.brands.generic.bank.AbstractBank;
 import org.mammon.scheme.brands.messages.BankWitnessesRequest;
 import org.mammon.scheme.brands.messages.BankWitnessesResponse;
 import org.mammon.util.messaging.AbstractTransitionable;
@@ -22,14 +23,14 @@ public abstract class AbstractWithdrawingCoinOne<G extends Group<G>, F extends F
 
 	private final AccountHolderForBank<G, F, I, T, H, H0> accountHolder;
 
-	private final Bank<G, F, I, T, H, H0> bank;
+	private final AbstractBank<G, F, I, T, H, H0> bank;
 
 	private final Group.Element<G> publicKey;
 
 	private final int count;
 
 	protected AbstractWithdrawingCoinOne(AccountHolderForBank<G, F, I, T, H, H0> accountHolder,
-			Bank<G, F, I, T, H, H0> bank, Group.Element<G> publicKey, int count) {
+			AbstractBank<G, F, I, T, H, H0> bank, Group.Element<G> publicKey, int count) {
 		this.accountHolder = accountHolder;
 		this.bank = bank;
 		this.publicKey = publicKey;
@@ -67,7 +68,7 @@ public abstract class AbstractWithdrawingCoinOne<G extends Group<G>, F extends F
 
 	@Override
 	public Message emitMessage() {
-		return new BankWitnessesRequest<G, I>(((Identifiable<I>) bank).getIdentity(), publicKey, count);
+		return new BankWitnessesRequest<G, I>(bank.getIdentity(), publicKey, count);
 	}
 
 	protected BrandsSchemeSetup<G, F, I, T, H, H0> getSetup() {

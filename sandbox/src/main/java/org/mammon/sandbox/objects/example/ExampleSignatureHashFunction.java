@@ -13,12 +13,10 @@ public class ExampleSignatureHashFunction extends OracleHashFunction implements
 	}
 
 	@Override
-	public FiniteField.Element<ExampleFiniteField> hash(
-			Group.Element<ExampleGroup> blindedIdentity,
-			Group.Element<ExampleGroup> commitment,
-			Group.Element<ExampleGroup>... secretValues) {
-		return oracle(blindedIdentity, commitment, secretValues[0],
-				secretValues[1], secretValues[2]);
+	public FiniteField.Element<ExampleFiniteField> hash(Group.Element<ExampleGroup> blindedIdentity,
+			Group.Element<ExampleGroup> commitment, Group.Element<ExampleGroup> z, Group.Element<ExampleGroup> a,
+			Group.Element<ExampleGroup> b) {
+		return oracle(blindedIdentity, commitment, z, a, b);
 	}
 
 	@Override

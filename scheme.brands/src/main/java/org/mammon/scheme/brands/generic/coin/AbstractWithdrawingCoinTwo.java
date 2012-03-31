@@ -109,7 +109,7 @@ public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends F
 			public String getCallSign() {
 				return "EUR";
 			}
-		}, 1, a, c);
+		}, Integer.valueOf(1), a, c);
 	}
 
 	protected BrandsSchemeSetup<G, F, I, T, H, H0> getSetup() {

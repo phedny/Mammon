@@ -10,6 +10,7 @@ import org.mammon.scheme.brands.PaymentHashFunction;
 import org.mammon.scheme.brands.SignatureHashFunction;
 import org.mammon.scheme.brands.accountholder.AccountHolderPrivate;
 import org.mammon.scheme.brands.bank.Bank;
+import org.mammon.scheme.brands.generic.bank.AbstractBank;
 import org.mammon.scheme.brands.messages.BlindedIdentityRequest;
 import org.mammon.scheme.brands.messages.BlindedIdentityResponse;
 import org.mammon.util.messaging.AbstractTransitionable;
@@ -23,9 +24,9 @@ public abstract class AbstractOpeningAccountHolder<G extends Group<G>, F extends
 
 	private final Group.Element<G> publicKey;
 
-	private final Bank<G, F, I, T, H, H0> bank;
+	private final AbstractBank<G, F, I, T, H, H0> bank;
 
-	public AbstractOpeningAccountHolder(BrandsSchemeSetup<G, F, I, T, H, H0> setup, Bank<G, F, I, T, H, H0> bank,
+	public AbstractOpeningAccountHolder(BrandsSchemeSetup<G, F, I, T, H, H0> setup, AbstractBank<G, F, I, T, H, H0> bank,
 			FiniteField.Element<F> privateKey) {
 		this.setup = setup;
 		this.bank = bank;

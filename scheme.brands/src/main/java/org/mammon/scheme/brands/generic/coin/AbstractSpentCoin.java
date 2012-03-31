@@ -61,8 +61,8 @@ public class AbstractSpentCoin<G extends Group<G>, F extends FiniteField<F>, I, 
 		spendingCommitments = (FiniteField.Element<F>[]) Array.newInstance(FiniteField.Element.class, 2);
 		spendingCommitments[0] = d.multiply(
 				((AbstractAccountHolderPrivate<G, F, I, T, H, H0>) basedOnCoin.getBearer()).getPrivateKey()).multiply(
-				basedOnCoin.getBlindingFactor()).add(basedOnCoin.getPayerWitness()[0]);
-		spendingCommitments[1] = d.multiply(basedOnCoin.getBlindingFactor()).add(basedOnCoin.getPayerWitness()[1]);
+				basedOnCoin.getBlindingFactor()).add(basedOnCoin.getPayerWitness1());
+		spendingCommitments[1] = d.multiply(basedOnCoin.getBlindingFactor()).add(basedOnCoin.getPayerWitness2());
 
 		// Tested by shop
 		Group.Element<G> left = setup.getGenerators()[1].exponentiate(spendingCommitments[0]).multiply(
