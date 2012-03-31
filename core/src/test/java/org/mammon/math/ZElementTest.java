@@ -35,7 +35,6 @@ public class ZElementTest {
 		assertEquals(one, one.multiply(one));
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void oppositesShouldSumToZero() {
 		for (FiniteField.Element<Z> element : new FiniteField.Element[] { zero, one }) {
@@ -43,11 +42,19 @@ public class ZElementTest {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void inversesShouldMultiplyToOne() {
 		for (FiniteField.Element<Z> element : new FiniteField.Element[] { one }) {
 			assertEquals(one, element.multiply(element.getInverse()));
 		}
+	}
+
+	@Test
+	public void additionShouldHaveOrderQ() {
+		FiniteField.Element<Z> result = zero;
+		for (int i = 0; i < 11; i++) {
+			result = result.add(one);
+		}
+		assertEquals(zero, result);
 	}
 }
