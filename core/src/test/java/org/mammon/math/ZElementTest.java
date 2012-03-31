@@ -1,17 +1,29 @@
 package org.mammon.math;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+@RunWith(Parameterized.class)
 public class ZElementTest {
 
-	private final int q = 11;
+	private final int q;
 	private FiniteField<Z> field;
 	private FiniteField.Element<Z> zero;
 	private FiniteField.Element<Z> one;
+
+	public ZElementTest(int q) {
+		this.q = q;
+	}
 
 	@Before
 	public void createFiniteField() {
@@ -69,5 +81,15 @@ public class ZElementTest {
 			result = result.multiply(generator);
 		}
 		assertEquals(one, result);
+	}
+
+	@Parameters
+	public static Collection<Object[]> data() {
+		List<Object[]> data = new ArrayList<Object[]>();
+		data.add(new Object[] { 11 });
+		data.add(new Object[] { 13 });
+		data.add(new Object[] { 17 });
+		data.add(new Object[] { 19 });
+		return data;
 	}
 }
