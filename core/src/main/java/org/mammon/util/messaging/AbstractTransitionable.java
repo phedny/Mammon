@@ -1,4 +1,4 @@
-package org.mammon.sandbox.generic.messaging;
+package org.mammon.util.messaging;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

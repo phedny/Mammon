@@ -10,6 +10,7 @@
   <modules>
     <module>interfaces</module>
     <module>core</module>
+    <module>scheme.brands</module>
     <module>cucumber</module>
     <module>sandbox</module>
   </modules>

@@ -8,8 +8,6 @@ import org.mammon.math.Group;
 import org.mammon.messaging.DualIdentityTransitionable;
 import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.Transitionable;
-import org.mammon.sandbox.HashCodeUtil;
-import org.mammon.sandbox.generic.messaging.AbstractTransitionable;
 import org.mammon.sandbox.messages.IssueCoinsResponse;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
 import org.mammon.scheme.brands.PaymentHashFunction;
@@ -19,6 +17,8 @@ import org.mammon.scheme.brands.accountholder.AccountHolderPrivate;
 import org.mammon.scheme.brands.bank.Bank;
 import org.mammon.scheme.brands.coin.CoinSignature;
 import org.mammon.scheme.brands.coin.UnspentCoin;
+import org.mammon.util.HashCodeUtil;
+import org.mammon.util.messaging.AbstractTransitionable;
 
 public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
 		extends AbstractTransitionable<I> implements UnspentCoin<G, F, I, T, H, H0>, Identifiable<I>,

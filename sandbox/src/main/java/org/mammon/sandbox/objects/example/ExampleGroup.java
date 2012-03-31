@@ -6,7 +6,7 @@ import java.util.TreeSet;
 
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
-import org.mammon.sandbox.HashCodeUtil;
+import org.mammon.util.HashCodeUtil;
 
 public class ExampleGroup implements Group<ExampleGroup> {
 

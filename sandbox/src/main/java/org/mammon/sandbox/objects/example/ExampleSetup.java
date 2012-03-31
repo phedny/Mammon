@@ -4,8 +4,8 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 
 import org.mammon.math.Group;
-import org.mammon.sandbox.HashCodeUtil;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
+import org.mammon.util.HashCodeUtil;
 
 public class ExampleSetup
 		implements

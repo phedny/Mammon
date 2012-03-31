@@ -7,19 +7,16 @@ import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.Message;
 import org.mammon.messaging.MessageEmitter;
 import org.mammon.messaging.Transitionable;
-import org.mammon.sandbox.generic.messaging.AbstractTransitionable;
 import org.mammon.sandbox.messages.BankWitnessesResponse;
 import org.mammon.sandbox.messages.IssueCoinsRequest;
 import org.mammon.sandbox.messages.IssueCoinsResponse;
-import org.mammon.sandbox.objects.example.ExampleGroup;
-import org.mammon.sandbox.objects.example.ExampleUnspentCoin;
-import org.mammon.sandbox.objects.example.ExampleGroup.ExampleElement;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
 import org.mammon.scheme.brands.PaymentHashFunction;
 import org.mammon.scheme.brands.SignatureHashFunction;
 import org.mammon.scheme.brands.accountholder.AccountHolderForBank;
 import org.mammon.scheme.brands.bank.Bank;
 import org.mammon.scheme.brands.coin.CoinSignature;
+import org.mammon.util.messaging.AbstractTransitionable;
 
 public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
 		extends AbstractTransitionable<I> implements Identifiable<I>, Transitionable<I>, MessageEmitter {
@@ -80,19 +77,14 @@ public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends F
 
 		// Tested by account holder
 		FiniteField.Element<F> r = response.getResponse();
-		ExampleGroup.ExampleElement left = (ExampleElement) setup.getGenerators()[0].exponentiate(r);
-		ExampleGroup.ExampleElement right = (ExampleElement) bank.getPublicKey().exponentiate(c).multiply(a);
-		System.out.println(left.simplify() + " <= from: " + left);
-		System.out.println(right.simplify() + " <= from: " + right);
-		System.out.println(left.simplify().equals(right.simplify()));
+		Group.Element<G> left = setup.getGenerators()[0].exponentiate(r);
+		Group.Element<G> right = bank.getPublicKey().exponentiate(c).multiply(a);
+		System.out.println(left.equals(right));
 
 		// Tested by account holder
-		left = (ExampleElement) accountHolder.getPublicKey().multiply(setup.getGenerators()[2]).exponentiate(
-				r);
-		right = (ExampleElement) accountHolder.getBlindedIdentity().exponentiate(c).multiply(b);
-		System.out.println(left.simplify() + " <= from: " + left);
-		System.out.println(right.simplify() + " <= from: " + right);
-		System.out.println(left.simplify().equals(right.simplify()));
+		left = accountHolder.getPublicKey().multiply(setup.getGenerators()[2]).exponentiate(r);
+		right = accountHolder.getBlindedIdentity().exponentiate(c).multiply(b);
+		System.out.println(left.equals(right));
 
 		Group.Element<G> z_ = accountHolder.getBlindedIdentity().exponentiate(s);
 		Group.Element<G> a_ = a.exponentiate(u).multiply(setup.getGenerators()[0].exponentiate(v));
@@ -100,7 +92,7 @@ public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends F
 		FiniteField.Element<F> r_ = r.multiply(u).add(v);
 		return newUnspentCoin(r, newCoinSignature(z_, a_, b_, r_));
 	}
-	
+
 	public AbstractWithdrawingCoinTwo<G, F, I, T, H, H0> transition(BankWitnessesResponse<G> response) {
 		if (a.equals(response.getValA()) && b.equals(response.getValB())) {
 			return this;
@@ -171,7 +163,7 @@ public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends F
 	protected Group.Element<G> getA() {
 		return a;
 	}
-	
+
 	protected Group.Element<G> getB() {
 		return b;
 	}
@@ -180,8 +172,9 @@ public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends F
 		return c;
 	}
 
-	protected abstract ExampleUnspentCoin newUnspentCoin(FiniteField.Element<F> r, CoinSignature<G, F> coinSignature);
+	protected abstract AbstractUnspentCoin<G, F, I, T, H, H0> newUnspentCoin(FiniteField.Element<F> r, CoinSignature<G, F> coinSignature);
 
-	protected abstract AbstractCoinSignature<G, F> newCoinSignature(Group.Element<G> z, Group.Element<G> a, Group.Element<G> b, FiniteField.Element<F> r);
-	
+	protected abstract AbstractCoinSignature<G, F> newCoinSignature(Group.Element<G> z, Group.Element<G> a,
+			Group.Element<G> b, FiniteField.Element<F> r);
+
 }

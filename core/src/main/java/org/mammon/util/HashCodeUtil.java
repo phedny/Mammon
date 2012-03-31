@@ -1,4 +1,4 @@
-package org.mammon.sandbox;
+package org.mammon.util;
 
 import java.lang.reflect.Array;
 

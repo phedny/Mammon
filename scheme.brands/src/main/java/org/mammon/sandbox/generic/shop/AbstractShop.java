@@ -2,12 +2,12 @@ package org.mammon.sandbox.generic.shop;
 
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
-import org.mammon.sandbox.HashCodeUtil;
-import org.mammon.sandbox.generic.messaging.AbstractTransactable;
+import org.mammon.util.HashCodeUtil;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
 import org.mammon.scheme.brands.PaymentHashFunction;
 import org.mammon.scheme.brands.SignatureHashFunction;
 import org.mammon.scheme.brands.shop.Shop;
+import org.mammon.util.messaging.AbstractTransactable;
 
 public class AbstractShop<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
 		extends AbstractTransactable<I> implements Shop<G, F, I, T, H, H0> {

@@ -4,12 +4,12 @@ import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
 import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.Transactable;
-import org.mammon.sandbox.HashCodeUtil;
-import org.mammon.sandbox.generic.messaging.AbstractTransactable;
+import org.mammon.util.HashCodeUtil;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
 import org.mammon.scheme.brands.PaymentHashFunction;
 import org.mammon.scheme.brands.SignatureHashFunction;
 import org.mammon.scheme.brands.bank.Bank;
+import org.mammon.util.messaging.AbstractTransactable;
 
 public abstract class AbstractBank<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
 		extends AbstractTransactable<I> implements Bank<G, F, I, T, H, H0>, Identifiable<I>, Transactable<I> {
