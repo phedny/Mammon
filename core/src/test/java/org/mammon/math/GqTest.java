@@ -37,4 +37,11 @@ public class GqTest {
 
 		assertEquals(group, generator.getGroup());
 	}
+
+	@Test
+	public void shouldBeAbleToReturnARandomElementOfTheGroup() {
+		Group.Element<Gq> element = group.getRandomElement();
+
+		assertEquals(group, element.getGroup());
+	}
 }

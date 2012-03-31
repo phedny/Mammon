@@ -86,8 +86,8 @@ public class Gq implements Group<Gq> {
 
 	@Override
 	public Group.Element<Gq> getRandomElement() {
-		// TODO Auto-generated method stub
-		return null;
+		Z field = new Z(q);
+		return getGenerator().exponentiate(field.getRandomElement());
 	}
 
 	class GqElement implements Group.Element<Gq> {
