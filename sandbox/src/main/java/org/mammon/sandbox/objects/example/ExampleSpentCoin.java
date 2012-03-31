@@ -1,12 +1,19 @@
 package org.mammon.sandbox.objects.example;
 
+import java.util.UUID;
+
 import org.mammon.scheme.brands.generic.coin.AbstractSpentCoin;
 
 public class ExampleSpentCoin extends
 		AbstractSpentCoin<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	public ExampleSpentCoin(ExampleUnspentCoin basedOnCoin, ExampleBank bank, ExampleShop bearer, Long time) {
-		super(basedOnCoin, bank, bearer, time);
+		super(basedOnCoin, bank, bearer, time, UUID.randomUUID().toString());
+	}
+
+	@Override
+	public String getIdentity() {
+		return null;
 	}
 
 	@Override

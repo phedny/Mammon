@@ -19,7 +19,7 @@ import org.mammon.math.Group;
  * @param <H0>
  *            The payment hash function.
  */
-public interface BrandsSchemeSetup<G extends Group<G>, F extends FiniteField<F>, S, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, S, T>> {
+public interface BrandsSchemeSetup<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>> {
 
 	/**
 	 * @return the object that describes the group that is named $G$ in the
