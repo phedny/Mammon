@@ -38,14 +38,16 @@ public class ZElementTest {
 
 	@Test
 	public void oppositesShouldSumToZero() {
-		for (FiniteField.Element<Z> element : new FiniteField.Element[] { zero, one }) {
+		Z cast = (Z) field;
+		for (FiniteField.Element<Z> element : new FiniteField.Element[] { zero, one, cast.element(2), cast.element(3) }) {
 			assertEquals(zero, element.add(element.getOpposite()));
 		}
 	}
 
 	@Test
 	public void inversesShouldMultiplyToOne() {
-		for (FiniteField.Element<Z> element : new FiniteField.Element[] { one }) {
+		Z cast = (Z) field;
+		for (FiniteField.Element<Z> element : new FiniteField.Element[] { one, cast.element(2), cast.element(3) }) {
 			assertEquals(one, element.multiply(element.getInverse()));
 		}
 	}
