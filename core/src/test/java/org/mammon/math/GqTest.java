@@ -1,22 +1,23 @@
 package org.mammon.math;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class GTest {
-	private Group<G> group;
+public class GqTest {
+	private Group<Gq> group;
 
 	@Test(expected = IllegalArgumentException.class)
 	public void qShouldDividePminus1() {
-		new G(12, 23);
+		new Gq(12, 23);
 	}
 
 	@Before
 	public void createGroup() {
-		this.group = new G(11, 23);
+		this.group = new Gq(11, 23);
 	}
 
 	@Test
@@ -26,14 +27,15 @@ public class GTest {
 
 	@Test
 	public void shouldBeAbleToReturnTheIdentityOfTheGroup() {
-		Group.Element<G> identity = group.getIdentity();
+		Group.Element<Gq> identity = group.getIdentity();
 
 		assertEquals(group, identity.getGroup());
 	}
 
+	@Ignore
 	@Test
 	public void shouldBeAbleToReturnTheGeneratorOfTheGroup() {
-		Group.Element<G> generator = group.getGenerator();
+		Group.Element<Gq> generator = group.getGenerator();
 
 		assertEquals(group, generator.getGroup());
 	}

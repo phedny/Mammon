@@ -33,7 +33,7 @@ public class Z implements FiniteField<Z> {
 		return element(BigInteger.ZERO);
 	}
 
-	private FiniteField.Element<Z> element(BigInteger element) {
+	public FiniteField.Element<Z> element(BigInteger element) {
 		return new ZElement(element);
 	}
 
@@ -90,6 +90,16 @@ public class Z implements FiniteField<Z> {
 		public FiniteField.Element<Z> exponentiate(FiniteField.Element<Z> other) {
 			// TODO Auto-generated method stub
 			return null;
+		}
+
+		@Override
+		public <G extends Group<G>> Group.Element<G> raise(Group.Element<G> groupElement) {
+			Group.Element<G> result = groupElement.getGroup().getIdentity();
+			for (BigInteger power = BigInteger.ZERO; power.compareTo(element) < 0; power = power.add(BigInteger.ONE)) {
+				// TODO Use Binary Quadratation.
+				result = result.multiply(groupElement);
+			}
+			return result;
 		}
 
 		@Override
