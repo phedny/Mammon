@@ -83,7 +83,24 @@ public class ExampleGroup implements Group<ExampleGroup> {
 			}
 		}
 
+		@Override
+		public boolean equals(Object obj) {
+			if (obj == null || !(obj instanceof ExampleElement)) {
+				return false;
+			}
+			return simplify().myEquals(((ExampleElement) obj).simplify());
+		}
+
+		@Override
+		public int hashCode() {
+			return simplify().myHashCode();
+		}
+
 		public abstract ExampleElement simplify();
+
+		public abstract int myHashCode();
+
+		public abstract boolean myEquals(ExampleElement obj);
 
 	}
 
@@ -96,7 +113,7 @@ public class ExampleGroup implements Group<ExampleGroup> {
 		}
 
 		@Override
-		public boolean equals(Object obj) {
+		public boolean myEquals(ExampleElement obj) {
 			if (obj == null || !(obj instanceof StaticElement)) {
 				return false;
 			}
@@ -104,7 +121,7 @@ public class ExampleGroup implements Group<ExampleGroup> {
 		}
 
 		@Override
-		public int hashCode() {
+		public int myHashCode() {
 			return value.hashCode();
 		}
 
@@ -133,7 +150,7 @@ public class ExampleGroup implements Group<ExampleGroup> {
 		}
 
 		@Override
-		public boolean equals(Object obj) {
+		public boolean myEquals(ExampleElement obj) {
 			if (obj == null || !(obj instanceof MultiplicationElement)) {
 				return false;
 			}
@@ -142,7 +159,7 @@ public class ExampleGroup implements Group<ExampleGroup> {
 		}
 
 		@Override
-		public int hashCode() {
+		public int myHashCode() {
 			int hashCode = HashCodeUtil.SEED;
 			hashCode = HashCodeUtil.hash(hashCode, operands);
 			return hashCode;
@@ -196,12 +213,12 @@ public class ExampleGroup implements Group<ExampleGroup> {
 		}
 
 		@Override
-		public boolean equals(Object obj) {
+		public boolean myEquals(ExampleElement obj) {
 			if (obj == null || !(obj instanceof ExponentiationElement)) {
 				return false;
 			}
 			ExponentiationElement other = (ExponentiationElement) obj;
-			if (base.equals(other.base) && exponent.equals(other.exponent)) {
+			if (base.myEquals(other.base) && exponent.equals(other.exponent)) {
 				return true;
 			}
 			if (base.equals(other.exponent) && exponent.equals(other.base)) {
@@ -211,7 +228,7 @@ public class ExampleGroup implements Group<ExampleGroup> {
 		}
 
 		@Override
-		public int hashCode() {
+		public int myHashCode() {
 			int hashCode = HashCodeUtil.SEED;
 			hashCode = HashCodeUtil.hash(hashCode, base);
 			hashCode = HashCodeUtil.hash(hashCode, exponent);

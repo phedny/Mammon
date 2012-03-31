@@ -105,7 +105,24 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 			return groupElement; // TODO Correctly implement the raise method
 		}
 
+		@Override
+		public boolean equals(Object obj) {
+			if (obj == null || !(obj instanceof ExampleElement)) {
+				return false;
+			}
+			return simplify().myEquals(((ExampleElement) obj).simplify());
+		}
+
+		@Override
+		public int hashCode() {
+			return simplify().myHashCode();
+		}
+
 		public abstract ExampleElement simplify();
+
+		public abstract int myHashCode();
+
+		public abstract boolean myEquals(ExampleElement obj);
 
 	}
 
@@ -118,7 +135,7 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 		}
 
 		@Override
-		public boolean equals(Object obj) {
+		public boolean myEquals(ExampleElement obj) {
 			if (obj == null || !(obj instanceof StaticElement)) {
 				return false;
 			}
@@ -126,7 +143,7 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 		}
 
 		@Override
-		public int hashCode() {
+		public int myHashCode() {
 			return value.hashCode();
 		}
 
@@ -158,7 +175,7 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 		}
 
 		@Override
-		public boolean equals(Object obj) {
+		public boolean myEquals(ExampleElement obj) {
 			if (obj == null || !(obj instanceof AdditionElement)) {
 				return false;
 			}
@@ -167,7 +184,7 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 		}
 
 		@Override
-		public int hashCode() {
+		public int myHashCode() {
 			int hashCode = HashCodeUtil.SEED;
 			hashCode = HashCodeUtil.hash(hashCode, operands);
 			return hashCode;
@@ -225,7 +242,7 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 		}
 
 		@Override
-		public boolean equals(Object obj) {
+		public boolean myEquals(ExampleElement obj) {
 			if (obj == null || !(obj instanceof MultiplicationElement)) {
 				return false;
 			}
@@ -234,7 +251,7 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 		}
 
 		@Override
-		public int hashCode() {
+		public int myHashCode() {
 			int hashCode = HashCodeUtil.SEED;
 			hashCode = HashCodeUtil.hash(hashCode, operands);
 			return hashCode;
@@ -288,7 +305,7 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 		}
 
 		@Override
-		public boolean equals(Object obj) {
+		public boolean myEquals(ExampleElement obj) {
 			if (obj == null || !(obj instanceof ExponentiationElement)) {
 				return false;
 			}
@@ -303,7 +320,7 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 		}
 
 		@Override
-		public int hashCode() {
+		public int myHashCode() {
 			int hashCode = HashCodeUtil.SEED;
 			hashCode = HashCodeUtil.hash(hashCode, base);
 			hashCode = HashCodeUtil.hash(hashCode, exponent);
