@@ -49,7 +49,7 @@ public class Z implements FiniteField<Z> {
 
 		@Override
 		public FiniteField.Element<Z> add(FiniteField.Element<Z> other) {
-			return element(this.element.add(((ZElement)other).element));
+			return element(this.element.add(((ZElement) other).element));
 		}
 
 		@Override
@@ -74,18 +74,12 @@ public class Z implements FiniteField<Z> {
 			return null;
 		}
 
-		private Z getOuterType() {
-			return Z.this;
-		}
-
-
 		@Override
 		public int hashCode() {
 			final int prime = 31;
 			int result = 1;
-			result = prime * result + getOuterType().hashCode();
-			result = prime * result
-					+ ((element == null) ? 0 : element.hashCode());
+			result = prime * result + getFiniteField().hashCode();
+			result = prime * result + ((element == null) ? 0 : element.hashCode());
 			return result;
 		}
 
@@ -98,7 +92,7 @@ public class Z implements FiniteField<Z> {
 			if (getClass() != obj.getClass())
 				return false;
 			ZElement other = (ZElement) obj;
-			if (!getOuterType().equals(other.getOuterType()))
+			if (!getFiniteField().equals(other.getFiniteField()))
 				return false;
 			if (element == null) {
 				if (other.element != null)
