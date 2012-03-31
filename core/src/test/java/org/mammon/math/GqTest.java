@@ -1,7 +1,6 @@
 package org.mammon.math;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -32,7 +31,6 @@ public class GqTest {
 		assertEquals(group, identity.getGroup());
 	}
 
-	@Ignore
 	@Test
 	public void shouldBeAbleToReturnTheGeneratorOfTheGroup() {
 		Group.Element<Gq> generator = group.getGenerator();

@@ -22,6 +22,11 @@ public class GqElementTest {
 	@Test
 	public void identityShouldBeIdentityForMultiplication() {
 		assertEquals(identity, identity.multiply(identity));
-		assertEquals(generator, identity.multiply(generator));
+		assertEquals(generator, generator.multiply(identity));
+	}
+
+	@Test
+	public void inverseShouldMultiplyToIdentity() {
+		assertEquals(identity, generator.multiply(generator.getInverse()));
 	}
 }

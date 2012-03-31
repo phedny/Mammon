@@ -3,6 +3,7 @@ package org.mammon.math;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.mammon.math.util.Gcd;
 import org.mammon.math.util.PrimeFactors;
 
 public class Gq implements Group<Gq> {
@@ -104,8 +105,8 @@ public class Gq implements Group<Gq> {
 
 		@Override
 		public Group.Element<Gq> getInverse() {
-			// TODO Auto-generated method stub
-			return null;
+			BigInteger[] gcd = Gcd.of(element, p);
+			return element(gcd[1]);
 		}
 
 		@Override
