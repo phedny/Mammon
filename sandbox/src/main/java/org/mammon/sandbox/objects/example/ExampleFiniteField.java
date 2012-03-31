@@ -1,7 +1,11 @@
 package org.mammon.sandbox.objects.example;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 
 import org.mammon.math.FiniteField;
@@ -96,7 +100,7 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 
 		@Override
 		public org.mammon.math.FiniteField.Element<ExampleFiniteField> exponentiate(
-			org.mammon.math.FiniteField.Element<ExampleFiniteField> other) {
+				org.mammon.math.FiniteField.Element<ExampleFiniteField> other) {
 			return new ExponentiationElement(this, (ExampleElement) other);
 		}
 
@@ -207,7 +211,7 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 			for (boolean execute = true; execute;) {
 				execute = false;
 				TreeSet<ExampleElement> newOperands = new TreeSet<ExampleElement>(
-					new HashCodeComparator<ExampleElement>());
+						new HashCodeComparator<ExampleElement>());
 				for (ExampleElement element : operands) {
 					if (element instanceof AdditionElement) {
 						newOperands.addAll(Arrays.asList(((AdditionElement) element).operands));
@@ -274,10 +278,24 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 				operands.add(element.simplify());
 			}
 
+			Set<ExampleElement> toRemove = new HashSet<ExampleElement>();
+			for (ExampleElement operand : operands) {
+				if (operand instanceof ExponentiationElement) {
+					ExponentiationElement eElt = (ExponentiationElement) operand;
+					if (eElt.exponent.equals(last) && operands.contains(eElt.base)) {
+						toRemove.add(eElt);
+						toRemove.add(eElt.base);
+					}
+				}
+			}
+			for (ExampleElement operand : toRemove) {
+				operands.remove(operand);
+			}
+
 			for (boolean execute = true; execute;) {
 				execute = false;
 				TreeSet<ExampleElement> newOperands = new TreeSet<ExampleElement>(
-					new HashCodeComparator<ExampleElement>());
+						new HashCodeComparator<ExampleElement>());
 				for (ExampleElement element : operands) {
 					if (element instanceof MultiplicationElement) {
 						newOperands.addAll(Arrays.asList(((MultiplicationElement) element).operands));
@@ -289,7 +307,44 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 				operands = newOperands;
 			}
 
-			return new MultiplicationElement(operands.toArray(new ExampleElement[operands.size()]));
+			List<MultiplicationElement> addOperands = new ArrayList<MultiplicationElement>();
+			for (ExampleElement element : operands) {
+				if (element instanceof AdditionElement) {
+					if (addOperands.isEmpty()) {
+						for (ExampleElement element2 : ((AdditionElement) element).operands) {
+							addOperands.add(new MultiplicationElement(element2));
+						}
+					} else {
+						List<MultiplicationElement> newAddOperands = new ArrayList<MultiplicationElement>();
+						for (MultiplicationElement addOperand : addOperands) {
+							for (ExampleElement element2 : ((AdditionElement) element).operands) {
+								List<ExampleElement> elements = new ArrayList<ExampleElement>();
+								elements.addAll(Arrays.asList(addOperand.operands));
+								elements.add(element2);
+								newAddOperands.add(new MultiplicationElement(elements
+										.toArray(new ExampleElement[elements.size()])));
+							}
+						}
+						addOperands = newAddOperands;
+					}
+				} else if (addOperands.isEmpty()) {
+					addOperands.add(new MultiplicationElement(element));
+				} else {
+					for (int i = 0; i < addOperands.size(); i++) {
+						List<ExampleElement> elements = new ArrayList<ExampleElement>();
+						elements.addAll(Arrays.asList(addOperands.get(i).operands));
+						elements.add(element);
+						addOperands.set(i, new MultiplicationElement(elements.toArray(new ExampleElement[elements
+								.size()])));
+					}
+				}
+			}
+
+			if (addOperands.size() < 2) {
+				return new MultiplicationElement(operands.toArray(new ExampleElement[operands.size()]));
+			} else {
+				return new AdditionElement(addOperands.toArray(new ExampleElement[addOperands.size()]));
+			}
 		}
 	}
 
