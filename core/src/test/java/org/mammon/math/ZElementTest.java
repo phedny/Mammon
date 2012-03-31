@@ -8,13 +8,14 @@ import static org.junit.Assert.assertFalse;
 
 public class ZElementTest {
 
+	private final int q = 11;
 	private FiniteField<Z> field;
 	private FiniteField.Element<Z> zero;
 	private FiniteField.Element<Z> one;
 
 	@Before
 	public void createFiniteField() {
-		field = new Z(11);
+		field = new Z(q);
 		zero = field.getZero();
 		one = field.getOne();
 	}
@@ -52,7 +53,7 @@ public class ZElementTest {
 	@Test
 	public void additionShouldHaveOrderQ() {
 		FiniteField.Element<Z> result = zero;
-		for (int i = 0; i < 11; i++) {
+		for (int i = 0; i < q; i++) {
 			result = result.add(one);
 		}
 		assertEquals(zero, result);
@@ -62,7 +63,7 @@ public class ZElementTest {
 	public void mulitplicationShouldHaveOrderTotientQ() {
 		FiniteField.Element<Z> result = one;
 		FiniteField.Element<Z> generator = ((Z) field).element(2);
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < q - 1; i++) {
 			result = result.multiply(generator);
 		}
 		assertEquals(one, result);
