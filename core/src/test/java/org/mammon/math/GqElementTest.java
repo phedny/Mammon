@@ -1,20 +1,20 @@
-package org.mammon.brands.group;
-
-import static org.junit.Assert.assertEquals;
-import static org.mammon.brands.group.Zq.Z;
+package org.mammon.math;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mammon.math.Group;
 import org.mammon.math.Group.Element;
 
-public class ZqElementTest {
-	private Element<Zq> identity;
-	private Element<Zq> generator;
+import static org.junit.Assert.assertEquals;
+
+public class GqElementTest {
+
+	private Group<Gq> group;
+	private Element<Gq> identity;
+	private Element<Gq> generator;
 
 	@Before
-	public void createElements() {
-		Group<Zq> group = Z(5);
+	public void createGroup() {
+		group = new Gq(11, 23);
 		identity = group.getIdentity();
 		generator = group.getGenerator();
 	}
@@ -23,11 +23,6 @@ public class ZqElementTest {
 	public void identityShouldBeIdentityForMultiplication() {
 		assertEquals(identity, identity.multiply(identity));
 		assertEquals(generator, generator.multiply(identity));
-	}
-
-	@Test
-	public void generatorShouldBeTheGeneratorForMultiplication() {
-		assertEquals(generator, identity.multiply(generator));
 	}
 
 	@Test

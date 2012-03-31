@@ -1,6 +1,5 @@
 package org.mammon.math;
 
-
 /**
  * This interface can be used for generic typing, to bind classes of an actual
  * implementation compile-time.
@@ -63,6 +62,18 @@ public interface FiniteField<F extends FiniteField<F>> {
 		 * @return the exponentiation of this element by the exponent.
 		 */
 		FiniteField.Element<F> exponentiate(FiniteField.Element<F> other);
+
+		/**
+		 * 
+		 * @param <G>
+		 *            A generic <code>Group</code>
+		 * @param An
+		 *            element of the <code>Group</code> which gets raised the
+		 *            <code>this</code> power.
+		 * @return the exponentiation of <code>groupElement</code> to
+		 *         <code>this</code>.
+		 */
+		<G extends Group<G>> Group.Element<G> raise(Group.Element<G> groupElement);
 	}
 
 }

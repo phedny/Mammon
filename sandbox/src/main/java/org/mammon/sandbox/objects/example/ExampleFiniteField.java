@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.TreeSet;
 
 import org.mammon.math.FiniteField;
+import org.mammon.math.Group;
 import org.mammon.sandbox.HashCodeUtil;
 
 public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
@@ -20,7 +21,7 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 	public ExampleFiniteField(ExampleRandomGenerator randomGenerator) {
 		this.randomGenerator = randomGenerator;
 	}
-	
+
 	public static ExampleElement last() {
 		return new ExampleFiniteField(null).last;
 	}
@@ -95,8 +96,13 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 
 		@Override
 		public org.mammon.math.FiniteField.Element<ExampleFiniteField> exponentiate(
-				org.mammon.math.FiniteField.Element<ExampleFiniteField> other) {
+			org.mammon.math.FiniteField.Element<ExampleFiniteField> other) {
 			return new ExponentiationElement(this, (ExampleElement) other);
+		}
+
+		@Override
+		public <G extends Group<G>> Group.Element<G> raise(Group.Element<G> groupElement) {
+			return groupElement; // TODO Correctly implement the raise method
 		}
 
 		public abstract ExampleElement simplify();
@@ -133,7 +139,6 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 		public ExampleElement simplify() {
 			return this;
 		}
-
 	}
 
 	public class AdditionElement extends ExampleElement {
@@ -185,7 +190,7 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 			for (boolean execute = true; execute;) {
 				execute = false;
 				TreeSet<ExampleElement> newOperands = new TreeSet<ExampleElement>(
-						new HashCodeComparator<ExampleElement>());
+					new HashCodeComparator<ExampleElement>());
 				for (ExampleElement element : operands) {
 					if (element instanceof AdditionElement) {
 						newOperands.addAll(Arrays.asList(((AdditionElement) element).operands));
@@ -255,7 +260,7 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 			for (boolean execute = true; execute;) {
 				execute = false;
 				TreeSet<ExampleElement> newOperands = new TreeSet<ExampleElement>(
-						new HashCodeComparator<ExampleElement>());
+					new HashCodeComparator<ExampleElement>());
 				for (ExampleElement element : operands) {
 					if (element instanceof MultiplicationElement) {
 						newOperands.addAll(Arrays.asList(((MultiplicationElement) element).operands));
