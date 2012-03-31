@@ -65,8 +65,8 @@ public class AbstractSpentCoin<G extends Group<G>, F extends FiniteField<F>, I, 
 		spendingCommitments[1] = d.multiply(basedOnCoin.getBlindingFactor()).add(basedOnCoin.getPayerWitness2());
 
 		// Tested by shop
-		Group.Element<G> left = setup.getGenerators()[1].exponentiate(spendingCommitments[0]).multiply(
-				setup.getGenerators()[2].exponentiate(spendingCommitments[1]));
+		Group.Element<G> left = setup.getGenerator(1).exponentiate(spendingCommitments[0]).multiply(
+				setup.getGenerator(2).exponentiate(spendingCommitments[1]));
 		Group.Element<G> right = blindedIdentity.exponentiate(d).multiply(commitment);
 		System.out.println(left.equals(right));
 	}

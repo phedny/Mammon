@@ -29,7 +29,7 @@ public abstract class AbstractBankPrivate<G extends Group<G>, F extends FiniteFi
 	private Map<Group.Element<G>, FiniteField.Element<F>> issuedWitnesses = new HashMap<Group.Element<G>, FiniteField.Element<F>>();
 
 	protected AbstractBankPrivate(BrandsSchemeSetup<G, F, I, T, H, H0> setup, FiniteField.Element<F> privateKey) {
-		super(setup, setup.getGenerators()[0].exponentiate(privateKey));
+		super(setup, setup.getGenerator(0).exponentiate(privateKey));
 		this.privateKey = privateKey;
 	}
 
@@ -40,7 +40,7 @@ public abstract class AbstractBankPrivate<G extends Group<G>, F extends FiniteFi
 
 	public BlindedIdentityResponse<G> transact(BlindedIdentityRequest<G, ?> request) {
 		knownIdentities.add(request.getIdentity());
-		return new BlindedIdentityResponse<G>(request.getIdentity().multiply(getSetup().getGenerators()[2])
+		return new BlindedIdentityResponse<G>(request.getIdentity().multiply(getSetup().getGenerator(2))
 				.exponentiate(privateKey));
 	}
 
@@ -51,8 +51,8 @@ public abstract class AbstractBankPrivate<G extends Group<G>, F extends FiniteFi
 		}
 		for (int i = 0; i < request.getCount(); i++) {
 			final FiniteField.Element<F> w = getSetup().getFiniteField().getRandomElement();
-			Group.Element<G> a = getSetup().getGenerators()[0].exponentiate(w);
-			Group.Element<G> b = identity.multiply(getSetup().getGenerators()[2]).exponentiate(w);
+			Group.Element<G> a = getSetup().getGenerator(0).exponentiate(w);
+			Group.Element<G> b = identity.multiply(getSetup().getGenerator(2)).exponentiate(w);
 			issuedWitnesses.put(a, w);
 			return new BankWitnessesResponse<G>(a, b);
 		}

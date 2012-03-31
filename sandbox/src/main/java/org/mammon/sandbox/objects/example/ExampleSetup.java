@@ -1,9 +1,7 @@
 package org.mammon.sandbox.objects.example;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
-
 import org.mammon.math.Group;
+import org.mammon.math.Group.Element;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
 import org.mammon.util.HashCodeUtil;
 
@@ -21,19 +19,30 @@ public class ExampleSetup
 
 	private final ExamplePaymentHashFunction paymentHashFunction = new ExamplePaymentHashFunction(group, field);
 
-	private final Group.Element<ExampleGroup>[] generators;
+	private final Group.Element<ExampleGroup> g;
 
-	@SuppressWarnings("unchecked")
+	private final Group.Element<ExampleGroup> g1;
+
+	private final Group.Element<ExampleGroup> g2;
+
 	public ExampleSetup() {
-		generators = (Group.Element<ExampleGroup>[]) Array.newInstance(Group.Element.class, 3);
-		generators[0] = group.getRandomElement();
-		generators[1] = group.getRandomElement();
-		generators[2] = group.getRandomElement();
+		g = group.getRandomElement();
+		g1 = group.getRandomElement();
+		g2 = group.getRandomElement();
 	}
 
 	@Override
-	public Group.Element<ExampleGroup>[] getGenerators() {
-		return generators.clone();
+	public Element<ExampleGroup> getGenerator(int i) {
+		switch (i) {
+		case 0:
+			return g;
+		case 1:
+			return g1;
+		case 2:
+			return g2;
+		default:
+			throw new ArrayIndexOutOfBoundsException();
+		}
 	}
 
 	@Override
@@ -63,7 +72,8 @@ public class ExampleSetup
 		}
 		ExampleSetup other = (ExampleSetup) obj;
 		return group.equals(other.group) && signatureHashFunction.equals(other.signatureHashFunction)
-				&& paymentHashFunction.equals(other.paymentHashFunction) && Arrays.equals(generators, other.generators);
+				&& paymentHashFunction.equals(other.paymentHashFunction) && g.equals(other.g) && g1.equals(other.g1)
+				&& g2.equals(other.g2);
 	}
 
 	@Override
@@ -72,7 +82,9 @@ public class ExampleSetup
 		hashCode = HashCodeUtil.hash(hashCode, group);
 		hashCode = HashCodeUtil.hash(hashCode, signatureHashFunction);
 		hashCode = HashCodeUtil.hash(hashCode, paymentHashFunction);
-		hashCode = HashCodeUtil.hash(hashCode, generators);
+		hashCode = HashCodeUtil.hash(hashCode, g);
+		hashCode = HashCodeUtil.hash(hashCode, g2);
+		hashCode = HashCodeUtil.hash(hashCode, g2);
 		return hashCode;
 	}
 
@@ -80,9 +92,9 @@ public class ExampleSetup
 	public String toString() {
 		StringBuilder sb = new StringBuilder("ExampleSetup[");
 		sb.append(group.toString()).append(",(");
-		sb.append(generators[0].toString()).append(",");
-		sb.append(generators[1].toString()).append(",");
-		sb.append(generators[2].toString()).append("),");
+		sb.append(g.toString()).append(",");
+		sb.append(g1.toString()).append(",");
+		sb.append(g2.toString()).append("),");
 		sb.append(signatureHashFunction.toString()).append(",");
 		sb.append(paymentHashFunction.toString()).append("]");
 		return sb.toString();

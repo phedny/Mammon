@@ -48,12 +48,12 @@ public abstract class AbstractWithdrawingCoinOne<G extends Group<G>, F extends F
 		FiniteField.Element<F> u = setup.getFiniteField().getRandomElement();
 		FiniteField.Element<F> v = setup.getFiniteField().getRandomElement();
 
-		Group.Element<G> bigA = accountHolder.getPublicKey().multiply(setup.getGenerators()[2]).exponentiate(s);
+		Group.Element<G> bigA = accountHolder.getPublicKey().multiply(setup.getGenerator(2)).exponentiate(s);
 		Group.Element<G> z_ = accountHolder.getBlindedIdentity().exponentiate(s);
-		Group.Element<G> bigB = setup.getGenerators()[1].exponentiate(x1).multiply(
-				setup.getGenerators()[2].exponentiate(x2));
+		Group.Element<G> bigB = setup.getGenerator(1).exponentiate(x1).multiply(
+				setup.getGenerator(2).exponentiate(x2));
 
-		Group.Element<G> a_ = a.exponentiate(u).multiply(setup.getGenerators()[0].exponentiate(v));
+		Group.Element<G> a_ = a.exponentiate(u).multiply(setup.getGenerator(0).exponentiate(v));
 		Group.Element<G> b_ = b.exponentiate(s.multiply(u)).multiply(bigA.exponentiate(v));
 
 		FiniteField.Element<F> c_ = setup.getSignatureHash().hash(bigA, bigB, z_, a_, b_);

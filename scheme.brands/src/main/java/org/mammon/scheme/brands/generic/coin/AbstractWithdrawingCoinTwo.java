@@ -77,17 +77,17 @@ public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends F
 
 		// Tested by account holder
 		FiniteField.Element<F> r = response.getResponse();
-		Group.Element<G> left = setup.getGenerators()[0].exponentiate(r);
+		Group.Element<G> left = setup.getGenerator(0).exponentiate(r);
 		Group.Element<G> right = bank.getPublicKey().exponentiate(c).multiply(a);
 		System.out.println(left.equals(right));
 
 		// Tested by account holder
-		left = accountHolder.getPublicKey().multiply(setup.getGenerators()[2]).exponentiate(r);
+		left = accountHolder.getPublicKey().multiply(setup.getGenerator(2)).exponentiate(r);
 		right = accountHolder.getBlindedIdentity().exponentiate(c).multiply(b);
 		System.out.println(left.equals(right));
 
 		Group.Element<G> z_ = accountHolder.getBlindedIdentity().exponentiate(s);
-		Group.Element<G> a_ = a.exponentiate(u).multiply(setup.getGenerators()[0].exponentiate(v));
+		Group.Element<G> a_ = a.exponentiate(u).multiply(setup.getGenerator(0).exponentiate(v));
 		Group.Element<G> b_ = b.exponentiate(s.multiply(u)).multiply(bigA.exponentiate(v));
 		FiniteField.Element<F> r_ = r.multiply(u).add(v);
 		return newUnspentCoin(r, newCoinSignature(z_, a_, b_, r_));

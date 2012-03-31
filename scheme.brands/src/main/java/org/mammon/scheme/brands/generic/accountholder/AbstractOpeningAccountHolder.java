@@ -31,7 +31,7 @@ public abstract class AbstractOpeningAccountHolder<G extends Group<G>, F extends
 		this.setup = setup;
 		this.bank = bank;
 		this.privateKey = privateKey;
-		publicKey = setup.getGenerators()[1].exponentiate(privateKey);
+		publicKey = setup.getGenerator(1).exponentiate(privateKey);
 	}
 
 	public Object transition(BlindedIdentityResponse<G> response) {

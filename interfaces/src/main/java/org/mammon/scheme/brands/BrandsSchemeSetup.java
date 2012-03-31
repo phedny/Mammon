@@ -34,10 +34,10 @@ public interface BrandsSchemeSetup<G extends Group<G>, F extends FiniteField<F>,
 	F getFiniteField();
 
 	/**
-	 * @return an array of length 3, containing the generators that are named
-	 *         $g$, $g_1$ and $g_2$ in the Brands scheme.
+	 * @param i the index of the generator to obtains, must be 0, 1 or 2.
+	 * @return the generator with the reqeusted index.
 	 */
-	Group.Element<G>[] getGenerators();
+	Group.Element<G> getGenerator(int i);
 
 	/**
 	 * @return the hash function used to construct and verify signatures of the
