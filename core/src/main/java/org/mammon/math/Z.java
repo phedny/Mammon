@@ -88,8 +88,13 @@ public class Z implements FiniteField<Z> {
 
 		@Override
 		public FiniteField.Element<Z> exponentiate(FiniteField.Element<Z> other) {
-			// TODO Auto-generated method stub
-			return null;
+			FiniteField.Element<Z> result = this.getFiniteField().getOne();
+			for (BigInteger power = BigInteger.ZERO; power.compareTo(((ZElement) other).element) < 0; power = power
+				.add(BigInteger.ONE)) {
+				// TODO Use Binary Quadratation.
+				result = result.multiply(this);
+			}
+			return result;
 		}
 
 		@Override
