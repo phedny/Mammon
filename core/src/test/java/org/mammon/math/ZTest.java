@@ -1,10 +1,10 @@
 package org.mammon.math;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class ZTest {
 	FiniteField<Z> field;
@@ -31,5 +31,12 @@ public class ZTest {
 		FiniteField.Element<Z> one = field.getOne();
 
 		assertEquals(field, one.getFiniteField());
+	}
+
+	@Test
+	public void shouldBeAbleToReturnARandomElementTheFiniteField() {
+		FiniteField.Element<Z> element = field.getRandomElement();
+
+		assertEquals(field, element.getFiniteField());
 	}
 }

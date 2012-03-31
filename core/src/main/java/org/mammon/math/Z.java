@@ -1,19 +1,31 @@
 package org.mammon.math;
 
 import java.math.BigInteger;
+import java.security.SecureRandom;
+import java.util.Random;
 
 import org.mammon.math.util.Gcd;
 
 public class Z implements FiniteField<Z> {
 
+	private final Random random;
 	private final BigInteger q;
 
 	public Z(int q) {
-		this(BigInteger.valueOf(q));
+		this(q, new SecureRandom());
+	}
+
+	public Z(int q, Random random) {
+		this(BigInteger.valueOf(q), random);
 	}
 
 	public Z(BigInteger q) {
+		this(q, new SecureRandom());
+	}
+
+	public Z(BigInteger q, Random random) {
 		this.q = q;
+		this.random = new Random();
 	}
 
 	@Override
@@ -36,8 +48,8 @@ public class Z implements FiniteField<Z> {
 
 	@Override
 	public FiniteField.Element<Z> getRandomElement() {
-		// TODO Auto-generated method stub
-		return null;
+		// TODO Generate a random BigInteger
+		return element(random.nextInt(q.intValue()));
 	}
 
 	class ZElement implements FiniteField.Element<Z> {
