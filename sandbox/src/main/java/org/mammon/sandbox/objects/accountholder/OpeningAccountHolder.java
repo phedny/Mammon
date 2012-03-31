@@ -1,7 +1,6 @@
 package org.mammon.sandbox.objects.accountholder;
 
 import org.mammon.math.Group;
-import org.mammon.sandbox.generic.accountholder.AbstractOpeningAccountHolder;
 import org.mammon.sandbox.objects.example.ExampleAccountHolder;
 import org.mammon.sandbox.objects.example.ExampleBank;
 import org.mammon.sandbox.objects.example.ExampleFiniteField;
@@ -10,6 +9,7 @@ import org.mammon.sandbox.objects.example.ExamplePaymentHashFunction;
 import org.mammon.sandbox.objects.example.ExampleSetup;
 import org.mammon.sandbox.objects.example.ExampleSignatureHashFunction;
 import org.mammon.scheme.brands.accountholder.AccountHolderPrivate;
+import org.mammon.scheme.brands.generic.accountholder.AbstractOpeningAccountHolder;
 
 public class OpeningAccountHolder
 		extends

@@ -2,7 +2,7 @@ package org.mammon.sandbox.objects.example;
 
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
-import org.mammon.sandbox.generic.coin.AbstractCoinSignature;
+import org.mammon.scheme.brands.generic.coin.AbstractCoinSignature;
 
 public class ExampleCoinSignature extends AbstractCoinSignature<ExampleGroup, ExampleFiniteField> {
 

@@ -1,12 +1,10 @@
-package org.mammon.sandbox.generic.coin;
+package org.mammon.scheme.brands.generic.coin;
 
 import java.lang.reflect.Array;
 
 import org.mammon.AssetType;
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
-import org.mammon.sandbox.generic.accountholder.AbstractAccountHolderPrivate;
-import org.mammon.sandbox.generic.shop.AbstractShop;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
 import org.mammon.scheme.brands.PaymentHashFunction;
 import org.mammon.scheme.brands.SignatureHashFunction;
@@ -14,6 +12,8 @@ import org.mammon.scheme.brands.bank.Bank;
 import org.mammon.scheme.brands.coin.CoinSignature;
 import org.mammon.scheme.brands.coin.SpentCoin;
 import org.mammon.scheme.brands.coin.UnspentCoin;
+import org.mammon.scheme.brands.generic.accountholder.AbstractAccountHolderPrivate;
+import org.mammon.scheme.brands.generic.shop.AbstractShop;
 import org.mammon.scheme.brands.shop.Shop;
 import org.mammon.util.HashCodeUtil;
 

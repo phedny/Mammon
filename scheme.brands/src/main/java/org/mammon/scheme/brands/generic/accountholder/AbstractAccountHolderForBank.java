@@ -1,4 +1,4 @@
-package org.mammon.sandbox.generic.accountholder;
+package org.mammon.scheme.brands.generic.accountholder;
 
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;

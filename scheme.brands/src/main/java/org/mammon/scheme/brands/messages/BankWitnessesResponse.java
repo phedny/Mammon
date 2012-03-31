@@ -1,4 +1,4 @@
-package org.mammon.sandbox.messages;
+package org.mammon.scheme.brands.messages;
 
 import org.mammon.math.Group;
 import org.mammon.messaging.Message;

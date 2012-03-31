@@ -1,4 +1,4 @@
-package org.mammon.sandbox.generic.coin;
+package org.mammon.scheme.brands.generic.coin;
 
 import java.lang.reflect.Array;
 
@@ -8,7 +8,6 @@ import org.mammon.math.Group;
 import org.mammon.messaging.DualIdentityTransitionable;
 import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.Transitionable;
-import org.mammon.sandbox.messages.IssueCoinsResponse;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
 import org.mammon.scheme.brands.PaymentHashFunction;
 import org.mammon.scheme.brands.SignatureHashFunction;
@@ -17,6 +16,7 @@ import org.mammon.scheme.brands.accountholder.AccountHolderPrivate;
 import org.mammon.scheme.brands.bank.Bank;
 import org.mammon.scheme.brands.coin.CoinSignature;
 import org.mammon.scheme.brands.coin.UnspentCoin;
+import org.mammon.scheme.brands.messages.IssueCoinsResponse;
 import org.mammon.util.HashCodeUtil;
 import org.mammon.util.messaging.AbstractTransitionable;
 

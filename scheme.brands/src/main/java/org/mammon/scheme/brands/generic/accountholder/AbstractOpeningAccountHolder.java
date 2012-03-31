@@ -1,17 +1,17 @@
-package org.mammon.sandbox.generic.accountholder;
+package org.mammon.scheme.brands.generic.accountholder;
 
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
 import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.MessageEmitter;
 import org.mammon.messaging.Transitionable;
-import org.mammon.sandbox.messages.BlindedIdentityRequest;
-import org.mammon.sandbox.messages.BlindedIdentityResponse;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
 import org.mammon.scheme.brands.PaymentHashFunction;
 import org.mammon.scheme.brands.SignatureHashFunction;
 import org.mammon.scheme.brands.accountholder.AccountHolderPrivate;
 import org.mammon.scheme.brands.bank.Bank;
+import org.mammon.scheme.brands.messages.BlindedIdentityRequest;
+import org.mammon.scheme.brands.messages.BlindedIdentityResponse;
 import org.mammon.util.messaging.AbstractTransitionable;
 
 public abstract class AbstractOpeningAccountHolder<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>

@@ -1,4 +1,4 @@
-package org.mammon.sandbox.generic;
+package org.mammon.scheme.brands.generic.bank;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,16 +9,16 @@ import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
 import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.Transactable;
-import org.mammon.sandbox.messages.BankWitnessesRequest;
-import org.mammon.sandbox.messages.BankWitnessesResponse;
-import org.mammon.sandbox.messages.BlindedIdentityRequest;
-import org.mammon.sandbox.messages.BlindedIdentityResponse;
-import org.mammon.sandbox.messages.IssueCoinsRequest;
-import org.mammon.sandbox.messages.IssueCoinsResponse;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
 import org.mammon.scheme.brands.PaymentHashFunction;
 import org.mammon.scheme.brands.SignatureHashFunction;
 import org.mammon.scheme.brands.bank.BankPrivate;
+import org.mammon.scheme.brands.messages.BankWitnessesRequest;
+import org.mammon.scheme.brands.messages.BankWitnessesResponse;
+import org.mammon.scheme.brands.messages.BlindedIdentityRequest;
+import org.mammon.scheme.brands.messages.BlindedIdentityResponse;
+import org.mammon.scheme.brands.messages.IssueCoinsRequest;
+import org.mammon.scheme.brands.messages.IssueCoinsResponse;
 
 public abstract class AbstractBankPrivate<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
 		extends AbstractBank<G, F, I, T, H, H0> implements BankPrivate<G, F, I, T, H, H0>, Identifiable<I>,

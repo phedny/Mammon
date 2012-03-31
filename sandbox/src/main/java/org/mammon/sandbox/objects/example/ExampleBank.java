@@ -1,8 +1,8 @@
 package org.mammon.sandbox.objects.example;
 
 import org.mammon.math.FiniteField;
-import org.mammon.sandbox.generic.AbstractBankPrivate;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
+import org.mammon.scheme.brands.generic.bank.AbstractBankPrivate;
 
 public class ExampleBank
 		extends

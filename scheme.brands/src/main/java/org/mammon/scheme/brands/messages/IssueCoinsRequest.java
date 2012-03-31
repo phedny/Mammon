@@ -1,4 +1,4 @@
-package org.mammon.sandbox.messages;
+package org.mammon.scheme.brands.messages;
 
 import org.mammon.AssetType;
 import org.mammon.math.FiniteField;

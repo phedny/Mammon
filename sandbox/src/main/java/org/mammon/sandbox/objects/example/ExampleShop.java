@@ -1,6 +1,6 @@
 package org.mammon.sandbox.objects.example;
 
-import org.mammon.sandbox.generic.shop.AbstractShop;
+import org.mammon.scheme.brands.generic.shop.AbstractShop;
 
 public class ExampleShop
 		extends

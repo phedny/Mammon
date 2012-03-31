@@ -1,4 +1,4 @@
-package org.mammon.sandbox.generic.coin;
+package org.mammon.scheme.brands.generic.coin;
 
 import org.mammon.AssetType;
 import org.mammon.math.FiniteField;
@@ -7,15 +7,15 @@ import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.Message;
 import org.mammon.messaging.MessageEmitter;
 import org.mammon.messaging.Transitionable;
-import org.mammon.sandbox.messages.BankWitnessesResponse;
-import org.mammon.sandbox.messages.IssueCoinsRequest;
-import org.mammon.sandbox.messages.IssueCoinsResponse;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
 import org.mammon.scheme.brands.PaymentHashFunction;
 import org.mammon.scheme.brands.SignatureHashFunction;
 import org.mammon.scheme.brands.accountholder.AccountHolderForBank;
 import org.mammon.scheme.brands.bank.Bank;
 import org.mammon.scheme.brands.coin.CoinSignature;
+import org.mammon.scheme.brands.messages.BankWitnessesResponse;
+import org.mammon.scheme.brands.messages.IssueCoinsRequest;
+import org.mammon.scheme.brands.messages.IssueCoinsResponse;
 import org.mammon.util.messaging.AbstractTransitionable;
 
 public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>

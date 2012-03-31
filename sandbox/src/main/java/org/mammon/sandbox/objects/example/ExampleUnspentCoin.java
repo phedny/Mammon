@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
-import org.mammon.sandbox.generic.coin.AbstractUnspentCoin;
 import org.mammon.scheme.brands.coin.CoinSignature;
+import org.mammon.scheme.brands.generic.coin.AbstractUnspentCoin;
 
 public class ExampleUnspentCoin
 		extends

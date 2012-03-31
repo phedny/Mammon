@@ -4,8 +4,6 @@ import java.util.UUID;
 
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
-import org.mammon.sandbox.generic.coin.AbstractWithdrawingCoinOne;
-import org.mammon.sandbox.generic.coin.AbstractWithdrawingCoinTwo;
 import org.mammon.sandbox.objects.example.ExampleAccountHolder;
 import org.mammon.sandbox.objects.example.ExampleBank;
 import org.mammon.sandbox.objects.example.ExampleFiniteField;
@@ -13,6 +11,8 @@ import org.mammon.sandbox.objects.example.ExampleGroup;
 import org.mammon.sandbox.objects.example.ExamplePaymentHashFunction;
 import org.mammon.sandbox.objects.example.ExampleSetup;
 import org.mammon.sandbox.objects.example.ExampleSignatureHashFunction;
+import org.mammon.scheme.brands.generic.coin.AbstractWithdrawingCoinOne;
+import org.mammon.scheme.brands.generic.coin.AbstractWithdrawingCoinTwo;
 
 public class WithdrawingCoinOne
 		extends

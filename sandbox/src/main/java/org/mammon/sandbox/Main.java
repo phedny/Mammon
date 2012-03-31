@@ -5,7 +5,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.mammon.IOweYou;
 import org.mammon.messaging.Identifiable;
-import org.mammon.sandbox.messages.ObtainCoinsMessage;
 import org.mammon.sandbox.objects.accountholder.OpeningAccountHolder;
 import org.mammon.sandbox.objects.example.ExampleBank;
 import org.mammon.sandbox.objects.example.ExampleFiniteField;
@@ -17,6 +16,7 @@ import org.mammon.sandbox.objects.example.ExampleSignatureHashFunction;
 import org.mammon.sandbox.objects.example.ExampleSpentCoin;
 import org.mammon.sandbox.objects.example.ExampleUnspentCoin;
 import org.mammon.scheme.brands.accountholder.AccountHolder;
+import org.mammon.scheme.brands.messages.ObtainCoinsMessage;
 
 public class Main {
 

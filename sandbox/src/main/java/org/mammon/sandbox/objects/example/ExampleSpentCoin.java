@@ -1,6 +1,6 @@
 package org.mammon.sandbox.objects.example;
 
-import org.mammon.sandbox.generic.coin.AbstractSpentCoin;
+import org.mammon.scheme.brands.generic.coin.AbstractSpentCoin;
 
 public class ExampleSpentCoin extends
 		AbstractSpentCoin<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {

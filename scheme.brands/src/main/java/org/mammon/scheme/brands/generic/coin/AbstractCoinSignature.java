@@ -1,4 +1,4 @@
-package org.mammon.sandbox.generic.coin;
+package org.mammon.scheme.brands.generic.coin;
 
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;

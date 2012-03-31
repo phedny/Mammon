@@ -2,10 +2,10 @@ package org.mammon.sandbox.objects.example;
 
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
-import org.mammon.sandbox.generic.accountholder.AbstractAccountHolderPrivate;
-import org.mammon.sandbox.generic.coin.AbstractWithdrawingCoinOne;
-import org.mammon.sandbox.messages.ObtainCoinsMessage;
 import org.mammon.sandbox.objects.accountholder.WithdrawingCoinOne;
+import org.mammon.scheme.brands.generic.accountholder.AbstractAccountHolderPrivate;
+import org.mammon.scheme.brands.generic.coin.AbstractWithdrawingCoinOne;
+import org.mammon.scheme.brands.messages.ObtainCoinsMessage;
 
 public class ExampleAccountHolder
 		extends

@@ -3,8 +3,6 @@ package org.mammon.sandbox.objects.accountholder;
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
 import org.mammon.math.Group.Element;
-import org.mammon.sandbox.generic.coin.AbstractCoinSignature;
-import org.mammon.sandbox.generic.coin.AbstractWithdrawingCoinTwo;
 import org.mammon.sandbox.objects.example.ExampleAccountHolder;
 import org.mammon.sandbox.objects.example.ExampleBank;
 import org.mammon.sandbox.objects.example.ExampleCoinSignature;
@@ -15,6 +13,8 @@ import org.mammon.sandbox.objects.example.ExampleSetup;
 import org.mammon.sandbox.objects.example.ExampleSignatureHashFunction;
 import org.mammon.sandbox.objects.example.ExampleUnspentCoin;
 import org.mammon.scheme.brands.coin.CoinSignature;
+import org.mammon.scheme.brands.generic.coin.AbstractCoinSignature;
+import org.mammon.scheme.brands.generic.coin.AbstractWithdrawingCoinTwo;
 
 public class WithdrawingCoinTwo
 		extends
