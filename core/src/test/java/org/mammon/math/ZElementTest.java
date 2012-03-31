@@ -57,4 +57,14 @@ public class ZElementTest {
 		}
 		assertEquals(zero, result);
 	}
+
+	@Test
+	public void mulitplicationShouldHaveOrderTotientQ() {
+		FiniteField.Element<Z> result = one;
+		FiniteField.Element<Z> generator = ((Z) field).element(2);
+		for (int i = 0; i < 10; i++) {
+			result = result.multiply(generator);
+		}
+		assertEquals(one, result);
+	}
 }

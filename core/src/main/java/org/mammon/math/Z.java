@@ -25,6 +25,10 @@ public class Z implements FiniteField<Z> {
 		return new ZElement(element);
 	}
 
+	public FiniteField.Element<Z> element(Integer element) {
+		return element(BigInteger.valueOf(element));
+	}
+
 	@Override
 	public FiniteField.Element<Z> getOne() {
 		return element(BigInteger.ONE);
