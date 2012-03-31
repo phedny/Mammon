@@ -2,6 +2,8 @@ package org.mammon.math;
 
 import java.math.BigInteger;
 
+import org.mammon.math.util.Gcd;
+
 public class Z implements FiniteField<Z> {
 
 	private final BigInteger q;
@@ -64,8 +66,8 @@ public class Z implements FiniteField<Z> {
 
 		@Override
 		public FiniteField.Element<Z> getInverse() {
-			// TODO Auto-generated method stub
-			return null;
+			BigInteger[] gcd = Gcd.of(element, q);
+			return element(gcd[1]);
 		}
 
 		@Override

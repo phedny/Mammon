@@ -1,10 +1,10 @@
 package org.mammon.math;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class ZElementTest {
 
@@ -38,8 +38,16 @@ public class ZElementTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void oppositesShouldSumToZero() {
-		for (FiniteField.Element<Z> element : new FiniteField.Element[]{zero, one}) {
+		for (FiniteField.Element<Z> element : new FiniteField.Element[] { zero, one }) {
 			assertEquals(zero, element.add(element.getOpposite()));
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void inversesShouldMultiplyToOne() {
+		for (FiniteField.Element<Z> element : new FiniteField.Element[] { one }) {
+			assertEquals(one, element.multiply(element.getInverse()));
 		}
 	}
 }
