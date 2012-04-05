@@ -177,4 +177,110 @@ public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends F
 	protected abstract AbstractCoinSignature<G, F> newCoinSignature(Group.Element<G> z, Group.Element<G> a,
 			Group.Element<G> b, FiniteField.Element<F> r);
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((a == null) ? 0 : a.hashCode());
+		result = prime * result + ((accountHolder == null) ? 0 : accountHolder.hashCode());
+		result = prime * result + ((b == null) ? 0 : b.hashCode());
+		result = prime * result + ((bank == null) ? 0 : bank.hashCode());
+		result = prime * result + ((bigA == null) ? 0 : bigA.hashCode());
+		result = prime * result + ((bigB == null) ? 0 : bigB.hashCode());
+		result = prime * result + ((c == null) ? 0 : c.hashCode());
+		result = prime * result + count;
+		result = prime * result + ((publicKey == null) ? 0 : publicKey.hashCode());
+		result = prime * result + ((s == null) ? 0 : s.hashCode());
+		result = prime * result + ((setup == null) ? 0 : setup.hashCode());
+		result = prime * result + ((u == null) ? 0 : u.hashCode());
+		result = prime * result + ((v == null) ? 0 : v.hashCode());
+		result = prime * result + ((x1 == null) ? 0 : x1.hashCode());
+		result = prime * result + ((x2 == null) ? 0 : x2.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AbstractWithdrawingCoinTwo other = (AbstractWithdrawingCoinTwo) obj;
+		if (a == null) {
+			if (other.a != null)
+				return false;
+		} else if (!a.equals(other.a))
+			return false;
+		if (accountHolder == null) {
+			if (other.accountHolder != null)
+				return false;
+		} else if (!accountHolder.equals(other.accountHolder))
+			return false;
+		if (b == null) {
+			if (other.b != null)
+				return false;
+		} else if (!b.equals(other.b))
+			return false;
+		if (bank == null) {
+			if (other.bank != null)
+				return false;
+		} else if (!bank.equals(other.bank))
+			return false;
+		if (bigA == null) {
+			if (other.bigA != null)
+				return false;
+		} else if (!bigA.equals(other.bigA))
+			return false;
+		if (bigB == null) {
+			if (other.bigB != null)
+				return false;
+		} else if (!bigB.equals(other.bigB))
+			return false;
+		if (c == null) {
+			if (other.c != null)
+				return false;
+		} else if (!c.equals(other.c))
+			return false;
+		if (count != other.count)
+			return false;
+		if (publicKey == null) {
+			if (other.publicKey != null)
+				return false;
+		} else if (!publicKey.equals(other.publicKey))
+			return false;
+		if (s == null) {
+			if (other.s != null)
+				return false;
+		} else if (!s.equals(other.s))
+			return false;
+		if (setup == null) {
+			if (other.setup != null)
+				return false;
+		} else if (!setup.equals(other.setup))
+			return false;
+		if (u == null) {
+			if (other.u != null)
+				return false;
+		} else if (!u.equals(other.u))
+			return false;
+		if (v == null) {
+			if (other.v != null)
+				return false;
+		} else if (!v.equals(other.v))
+			return false;
+		if (x1 == null) {
+			if (other.x1 != null)
+				return false;
+		} else if (!x1.equals(other.x1))
+			return false;
+		if (x2 == null) {
+			if (other.x2 != null)
+				return false;
+		} else if (!x2.equals(other.x2))
+			return false;
+		return true;
+	}
+
 }

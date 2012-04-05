@@ -61,4 +61,47 @@ public abstract class AbstractOpeningAccountHolder<G extends Group<G>, F extends
 
 	protected abstract AccountHolderPrivate<G, F, I, T, H, H0> newAccountHolder(Group.Element<G> element);
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((bank == null) ? 0 : bank.hashCode());
+		result = prime * result + ((privateKey == null) ? 0 : privateKey.hashCode());
+		result = prime * result + ((publicKey == null) ? 0 : publicKey.hashCode());
+		result = prime * result + ((setup == null) ? 0 : setup.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AbstractOpeningAccountHolder other = (AbstractOpeningAccountHolder) obj;
+		if (bank == null) {
+			if (other.bank != null)
+				return false;
+		} else if (!bank.equals(other.bank))
+			return false;
+		if (privateKey == null) {
+			if (other.privateKey != null)
+				return false;
+		} else if (!privateKey.equals(other.privateKey))
+			return false;
+		if (publicKey == null) {
+			if (other.publicKey != null)
+				return false;
+		} else if (!publicKey.equals(other.publicKey))
+			return false;
+		if (setup == null) {
+			if (other.setup != null)
+				return false;
+		} else if (!setup.equals(other.setup))
+			return false;
+		return true;
+	}
+
 }

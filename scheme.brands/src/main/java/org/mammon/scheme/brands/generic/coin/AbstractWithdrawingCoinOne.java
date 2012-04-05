@@ -91,4 +91,50 @@ public abstract class AbstractWithdrawingCoinOne<G extends Group<G>, F extends F
 		return count;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((accountHolder == null) ? 0 : accountHolder.hashCode());
+		result = prime * result + ((bank == null) ? 0 : bank.hashCode());
+		result = prime * result + count;
+		result = prime * result + ((publicKey == null) ? 0 : publicKey.hashCode());
+		result = prime * result + ((setup == null) ? 0 : setup.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AbstractWithdrawingCoinOne other = (AbstractWithdrawingCoinOne) obj;
+		if (accountHolder == null) {
+			if (other.accountHolder != null)
+				return false;
+		} else if (!accountHolder.equals(other.accountHolder))
+			return false;
+		if (bank == null) {
+			if (other.bank != null)
+				return false;
+		} else if (!bank.equals(other.bank))
+			return false;
+		if (count != other.count)
+			return false;
+		if (publicKey == null) {
+			if (other.publicKey != null)
+				return false;
+		} else if (!publicKey.equals(other.publicKey))
+			return false;
+		if (setup == null) {
+			if (other.setup != null)
+				return false;
+		} else if (!setup.equals(other.setup))
+			return false;
+		return true;
+	}
+
 }
