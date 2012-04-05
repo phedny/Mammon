@@ -36,7 +36,7 @@ public class ExampleGroup implements Group<ExampleGroup> {
 	}
 
 	@Override
-	public ExampleElement getIdentity() {
+	public ExampleElement getIdentityElement() {
 		return zero;
 	}
 

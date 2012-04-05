@@ -13,7 +13,7 @@ public interface Group<G extends Group<G>> {
 	/**
 	 * @return the identity element of this group.
 	 */
-	Element<G> getIdentity();
+	Element<G> getIdentityElement();
 
 	/**
 	 * @return the unit (one) element of this group.

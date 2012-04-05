@@ -26,7 +26,7 @@ public class GqTest {
 
 	@Test
 	public void shouldBeAbleToReturnTheIdentityOfTheGroup() {
-		Group.Element<Gq> identity = group.getIdentity();
+		Group.Element<Gq> identity = group.getIdentityElement();
 
 		assertEquals(group, identity.getGroup());
 	}

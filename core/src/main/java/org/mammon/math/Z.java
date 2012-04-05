@@ -99,7 +99,7 @@ public class Z implements FiniteField<Z> {
 
 		@Override
 		public <G extends Group<G>> Group.Element<G> raise(Group.Element<G> groupElement) {
-			Group.Element<G> result = groupElement.getGroup().getIdentity();
+			Group.Element<G> result = groupElement.getGroup().getIdentityElement();
 			for (BigInteger power = BigInteger.ZERO; power.compareTo(element) < 0; power = power.add(BigInteger.ONE)) {
 				// TODO Use Binary Quadratation.
 				result = result.multiply(groupElement);

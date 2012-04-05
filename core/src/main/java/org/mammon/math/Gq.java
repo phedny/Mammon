@@ -32,7 +32,7 @@ public class Gq implements Group<Gq> {
 	}
 
 	@Override
-	public Group.Element<Gq> getIdentity() {
+	public Group.Element<Gq> getIdentityElement() {
 		return element(BigInteger.ONE);
 	}
 

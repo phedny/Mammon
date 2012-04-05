@@ -15,7 +15,7 @@ public class GqElementTest {
 	@Before
 	public void createGroup() {
 		group = new Gq(11, 23);
-		identity = group.getIdentity();
+		identity = group.getIdentityElement();
 		generator = group.getGenerator();
 	}
 
