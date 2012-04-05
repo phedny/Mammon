@@ -28,7 +28,11 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 
 	private Map<Class, Constructor> storableInterfaces = new HashMap<Class, Constructor>();
 
+	private Map<String, Constructor> implementationConstructors = new HashMap<String, Constructor>();
+
 	private Map<Class, List<String>> classProperties = new HashMap<Class, List<String>>();
+
+	private Map<Class, List<Class<?>>> classPropertyTypes = new HashMap<Class, List<Class<?>>>();
 
 	private Map<I, Identifiable<I>> objectMap = new HashMap<I, Identifiable<I>>();
 
@@ -46,6 +50,7 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 		Constructor<?> constructor = null;
 
 		List<String> properties = new ArrayList<String>();
+		List<Class<?>> propertyTypes = new ArrayList<Class<?>>();
 		if (availableAtRuntime == null) {
 			for (Constructor<?> ctor : clazz.getConstructors()) {
 				FromPersistent fromPersist = ctor.getAnnotation(FromPersistent.class);
@@ -91,6 +96,7 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 				}
 				String propertyName = methodName.substring(3, 4).toLowerCase() + methodName.substring(4);
 				properties.add(propertyName);
+				propertyTypes.add(enclosingClass);
 			}
 			Class<?>[] types = constructor.getParameterTypes();
 			Annotation[][] annotations = constructor.getParameterAnnotations();
@@ -104,28 +110,29 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 				}
 
 				int arrayDepth = 0;
-				while (type.isArray()) {
-					type = type.getComponentType();
+				Class<?> baseType = type;
+				while (baseType.isArray()) {
+					baseType = baseType.getComponentType();
 					arrayDepth++;
 				}
-				
+
 				Class<?> registeredClass = null;
 				if (persistAs == null) {
 					throw new IllegalArgumentException("Argument " + i + " of " + clazz
 							+ " constructor has no @PersistAt");
-				} else if (String.class.isAssignableFrom(type)) {
+				} else if (String.class.isAssignableFrom(baseType)) {
 					registeredClass = String.class;
-				} else if (type.isPrimitive()) {
-					registeredClass = type;
+				} else if (baseType.isPrimitive()) {
+					registeredClass = baseType;
 				} else {
-					Class<?> componentType = type;
+					Class<?> componentType = baseType;
 					registeredClass = getRegisteredClass(componentType);
 					if (registeredClass == null && iface.isAssignableFrom(componentType)) {
 						registeredClass = iface;
 					}
 					if (registeredClass == null) {
 						throw new IllegalArgumentException("Argument " + i + " of " + clazz
-								+ " constructor has incompatible type " + type);
+								+ " constructor has incompatible type " + baseType);
 					}
 
 				}
@@ -152,6 +159,7 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 							+ clazz + " constructor");
 				}
 				properties.add(propertyName);
+				propertyTypes.add(type);
 			}
 
 		} else {
@@ -164,7 +172,9 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 		}
 
 		storableInterfaces.put(iface, constructor);
+		implementationConstructors.put(clazz.getName(), constructor);
 		classProperties.put(clazz, properties);
+		classPropertyTypes.put(clazz, propertyTypes);
 	}
 
 	@Override
@@ -189,13 +199,88 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 		objectMap.put(object.getIdentity(), object);
 	}
 
-	private String serializeObject(Object object) {
-		return serializeObjectJSON(object).toString();
+	private Object deserializeObject(String json) {
+		try {
+			JSONObject jsonObject = new JSONObject(json);
+			return deserializeObjectJSON(jsonObject);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
-	private JSONObject serializeObjectJSON(Object object) {
+	private Object deserializeObjectJSON(JSONObject json) throws JSONException {
+		String implementation = json.getString("implementation");
+		Constructor constructor = implementationConstructors.get(implementation);
+		Class clazz = constructor.getDeclaringClass();
+		List<String> properties = classProperties.get(clazz);
+		List<Class<?>> propertyTypes = classPropertyTypes.get(clazz);
+
+		Object[] arguments = new Object[properties.size()];
+		for (int i = 0; i < arguments.length; i++) {
+			String propertyName = properties.get(i);
+			Class<?> propertyType = propertyTypes.get(i);
+			arguments[i] = deserializePropertyJSON(json.get(propertyName), propertyType);
+		}
+
+		try {
+			return constructor.newInstance(arguments);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	private Object deserializePropertyJSON(Object object, Class<?> propertyType) throws JSONException {
+		if (propertyType.isArray() && object instanceof JSONArray) {
+			return deserializeArrayJSON((JSONArray) object, propertyType.getComponentType());
+		} else if (String.class.isAssignableFrom(propertyType) && object instanceof String) {
+			return object;
+		} else if (Integer.TYPE.isAssignableFrom(propertyType) && object instanceof Number) {
+			return Integer.valueOf(((Number) object).intValue());
+		} else if (Long.TYPE.isAssignableFrom(propertyType) && object instanceof Number) {
+			return Long.valueOf(((Number) object).longValue());
+		} else if (object instanceof String) {
+			return get((I) object);
+		} else if (object instanceof JSONObject) {
+			return deserializeObjectJSON((JSONObject) object);
+		} else {
+			return null;
+
+		}
+	}
+
+	private Object deserializeArrayJSON(JSONArray json, Class<?> expectedType) throws ArrayIndexOutOfBoundsException,
+			IllegalArgumentException, JSONException {
+		int length = json.length();
+		Object array = Array.newInstance(expectedType, length);
+		for (int i = 0; i < length; i++) {
+			Array.set(array, i, deserializePropertyJSON(json.get(i), expectedType));
+		}
+		return array;
+	}
+
+	private String serializeObject(Object object, Set<Identifiable<I>> referencedObjects) {
+		return serializeObjectJSON(object, referencedObjects).toString();
+	}
+
+	private JSONObject serializeObjectJSON(Object object, Set<Identifiable<I>> referencedObjects) {
 		JSONObject json = new JSONObject();
 		Class<? extends Object> clazz = object.getClass();
+		Class<?> registeredClass = getRegisteredClass(clazz);
+		try {
+			json.put("interface", registeredClass.getName());
+			json.put("implementation", clazz.getName());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		List<String> properties = classProperties.get(clazz);
 		for (String property : properties) {
 			String getterName = "get" + property.substring(0, 1).toUpperCase() + property.substring(1);
@@ -208,17 +293,19 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 				} else {
 					Class<?> returnType = value.getClass();
 					if (returnType.isArray()) {
-						JSONArray array = serializeArrayJSON(value);
+						JSONArray array = serializeArrayJSON(value, referencedObjects);
 						json.put(property, array);
 					} else if (value instanceof String) {
 						json.put(property, value);
 					} else if (value instanceof Number) {
 						json.put(property, value);
 					} else if (value instanceof Identifiable<?>) {
-						String identifier = ((Identifiable<?>) value).toString();
+						Identifiable<I> identifiable = (Identifiable<I>) value;
+						String identifier = identifiable.getIdentity().toString();
 						json.put(property, identifier);
+						referencedObjects.add(identifiable);
 					} else {
-						json.put(property, serializeObjectJSON(value));
+						json.put(property, serializeObjectJSON(value, referencedObjects));
 					}
 				}
 			} catch (SecurityException e) {
@@ -238,15 +325,15 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 		return json;
 	}
 
-	private JSONArray serializeArrayJSON(Object value) {
+	private JSONArray serializeArrayJSON(Object value, Set<Identifiable<I>> referencedObjects) {
 		JSONArray array = new JSONArray();
 		int length = Array.getLength(value);
 		for (int i = 0; i < length; i++) {
 			Object componentObject = Array.get(value, i);
 			if (componentObject.getClass().isArray()) {
-				array.put(serializeArrayJSON(componentObject));
+				array.put(serializeArrayJSON(componentObject, referencedObjects));
 			} else {
-				array.put(serializeObjectJSON(componentObject));
+				array.put(serializeObjectJSON(componentObject, referencedObjects));
 			}
 		}
 		return array;
@@ -272,7 +359,24 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 		}
 
 		System.out.println("Storing " + object.getIdentity() + " (" + object.getClass() + " as " + clazz + ")");
-		System.out.println(":-> " + serializeObject(object));
+		Set<Identifiable<I>> referencedObjects = new HashSet<Identifiable<I>>();
+		String serializedObject = serializeObject(object, referencedObjects);
+		System.out.println(":-> " + serializedObject);
+
+		for (Identifiable<I> obj : referencedObjects) {
+			if (!objectMap.containsKey(obj.getIdentity())) {
+				store(obj);
+			}
+		}
+
+		try {
+			Object deserializedObject = deserializeObject(serializedObject);
+			System.out.println(":<- " + deserializedObject);
+			System.out.println(":.. " + object);
+			System.out.println(":== " + deserializedObject.equals(object));
+		} catch (NullPointerException e) {
+			System.out.println("!!! Failed to deserialize " + object);
+		}
 		objectMap.put(object.getIdentity(), object);
 		if (secT != null) {
 			objectMap.put(secT.getIdentity(), secT);

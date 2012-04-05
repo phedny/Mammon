@@ -8,12 +8,13 @@ import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
 import org.mammon.messaging.AvailableAtRuntime;
 import org.mammon.messaging.FromPersistent;
+import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.PersistAs;
 import org.mammon.messaging.ReturnsEnclosing;
 import org.mammon.util.HashCodeUtil;
 
 @AvailableAtRuntime(Group.class)
-public class ExampleGroup implements Group<ExampleGroup> {
+public class ExampleGroup implements Identifiable<String>, Group<ExampleGroup> {
 
 	private final ExampleRandomGenerator randomGenerator;
 
@@ -301,6 +302,11 @@ public class ExampleGroup implements Group<ExampleGroup> {
 			return o1.hashCode() - o2.hashCode();
 		}
 
+	}
+
+	@Override
+	public String getIdentity() {
+		return "ExampleGroup";
 	}
 
 }

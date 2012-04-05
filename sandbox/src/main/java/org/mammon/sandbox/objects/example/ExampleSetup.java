@@ -2,12 +2,15 @@ package org.mammon.sandbox.objects.example;
 
 import org.mammon.math.Group;
 import org.mammon.math.Group.Element;
-import org.mammon.messaging.FromPersistent;
+import org.mammon.messaging.AvailableAtRuntime;
+import org.mammon.messaging.Identifiable;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
 import org.mammon.util.HashCodeUtil;
 
+@AvailableAtRuntime(BrandsSchemeSetup.class)
 public class ExampleSetup
 		implements
+		Identifiable<String>,
 		BrandsSchemeSetup<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	private final ExampleRandomGenerator randomGenerator = new ExampleRandomGenerator();
@@ -26,7 +29,6 @@ public class ExampleSetup
 
 	private final Group.Element<ExampleGroup> g2;
 
-	@FromPersistent(BrandsSchemeSetup.class)
 	public ExampleSetup() {
 		g = group.getRandomElement();
 		g1 = group.getRandomElement();
@@ -100,6 +102,11 @@ public class ExampleSetup
 		sb.append(signatureHashFunction.toString()).append(",");
 		sb.append(paymentHashFunction.toString()).append("]");
 		return sb.toString();
+	}
+
+	@Override
+	public String getIdentity() {
+		return "ExampleSetup";
 	}
 
 }
