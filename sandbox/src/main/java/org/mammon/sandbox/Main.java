@@ -36,7 +36,7 @@ public class Main {
 	 * @throws InterruptedException
 	 */
 	public static void main(String[] args) throws InterruptedException {
-		final AbstractMessagingSystem<String> messaging = new MessagingSystem(EuroAssetType.class,
+		final JsonUtil jsonUtil = new JsonUtil(EuroAssetType.class,
 				ExampleFiniteField.class, ExampleFiniteField.StaticElement.class,
 				ExampleFiniteField.AdditionElement.class, ExampleFiniteField.MultiplicationElement.class,
 				ExampleFiniteField.ExponentiationElement.class, ExampleGroup.class, ExampleGroup.StaticElement.class,
@@ -46,6 +46,7 @@ public class Main {
 				WithdrawingCoinTwo.class, ExampleUnspentCoin.class, BankWitnessesRequest.class,
 				BankWitnessesResponse.class, BlindedIdentityRequest.class, BlindedIdentityResponse.class,
 				IssueCoinsRequest.class, IssueCoinsResponse.class, ObtainCoinsMessage.class);
+		final MessagingSystem messaging = new MessagingSystem(jsonUtil);
 
 		// Setup the environment.
 		final ExampleSetup setup = new ExampleSetup();

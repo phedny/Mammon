@@ -7,14 +7,6 @@ package org.mammon.messaging;
 public interface ObjectStorage {
 
 	/**
-	 * Register a class, such that it can be persisted.
-	 * 
-	 * @param clazz
-	 *            Class to use when instantiating an object of this interface.
-	 */
-	void registerClass(Class<?> clazz);
-
-	/**
 	 * Retrieve an object from persistent storage.
 	 * 
 	 * @param identity
