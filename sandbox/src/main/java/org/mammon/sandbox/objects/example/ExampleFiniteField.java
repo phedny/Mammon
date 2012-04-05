@@ -14,6 +14,7 @@ import org.mammon.messaging.AvailableAtRuntime;
 import org.mammon.messaging.FromPersistent;
 import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.PersistAs;
+import org.mammon.messaging.ReturnsEnclosing;
 import org.mammon.util.HashCodeUtil;
 
 @AvailableAtRuntime(FiniteField.class)
@@ -80,6 +81,7 @@ public class ExampleFiniteField implements Identifiable<String>, FiniteField<Exa
 		}
 
 		@Override
+		@ReturnsEnclosing
 		public ExampleFiniteField getFiniteField() {
 			return ExampleFiniteField.this;
 		}

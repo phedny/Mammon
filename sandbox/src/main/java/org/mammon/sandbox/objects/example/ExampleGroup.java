@@ -9,6 +9,7 @@ import org.mammon.math.Group;
 import org.mammon.messaging.AvailableAtRuntime;
 import org.mammon.messaging.FromPersistent;
 import org.mammon.messaging.PersistAs;
+import org.mammon.messaging.ReturnsEnclosing;
 import org.mammon.util.HashCodeUtil;
 
 @AvailableAtRuntime(Group.class)
@@ -69,6 +70,7 @@ public class ExampleGroup implements Group<ExampleGroup> {
 		}
 
 		@Override
+		@ReturnsEnclosing
 		public ExampleGroup getGroup() {
 			return ExampleGroup.this;
 		}

@@ -1,24 +1,34 @@
 package org.mammon.sandbox;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.mammon.messaging.AvailableAtRuntime;
 import org.mammon.messaging.DualIdentityTransitionable;
 import org.mammon.messaging.FromPersistent;
 import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.ObjectStorage;
 import org.mammon.messaging.PersistAs;
+import org.mammon.messaging.ReturnsEnclosing;
 import org.mammon.messaging.Transitionable;
 
 public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 
 	private Map<Class, Constructor> storableInterfaces = new HashMap<Class, Constructor>();
+
+	private Map<Class, List<String>> classProperties = new HashMap<Class, List<String>>();
 
 	private Map<I, Identifiable<I>> objectMap = new HashMap<I, Identifiable<I>>();
 
@@ -35,6 +45,7 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 		Class<?> iface = null;
 		Constructor<?> constructor = null;
 
+		List<String> properties = new ArrayList<String>();
 		if (availableAtRuntime == null) {
 			for (Constructor<?> ctor : clazz.getConstructors()) {
 				FromPersistent fromPersist = ctor.getAnnotation(FromPersistent.class);
@@ -54,6 +65,32 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 					throw new IllegalArgumentException("Enclosing class of " + clazz + " not registered");
 				}
 				offset = 1;
+
+				Method returnsEnclosing = null;
+				for (Method method : clazz.getMethods()) {
+					if (method.getAnnotation(ReturnsEnclosing.class) != null) {
+						if (returnsEnclosing != null) {
+							throw new IllegalArgumentException("More than one methods of " + clazz
+									+ " have @ReturnsEnclosing");
+						}
+						returnsEnclosing = method;
+					}
+				}
+				if (returnsEnclosing == null) {
+					throw new IllegalArgumentException("No @ReturnsEnclosing method on " + clazz);
+				}
+				if (!returnsEnclosing.getReturnType().equals(enclosingClass)) {
+					throw new IllegalArgumentException("@ReturnsEnclosing method on " + clazz
+							+ " must have return type " + enclosingClass);
+				}
+				String methodName = returnsEnclosing.getName();
+				char fourthChar = methodName.charAt(3);
+				if (!methodName.startsWith("get") || fourthChar < 'A' || fourthChar > 'Z') {
+					throw new IllegalArgumentException("@ReturnsEnclosing method on " + clazz
+							+ " must have a proper getter name");
+				}
+				String propertyName = methodName.substring(3, 4).toLowerCase() + methodName.substring(4);
+				properties.add(propertyName);
 			}
 			Class<?>[] types = constructor.getParameterTypes();
 			Annotation[][] annotations = constructor.getParameterAnnotations();
@@ -94,8 +131,8 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 				}
 
 				// Test for getter
-				String getterName = "get" + persistAs.value().substring(0, 1).toUpperCase()
-						+ persistAs.value().substring(1);
+				String propertyName = persistAs.value();
+				String getterName = "get" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
 				try {
 					Method getter = clazz.getMethod(getterName);
 					Class<?> returnType = getter.getReturnType();
@@ -114,6 +151,7 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 					throw new IllegalArgumentException("No " + getterName + " method found for argument " + i + " of "
 							+ clazz + " constructor");
 				}
+				properties.add(propertyName);
 			}
 
 		} else {
@@ -126,6 +164,7 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 		}
 
 		storableInterfaces.put(iface, constructor);
+		classProperties.put(clazz, properties);
 	}
 
 	@Override
@@ -150,6 +189,69 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 		objectMap.put(object.getIdentity(), object);
 	}
 
+	private String serializeObject(Object object) {
+		return serializeObjectJSON(object).toString();
+	}
+
+	private JSONObject serializeObjectJSON(Object object) {
+		JSONObject json = new JSONObject();
+		Class<? extends Object> clazz = object.getClass();
+		List<String> properties = classProperties.get(clazz);
+		for (String property : properties) {
+			String getterName = "get" + property.substring(0, 1).toUpperCase() + property.substring(1);
+			try {
+				Method getter = clazz.getMethod(getterName);
+				Object value = getter.invoke(object);
+
+				if (value == null) {
+					json.put(property, JSONObject.NULL);
+				} else {
+					Class<?> returnType = value.getClass();
+					if (returnType.isArray()) {
+						JSONArray array = serializeArrayJSON(value);
+						json.put(property, array);
+					} else if (value instanceof String) {
+						json.put(property, value);
+					} else if (value instanceof Number) {
+						json.put(property, value);
+					} else if (value instanceof Identifiable<?>) {
+						String identifier = ((Identifiable<?>) value).toString();
+						json.put(property, identifier);
+					} else {
+						json.put(property, serializeObjectJSON(value));
+					}
+				}
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		return json;
+	}
+
+	private JSONArray serializeArrayJSON(Object value) {
+		JSONArray array = new JSONArray();
+		int length = Array.getLength(value);
+		for (int i = 0; i < length; i++) {
+			Object componentObject = Array.get(value, i);
+			if (componentObject.getClass().isArray()) {
+				array.put(serializeArrayJSON(componentObject));
+			} else {
+				array.put(serializeObjectJSON(componentObject));
+			}
+		}
+		return array;
+	}
+
 	@Override
 	public synchronized void store(Identifiable<I> object) {
 		Class<?> clazz = getRegisteredClass(object.getClass());
@@ -170,6 +272,7 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 		}
 
 		System.out.println("Storing " + object.getIdentity() + " (" + object.getClass() + " as " + clazz + ")");
+		System.out.println(":-> " + serializeObject(object));
 		objectMap.put(object.getIdentity(), object);
 		if (secT != null) {
 			objectMap.put(secT.getIdentity(), secT);
