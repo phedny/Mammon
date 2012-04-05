@@ -55,19 +55,22 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 
 	@Override
 	public synchronized void store(Identifiable<I> object) {
-		int countInterfaces = 0;
 		Class<?> clazz = null;
 		for (Class<?> c : storableInterfaces.keySet()) {
 			if (c.isAssignableFrom(object.getClass())) {
-				if (++countInterfaces == 1) {
+				if (clazz == null) {
 					clazz = c;
 				} else if (c != clazz) {
-					throw new IllegalArgumentException("Object has ambiguous class registration for "
-							+ object.getClass());
+					if (clazz.isAssignableFrom(c)) {
+						clazz = c;
+					} else if (!c.isAssignableFrom(clazz)) {
+						throw new IllegalArgumentException("Object has ambiguous class registration for "
+								+ object.getClass());
+					}
 				}
 			}
 		}
-		if (countInterfaces == 0) {
+		if (clazz == null) {
 			throw new IllegalArgumentException("No object interface has been registered for " + object.getClass());
 		}
 
@@ -83,6 +86,7 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 			}
 		}
 
+		System.out.println("Storing " + object.getIdentity() + " (" + object.getClass() + " as " + clazz + ")");
 		objectMap.put(object.getIdentity(), object);
 		if (secT != null) {
 			objectMap.put(secT.getIdentity(), secT);
