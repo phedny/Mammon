@@ -17,8 +17,8 @@ import org.mammon.messaging.Transitionable;
 
 public class MessagingSystem<I> {
 
-	private Map<I, Identifiable<I>> objectMap = new HashMap<I, Identifiable<I>>();
-
+	private ExampleObjectStorage<I> storage = new ExampleObjectStorage<I>();
+	
 	private Map<Class<?>, StateHandler<?, I>> stateHandlers = new HashMap<Class<?>, StateHandler<?, I>>();
 
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -34,9 +34,13 @@ public class MessagingSystem<I> {
 	public void awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
 		executor.awaitTermination(timeout, unit);
 	}
+	
+	public <C> void registerClass(Class<C> iface, Class<? extends C> clazz) {
+		storage.registerClass(iface, clazz);
+	}
 
 	public void addObject(Identifiable<I> object) {
-		objectMap.put(object.getIdentity(), object);
+		storage.store(object);
 		enteredState(object, null);
 	}
 
@@ -73,7 +77,7 @@ public class MessagingSystem<I> {
 
 			@Override
 			public void run() {
-				Identifiable<I> destObj = objectMap.get(destination);
+				Identifiable<I> destObj = storage.get(destination);
 				System.out.println("Message " + message + " to " + destination + " (" + destObj + ")");
 				Object newObject = null;
 
@@ -95,23 +99,16 @@ public class MessagingSystem<I> {
 					Transitionable t = (Transitionable) destObj;
 					newObject = t.transition(message);
 					leftState(destObj);
-					objectMap.remove(destination);
-					if (destObj instanceof DualIdentityTransitionable<?>) {
-						Transitionable<I> secT = ((DualIdentityTransitionable<I>) destObj).getSecondaryTransitionable();
-						objectMap.remove(secT.getIdentity());
-					}
+					storage.remove(destination);
 				}
 
 				if (newObject != null) {
 					if (newObject instanceof Identifiable<?>) {
 						Identifiable<I> newIdentifiable = (Identifiable<I>) newObject;
-						objectMap.put(newIdentifiable.getIdentity(), newIdentifiable);
+						storage.store(newIdentifiable);
 						Identifiable<I> testObj = newIdentifiable;
 						if (newObject instanceof DualIdentityTransitionable<?>) {
-							Transitionable<I> secT = ((DualIdentityTransitionable<I>) newObject)
-									.getSecondaryTransitionable();
-							objectMap.put(secT.getIdentity(), secT);
-							testObj = secT;
+							testObj = ((DualIdentityTransitionable<I>) newObject);
 						}
 						if (newObject instanceof Transitionable && destination.equals(testObj.getIdentity())) {
 							Object testState = ((Transitionable) testObj).transition(message);
