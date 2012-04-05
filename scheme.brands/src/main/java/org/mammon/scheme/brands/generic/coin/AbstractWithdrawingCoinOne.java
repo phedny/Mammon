@@ -17,7 +17,7 @@ import org.mammon.scheme.brands.messages.BankWitnessesResponse;
 import org.mammon.util.messaging.AbstractTransitionable;
 
 public abstract class AbstractWithdrawingCoinOne<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
-		extends AbstractTransitionable<I> implements Identifiable<I>, Transitionable<I>, MessageEmitter {
+		extends AbstractTransitionable implements Identifiable, Transitionable, MessageEmitter {
 
 	private final BrandsSchemeSetup<G, F, I, T, H, H0> setup;
 
@@ -68,7 +68,7 @@ public abstract class AbstractWithdrawingCoinOne<G extends Group<G>, F extends F
 
 	@Override
 	public Message emitMessage() {
-		return new BankWitnessesRequest<G, I>(bank.getIdentity(), publicKey, count);
+		return new BankWitnessesRequest<G>(bank.getIdentity(), publicKey, count);
 	}
 
 	public BrandsSchemeSetup<G, F, I, T, H, H0> getSetup() {

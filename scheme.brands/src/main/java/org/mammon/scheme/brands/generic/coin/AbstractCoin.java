@@ -13,7 +13,7 @@ import org.mammon.scheme.brands.coin.CoinSignature;
 import org.mammon.util.messaging.AbstractTransitionable;
 
 public abstract class AbstractCoin<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
-		extends AbstractTransitionable<I> implements Coin<G, F, I, T, H, H0> {
+		extends AbstractTransitionable implements Coin<G, F, I, T, H, H0> {
 
 	private final BrandsSchemeSetup<G, F, I, T, H, H0> setup;
 
@@ -29,11 +29,11 @@ public abstract class AbstractCoin<G extends Group<G>, F extends FiniteField<F>,
 
 	private final Number faceValue;
 
-	private final I identity;
+	private final String identity;
 
 	public AbstractCoin(BrandsSchemeSetup<G, F, I, T, H, H0> setup, Bank<G, F, I, T, H, H0> bank,
 			Element<G> blindedIdentity, Element<G> commitment, CoinSignature<G, F> coinSignature, AssetType assetType,
-			Number faceValue, I identity) {
+			Number faceValue, String identity) {
 		this.setup = setup;
 		this.bank = bank;
 		this.blindedIdentity = blindedIdentity;
@@ -80,7 +80,7 @@ public abstract class AbstractCoin<G extends Group<G>, F extends FiniteField<F>,
 	}
 
 	@Override
-	public I getIdentity() {
+	public String getIdentity() {
 		return identity;
 	}
 

@@ -14,7 +14,7 @@ import org.mammon.messaging.ReturnsEnclosing;
 import org.mammon.util.HashCodeUtil;
 
 @AvailableAtRuntime(Group.class)
-public class ExampleGroup implements Identifiable<String>, Group<ExampleGroup> {
+public class ExampleGroup implements Identifiable, Group<ExampleGroup> {
 
 	private final ExampleRandomGenerator randomGenerator;
 

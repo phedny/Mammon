@@ -2,16 +2,21 @@ package org.mammon.scheme.brands.messages;
 
 import org.mammon.math.Group;
 import org.mammon.messaging.DirectedMessage;
+import org.mammon.messaging.FromPersistent;
+import org.mammon.messaging.Message;
+import org.mammon.messaging.PersistAs;
 
-public class BankWitnessesRequest<G extends Group<G>, I> implements DirectedMessage<I> {
+public class BankWitnessesRequest<G extends Group<G>> implements DirectedMessage {
 
-	private final I destination;
+	private final String destination;
 
 	private final Group.Element<G> identity;
 
 	private final int count;
 
-	public BankWitnessesRequest(I destination, Group.Element<G> identity, int count) {
+	@FromPersistent(Message.class)
+	public BankWitnessesRequest(@PersistAs("destination") String destination,
+			@PersistAs("identity") Group.Element<G> identity, @PersistAs("count") int count) {
 		this.destination = destination;
 		this.identity = identity;
 		this.count = count;
@@ -26,7 +31,7 @@ public class BankWitnessesRequest<G extends Group<G>, I> implements DirectedMess
 	}
 
 	@Override
-	public I getDestination() {
+	public String getDestination() {
 		return destination;
 	}
 

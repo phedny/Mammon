@@ -16,7 +16,7 @@ import org.mammon.scheme.brands.messages.BlindedIdentityResponse;
 import org.mammon.util.messaging.AbstractTransitionable;
 
 public abstract class AbstractOpeningAccountHolder<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
-		extends AbstractTransitionable<I> implements Identifiable<I>, Transitionable<I>, MessageEmitter {
+		extends AbstractTransitionable implements Identifiable, Transitionable, MessageEmitter {
 
 	private final BrandsSchemeSetup<G, F, I, T, H, H0> setup;
 
@@ -39,8 +39,8 @@ public abstract class AbstractOpeningAccountHolder<G extends Group<G>, F extends
 	}
 
 	@Override
-	public BlindedIdentityRequest<G, I> emitMessage() {
-		return new BlindedIdentityRequest<G, I>(((Identifiable<I>) bank).getIdentity(), publicKey);
+	public BlindedIdentityRequest<G> emitMessage() {
+		return new BlindedIdentityRequest<G>(((Identifiable) bank).getIdentity(), publicKey);
 	}
 
 	public BrandsSchemeSetup<G, F, I, T, H, H0> getSetup() {

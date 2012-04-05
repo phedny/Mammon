@@ -14,7 +14,7 @@ import org.mammon.scheme.brands.messages.ObtainCoinsMessage;
 
 public abstract class AbstractAccountHolderPrivate<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
 		extends AbstractAccountHolderForBank<G, F, I, T, H, H0> implements AccountHolderPrivate<G, F, I, T, H, H0>,
-		Identifiable<I>, Transactable<I> {
+		Identifiable, Transactable {
 
 	private final FiniteField.Element<F> privateKey;
 
@@ -33,7 +33,7 @@ public abstract class AbstractAccountHolderPrivate<G extends Group<G>, F extends
 		return privateKey;
 	}
 
-	public AbstractWithdrawingCoinOne<G, F, I, T, H, H0> transact(ObtainCoinsMessage<String> request) {
+	public AbstractWithdrawingCoinOne<G, F, I, T, H, H0> transact(ObtainCoinsMessage request) {
 		return newWithdrawingCoinOne(request);
 	}
 
@@ -42,6 +42,6 @@ public abstract class AbstractAccountHolderPrivate<G extends Group<G>, F extends
 	}
 
 	protected abstract AbstractWithdrawingCoinOne<G, F, I, T, H, H0> newWithdrawingCoinOne(
-			ObtainCoinsMessage<String> request);
+			ObtainCoinsMessage request);
 
 }

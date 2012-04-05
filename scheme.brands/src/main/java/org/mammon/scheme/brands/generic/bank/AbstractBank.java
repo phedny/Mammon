@@ -1,8 +1,5 @@
 package org.mammon.scheme.brands.generic.bank;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
 import org.mammon.messaging.Identifiable;
@@ -15,7 +12,7 @@ import org.mammon.util.HashCodeUtil;
 import org.mammon.util.messaging.AbstractTransactable;
 
 public abstract class AbstractBank<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
-		extends AbstractTransactable<I> implements Bank<G, F, I, T, H, H0>, Identifiable<I>, Transactable<I> {
+		extends AbstractTransactable implements Bank<G, F, I, T, H, H0>, Identifiable, Transactable {
 
 	private final BrandsSchemeSetup<G, F, I, T, H, H0> setup;
 	private final Group.Element<G> publicKey;

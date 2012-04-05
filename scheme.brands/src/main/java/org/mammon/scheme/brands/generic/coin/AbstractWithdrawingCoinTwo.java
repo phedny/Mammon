@@ -13,13 +13,14 @@ import org.mammon.scheme.brands.SignatureHashFunction;
 import org.mammon.scheme.brands.accountholder.AccountHolderForBank;
 import org.mammon.scheme.brands.bank.Bank;
 import org.mammon.scheme.brands.coin.CoinSignature;
+import org.mammon.scheme.brands.generic.assettypes.EuroAssetType;
 import org.mammon.scheme.brands.messages.BankWitnessesResponse;
 import org.mammon.scheme.brands.messages.IssueCoinsRequest;
 import org.mammon.scheme.brands.messages.IssueCoinsResponse;
 import org.mammon.util.messaging.AbstractTransitionable;
 
 public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
-		extends AbstractTransitionable<I> implements Identifiable<I>, Transitionable<I>, MessageEmitter {
+		extends AbstractTransitionable implements Identifiable, Transitionable, MessageEmitter {
 
 	private final BrandsSchemeSetup<G, F, I, T, H, H0> setup;
 
@@ -103,13 +104,7 @@ public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends F
 
 	@Override
 	public Message emitMessage() {
-		return new IssueCoinsRequest<G, F>(new AssetType() {
-
-			@Override
-			public String getCallSign() {
-				return "EUR";
-			}
-		}, Integer.valueOf(1), a, c);
+		return new IssueCoinsRequest<G, F>(new EuroAssetType<G, F, I, T, H, H0>(), Integer.valueOf(1), c);
 	}
 
 	public BrandsSchemeSetup<G, F, I, T, H, H0> getSetup() {

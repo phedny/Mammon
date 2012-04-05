@@ -25,7 +25,7 @@ public abstract class AbstractSpentCoin<G extends Group<G>, F extends FiniteFiel
 
 	@SuppressWarnings("unchecked")
 	public AbstractSpentCoin(UnspentCoin<G, F, I, T, H, H0> basedOnCoin, Bank<G, F, I, T, H, H0> bank,
-			AbstractShop<G, F, I, T, H, H0> bearer, T time, I identity) {
+			AbstractShop<G, F, I, T, H, H0> bearer, T time, String identity) {
 		super(basedOnCoin.getSetup(), bank, basedOnCoin.getBlindedIdentity(), basedOnCoin.getCommitment(), basedOnCoin
 				.getCoinSignature(), basedOnCoin.getAssetType(), basedOnCoin.getFaceValue(), identity);
 		this.bearer = bearer;

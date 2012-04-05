@@ -11,7 +11,7 @@ import org.mammon.math.Group;
  * @param <G>
  *            The group used for this setup.
  * @param <S>
- *            The type used to identify shops.
+ *            The type used to identify shops (unused).
  * @param <T>
  *            The type used to express times.
  * @param <H>

@@ -18,7 +18,7 @@ import org.mammon.messaging.ReturnsEnclosing;
 import org.mammon.util.HashCodeUtil;
 
 @AvailableAtRuntime(FiniteField.class)
-public class ExampleFiniteField implements Identifiable<String>, FiniteField<ExampleFiniteField> {
+public class ExampleFiniteField implements Identifiable, FiniteField<ExampleFiniteField> {
 
 	private final ExampleRandomGenerator randomGenerator;
 

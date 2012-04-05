@@ -2,14 +2,19 @@ package org.mammon.scheme.brands.messages;
 
 import org.mammon.math.Group;
 import org.mammon.messaging.DirectedMessage;
+import org.mammon.messaging.FromPersistent;
+import org.mammon.messaging.Message;
+import org.mammon.messaging.PersistAs;
 
-public class BlindedIdentityRequest<G extends Group<G>, I> implements DirectedMessage<I> {
+public class BlindedIdentityRequest<G extends Group<G>> implements DirectedMessage {
 
-	private final I destination;
+	private final String destination;
 
 	private final Group.Element<G> identity;
 
-	public BlindedIdentityRequest(I destination, Group.Element<G> identity) {
+	@FromPersistent(Message.class)
+	public BlindedIdentityRequest(@PersistAs("destination") String destination,
+			@PersistAs("identity") Group.Element<G> identity) {
 		this.destination = destination;
 		this.identity = identity;
 	}
@@ -19,7 +24,7 @@ public class BlindedIdentityRequest<G extends Group<G>, I> implements DirectedMe
 	}
 
 	@Override
-	public I getDestination() {
+	public String getDestination() {
 		return destination;
 	}
 

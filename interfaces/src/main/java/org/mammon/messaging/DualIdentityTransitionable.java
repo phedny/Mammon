@@ -5,12 +5,12 @@ package org.mammon.messaging;
  * implement this interface to be reachable by their old identity in order to
  * meet the Redelivable requirement.
  */
-public interface DualIdentityTransitionable<I> extends Transitionable<I> {
+public interface DualIdentityTransitionable extends Transitionable {
 
 	/**
 	 * @return the Transitionable object that accepts messages on the old
 	 *         identity.
 	 */
-	Transitionable<I> getSecondaryTransitionable();
+	Transitionable getSecondaryTransitionable();
 
 }

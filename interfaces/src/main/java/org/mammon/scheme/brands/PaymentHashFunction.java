@@ -24,6 +24,6 @@ public interface PaymentHashFunction<G extends Group<G>, F extends FiniteField<F
 	 * @return hashed value.
 	 */
 	FiniteField.Element<F> hash(Group.Element<G> blindedIdentity,
-			Group.Element<G> commitment, S shopIdentity, T time);
+			Group.Element<G> commitment, String shopIdentity, T time);
 
 }

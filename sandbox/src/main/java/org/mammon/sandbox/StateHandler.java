@@ -1,8 +1,8 @@
 package org.mammon.sandbox;
 
-public interface StateHandler<C, I> {
+public interface StateHandler<C> {
 
-	void enteredState(C object, I enteredBy);
+	void enteredState(C object, String enteredBy);
 	
 	void leftState(C object);
 	

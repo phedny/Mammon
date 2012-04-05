@@ -23,6 +23,6 @@ public interface Shop<G extends Group<G>, F extends FiniteField<F>, I, T, H exte
 	/**
 	 * @return the identity $I_\mathcal{S}$ of the shop.
 	 */
-	I getIdentity();
+	String getIdentity();
 
 }

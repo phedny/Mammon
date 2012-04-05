@@ -1,6 +1,5 @@
 package org.mammon.scheme.brands.generic.coin;
 
-import org.mammon.AssetType;
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
 import org.mammon.messaging.DualIdentityTransitionable;
@@ -14,17 +13,18 @@ import org.mammon.scheme.brands.accountholder.AccountHolderPrivate;
 import org.mammon.scheme.brands.bank.Bank;
 import org.mammon.scheme.brands.coin.CoinSignature;
 import org.mammon.scheme.brands.coin.UnspentCoin;
+import org.mammon.scheme.brands.generic.assettypes.EuroAssetType;
 import org.mammon.scheme.brands.messages.IssueCoinsResponse;
 import org.mammon.util.HashCodeUtil;
 import org.mammon.util.messaging.AbstractTransitionable;
 
 public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
-		extends AbstractCoin<G, F, I, T, H, H0> implements UnspentCoin<G, F, I, T, H, H0>, Identifiable<I>,
-		Transitionable<I>, DualIdentityTransitionable<I> {
+		extends AbstractCoin<G, F, I, T, H, H0> implements UnspentCoin<G, F, I, T, H, H0>, Identifiable,
+		Transitionable, DualIdentityTransitionable {
 
 	private final AccountHolderPrivate<G, F, I, T, H, H0> bearer;
 
-	private final I dualIdentity;
+	private final String dualIdentity;
 
 	private final FiniteField.Element<F> s;
 
@@ -35,17 +35,12 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteFi
 	private final FiniteField.Element<F> r;
 
 	protected AbstractUnspentCoin(BrandsSchemeSetup<G, F, I, T, H, H0> setup,
-			AccountHolderPrivate<G, F, I, T, H, H0> bearer, Bank<G, F, I, T, H, H0> bank, I identity, I dualIdentity,
-			FiniteField.Element<F> blindingFactor, FiniteField.Element<F> x1, FiniteField.Element<F> x2,
-			Group.Element<G> blindedIdentity, Group.Element<G> commitment, FiniteField.Element<F> r,
-			CoinSignature<G, F> coinSignature) {
-		super(setup, bank, blindedIdentity, commitment, coinSignature, new AssetType() {
-
-			@Override
-			public String getCallSign() {
-				return "EUR";
-			}
-		}, Integer.valueOf(1), identity);
+			AccountHolderPrivate<G, F, I, T, H, H0> bearer, Bank<G, F, I, T, H, H0> bank, String identity,
+			String dualIdentity, FiniteField.Element<F> blindingFactor, FiniteField.Element<F> x1,
+			FiniteField.Element<F> x2, Group.Element<G> blindedIdentity, Group.Element<G> commitment,
+			FiniteField.Element<F> r, CoinSignature<G, F> coinSignature) {
+		super(setup, bank, blindedIdentity, commitment, coinSignature, new EuroAssetType<G, F, I, T, H, H0>(), Integer
+				.valueOf(1), identity);
 		this.bearer = bearer;
 		this.dualIdentity = dualIdentity;
 		this.s = blindingFactor;
@@ -73,7 +68,7 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteFi
 	public FiniteField.Element<F> getPayerWitness2() {
 		return x2;
 	}
-	
+
 	public FiniteField.Element<F> getR() {
 		return r;
 	}
@@ -84,7 +79,7 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteFi
 	}
 
 	@Override
-	public Transitionable<I> getSecondaryTransitionable() {
+	public Transitionable getSecondaryTransitionable() {
 		return new SecondaryTransitionable();
 	}
 
@@ -94,8 +89,8 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteFi
 			return false;
 		}
 		AbstractUnspentCoin<?, ?, ?, ?, ?, ?> other = (AbstractUnspentCoin<?, ?, ?, ?, ?, ?>) obj;
-		return getSetup().equals(other.getSetup()) && getIssuer().equals(other.getIssuer()) && bearer.equals(other.bearer) && s.equals(other.s)
-				&& x1.equals(other.x1) && x2.equals(other.x2);
+		return getSetup().equals(other.getSetup()) && getIssuer().equals(other.getIssuer())
+				&& bearer.equals(other.bearer) && s.equals(other.s) && x1.equals(other.x1) && x2.equals(other.x2);
 	}
 
 	@Override
@@ -110,9 +105,9 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteFi
 		return hashCode;
 	}
 
-	protected final class SecondaryTransitionable extends AbstractTransitionable<I> {
+	protected final class SecondaryTransitionable extends AbstractTransitionable {
 		@Override
-		public I getIdentity() {
+		public String getIdentity() {
 			return dualIdentity;
 		}
 

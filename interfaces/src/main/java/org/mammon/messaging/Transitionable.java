@@ -5,18 +5,19 @@ package org.mammon.messaging;
  * interface, such that a transition into another state can be initiated by
  * delivery of a message.
  */
-public interface Transitionable<I> extends Identifiable<I> {
+public interface Transitionable extends Identifiable {
 
 	/**
 	 * Initiate the state transition that is requested by the delivered message.
 	 * 
 	 * @param message
 	 *            the message that initiates the state change.
-	 * @return an object that represents the new state of the state machine. If
-	 *         the object is a MessageEmitter, the emitted message is returned
-	 *         to the sender and the new state object must meet the
-	 *         Redeliverable requirement. The Redeliverable requirement states
-	 *         that the identity of either one of the following is true:
+	 * @return an object that represents the new state of the state machine or a
+	 *         persistable Message object. If the new state object is a
+	 *         MessageEmitter, the emitted message is returned to the sender and
+	 *         the new state object must meet the Redeliverable requirement. The
+	 *         Redeliverable requirement states that the identity of either one
+	 *         of the following is true:
 	 * 
 	 *         - The identity of the new state object must equal the identity of
 	 *         this state object, and invoking the transition() method on the
@@ -30,6 +31,10 @@ public interface Transitionable<I> extends Identifiable<I> {
 	 *         must implement DualIdentityTransitionable, such that invoking
 	 *         getSecondaryTransitionable() on the new state object returns an
 	 *         object that meets the previous statement.
+	 * 
+	 *         If a Message object is returned, the messaging system
+	 *         automatically creates a virtual state, which does not allow any
+	 *         new transitions, but does meet the Redeliverable requirement.
 	 */
 	Object transition(Message message);
 

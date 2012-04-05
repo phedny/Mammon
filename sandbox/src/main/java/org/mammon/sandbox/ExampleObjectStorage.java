@@ -24,9 +24,9 @@ import org.mammon.messaging.PersistAs;
 import org.mammon.messaging.ReturnsEnclosing;
 import org.mammon.messaging.Transitionable;
 
-public class ExampleObjectStorage<I> implements ObjectStorage<I> {
+public class ExampleObjectStorage implements ObjectStorage {
 
-	private Map<Class, Constructor> storableInterfaces = new HashMap<Class, Constructor>();
+	private Map<Class, Class> storableInterfaces = new HashMap<Class, Class>();
 
 	private Map<String, Constructor> implementationConstructors = new HashMap<String, Constructor>();
 
@@ -34,13 +34,29 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 
 	private Map<Class, List<Class<?>>> classPropertyTypes = new HashMap<Class, List<Class<?>>>();
 
-	private Map<I, Identifiable<I>> objectMap = new HashMap<I, Identifiable<I>>();
+	private Map<String, Identifiable> runtimeObjectMap = new HashMap<String, Identifiable>();
 
-	private Set<I> secondaryIdentities = new HashSet<I>();
+	private Map<String, String> persistedObjectMap = new HashMap<String, String>();
+
+	private Set<String> secondaryIdentities = new HashSet<String>();
+
+	public ExampleObjectStorage() {
+		registerClass(SecondaryTransitionable.class);
+	}
 
 	@Override
-	public synchronized Identifiable<I> get(I identity) {
-		return objectMap.get(identity);
+	public synchronized Identifiable get(String identity) {
+		Identifiable object = runtimeObjectMap.get(identity);
+		if (object == null) {
+			String json = persistedObjectMap.get(identity);
+			if (json != null) {
+				object = (Identifiable) deserializeObject(json);
+			}
+		}
+		if (object instanceof SecondaryTransitionable) {
+			object = get((String) ((SecondaryTransitionable) object).getPrimaryIdentity());
+		}
+		return object;
 	}
 
 	@Override
@@ -122,6 +138,8 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 							+ " constructor has no @PersistAt");
 				} else if (String.class.isAssignableFrom(baseType)) {
 					registeredClass = String.class;
+				} else if (Number.class.isAssignableFrom(baseType)) {
+					registeredClass = Number.class;
 				} else if (baseType.isPrimitive()) {
 					registeredClass = baseType;
 				} else {
@@ -148,7 +166,7 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 						returnType = returnType.getComponentType();
 						returnArrayDepth++;
 					}
-					if (!registeredClass.isAssignableFrom(returnType) && arrayDepth == returnArrayDepth) {
+					if (!registeredClass.isAssignableFrom(returnType) || arrayDepth != returnArrayDepth) {
 						throw new IllegalArgumentException(getterName + " method for argument " + i + " of " + clazz
 								+ " constructor of wrong type");
 					}
@@ -171,32 +189,34 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 			// + clazz + " already known");
 		}
 
-		storableInterfaces.put(iface, constructor);
+		storableInterfaces.put(iface, clazz);
 		implementationConstructors.put(clazz.getName(), constructor);
 		classProperties.put(clazz, properties);
 		classPropertyTypes.put(clazz, propertyTypes);
 	}
 
 	@Override
-	public synchronized void remove(I identity) {
+	public synchronized void remove(String identity) {
 		if (secondaryIdentities.contains(identity)) {
 			throw new IllegalArgumentException("Argument must be primary identity");
 		}
-		Identifiable<I> object = objectMap.get(identity);
+		Identifiable object = runtimeObjectMap.get(identity);
 		if (object != null) {
-			objectMap.remove(object.getIdentity());
-			if (object instanceof DualIdentityTransitionable<?>) {
-				Transitionable<I> secT = ((DualIdentityTransitionable<I>) object).getSecondaryTransitionable();
-				objectMap.remove(secT.getIdentity());
+			System.out.println("Removing " + identity);
+			runtimeObjectMap.remove(object.getIdentity());
+			if (object instanceof DualIdentityTransitionable) {
+				Transitionable secT = ((DualIdentityTransitionable) object).getSecondaryTransitionable();
+				System.out.println("Also removing " + secT.getIdentity());
+				runtimeObjectMap.remove(secT.getIdentity());
 				secondaryIdentities.remove(secT.getIdentity());
 			}
 		}
 	}
 
 	@Override
-	public synchronized void replace(I identity, Identifiable<I> object) {
-		objectMap.remove(identity);
-		objectMap.put(object.getIdentity(), object);
+	public synchronized void replace(String identity, Identifiable object) {
+		remove(identity);
+		store(object);
 	}
 
 	private Object deserializeObject(String json) {
@@ -248,7 +268,7 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 		} else if (Long.TYPE.isAssignableFrom(propertyType) && object instanceof Number) {
 			return Long.valueOf(((Number) object).longValue());
 		} else if (object instanceof String) {
-			return get((I) object);
+			return get((String) object);
 		} else if (object instanceof JSONObject) {
 			return deserializeObjectJSON((JSONObject) object);
 		} else {
@@ -267,11 +287,14 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 		return array;
 	}
 
-	private String serializeObject(Object object, Set<Identifiable<I>> referencedObjects) {
+	private String serializeObject(Object object, Set<Identifiable> referencedObjects) {
+		if (referencedObjects == null) {
+			referencedObjects = new HashSet<Identifiable>();
+		}
 		return serializeObjectJSON(object, referencedObjects).toString();
 	}
 
-	private JSONObject serializeObjectJSON(Object object, Set<Identifiable<I>> referencedObjects) {
+	private JSONObject serializeObjectJSON(Object object, Set<Identifiable> referencedObjects) {
 		JSONObject json = new JSONObject();
 		Class<? extends Object> clazz = object.getClass();
 		Class<?> registeredClass = getRegisteredClass(clazz);
@@ -299,8 +322,8 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 						json.put(property, value);
 					} else if (value instanceof Number) {
 						json.put(property, value);
-					} else if (value instanceof Identifiable<?>) {
-						Identifiable<I> identifiable = (Identifiable<I>) value;
+					} else if (value instanceof Identifiable) {
+						Identifiable identifiable = (Identifiable) value;
 						String identifier = identifiable.getIdentity().toString();
 						json.put(property, identifier);
 						referencedObjects.add(identifiable);
@@ -325,7 +348,7 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 		return json;
 	}
 
-	private JSONArray serializeArrayJSON(Object value, Set<Identifiable<I>> referencedObjects) {
+	private JSONArray serializeArrayJSON(Object value, Set<Identifiable> referencedObjects) {
 		JSONArray array = new JSONArray();
 		int length = Array.getLength(value);
 		for (int i = 0; i < length; i++) {
@@ -340,47 +363,56 @@ public class ExampleObjectStorage<I> implements ObjectStorage<I> {
 	}
 
 	@Override
-	public synchronized void store(Identifiable<I> object) {
+	public synchronized void store(Identifiable object) {
 		Class<?> clazz = getRegisteredClass(object.getClass());
 		if (clazz == null) {
 			throw new IllegalArgumentException("No object interface has been registered for " + object.getClass());
 		}
 
-		if (objectMap.containsKey(object.getIdentity())) {
+		if (runtimeObjectMap.containsKey(object.getIdentity())) {
 			throw new IllegalArgumentException("Object with this identity already exists, use replace()");
 		}
-		Transitionable<I> secT = null;
-		if (object instanceof DualIdentityTransitionable<?>) {
-			secT = ((DualIdentityTransitionable<I>) object).getSecondaryTransitionable();
-			if (objectMap.containsKey(secT.getIdentity())) {
+		Transitionable secT = null;
+		if (object instanceof DualIdentityTransitionable) {
+			secT = ((DualIdentityTransitionable) object).getSecondaryTransitionable();
+			if (runtimeObjectMap.containsKey(secT.getIdentity())) {
 				throw new IllegalArgumentException(
 						"Object with identity of secondary transitionable exists, use replace()");
 			}
 		}
 
-		System.out.println("Storing " + object.getIdentity() + " (" + object.getClass() + " as " + clazz + ")");
-		Set<Identifiable<I>> referencedObjects = new HashSet<Identifiable<I>>();
-		String serializedObject = serializeObject(object, referencedObjects);
-		System.out.println(":-> " + serializedObject);
+		Class implementationClass = storableInterfaces.get(clazz);
+		Constructor implementationConstructor = implementationConstructors.get(implementationClass.getName());
+		if (implementationConstructor != null) {
+			System.out.println("Storing " + object.getIdentity() + " (" + object.getClass() + " as " + clazz + ")");
+			Set<Identifiable> referencedObjects = new HashSet<Identifiable>();
+			String serializedObject = serializeObject(object, referencedObjects);
+			// System.out.println(":-> " + serializedObject);
 
-		for (Identifiable<I> obj : referencedObjects) {
-			if (!objectMap.containsKey(obj.getIdentity())) {
-				store(obj);
+			for (Identifiable obj : referencedObjects) {
+				if (!runtimeObjectMap.containsKey(obj.getIdentity())
+						&& !persistedObjectMap.containsKey(obj.getIdentity())) {
+					store(obj);
+				}
 			}
-		}
 
-		try {
-			Object deserializedObject = deserializeObject(serializedObject);
-			System.out.println(":<- " + deserializedObject);
-			System.out.println(":.. " + object);
-			System.out.println(":== " + deserializedObject.equals(object));
-		} catch (NullPointerException e) {
-			System.out.println("!!! Failed to deserialize " + object);
-		}
-		objectMap.put(object.getIdentity(), object);
-		if (secT != null) {
-			objectMap.put(secT.getIdentity(), secT);
-			secondaryIdentities.add(secT.getIdentity());
+			// Object deserializedObject = deserializeObject(serializedObject);
+			// System.out.println(":<- " + deserializedObject);
+			// System.out.println(":.. " + object);
+			// System.out.println(":== " + deserializedObject.equals(object));
+
+			persistedObjectMap.put(object.getIdentity(), serializedObject);
+			if (secT != null) {
+				persistedObjectMap.put(secT.getIdentity(), serializeObject(new SecondaryTransitionable(object
+						.getIdentity().toString()), null));
+				secondaryIdentities.add(secT.getIdentity());
+			}
+		} else {
+			runtimeObjectMap.put(object.getIdentity(), object);
+			if (secT != null) {
+				runtimeObjectMap.put(secT.getIdentity(), secT);
+				secondaryIdentities.add(secT.getIdentity());
+			}
 		}
 	}
 

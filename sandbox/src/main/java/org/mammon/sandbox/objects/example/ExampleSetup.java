@@ -10,7 +10,7 @@ import org.mammon.util.HashCodeUtil;
 @AvailableAtRuntime(BrandsSchemeSetup.class)
 public class ExampleSetup
 		implements
-		Identifiable<String>,
+		Identifiable,
 		BrandsSchemeSetup<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	private final ExampleRandomGenerator randomGenerator = new ExampleRandomGenerator();

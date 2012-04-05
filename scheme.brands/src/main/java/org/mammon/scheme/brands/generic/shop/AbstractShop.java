@@ -10,18 +10,18 @@ import org.mammon.scheme.brands.shop.Shop;
 import org.mammon.util.messaging.AbstractTransactable;
 
 public class AbstractShop<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
-		extends AbstractTransactable<I> implements Shop<G, F, I, T, H, H0> {
+		extends AbstractTransactable implements Shop<G, F, I, T, H, H0> {
 
 	private final BrandsSchemeSetup<G, F, I, T, H, H0> setup;
-	private final I identity;
+	private final String identity;
 
-	public AbstractShop(BrandsSchemeSetup<G, F, I, T, H, H0> setup, I identity) {
+	public AbstractShop(BrandsSchemeSetup<G, F, I, T, H, H0> setup, String identity) {
 		this.setup = setup;
 		this.identity = identity;
 	}
 
 	@Override
-	public I getIdentity() {
+	public String getIdentity() {
 		return identity;
 	}
 

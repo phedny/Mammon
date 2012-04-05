@@ -1,19 +1,23 @@
 package org.mammon.scheme.brands.messages;
 
 import org.mammon.messaging.DirectedMessage;
+import org.mammon.messaging.FromPersistent;
+import org.mammon.messaging.Message;
+import org.mammon.messaging.PersistAs;
 
-public class ObtainCoinsMessage<I> implements DirectedMessage<I> {
+public class ObtainCoinsMessage implements DirectedMessage {
 
-	private final I destination;
+	private final String destination;
 
 	private final int count;
 
-	public ObtainCoinsMessage(I destination, int count) {
+	@FromPersistent(Message.class)
+	public ObtainCoinsMessage(@PersistAs("destination") String destination, @PersistAs("count") int count) {
 		this.destination = destination;
 		this.count = count;
 	}
 
-	public I getDestination() {
+	public String getDestination() {
 		return destination;
 	}
 

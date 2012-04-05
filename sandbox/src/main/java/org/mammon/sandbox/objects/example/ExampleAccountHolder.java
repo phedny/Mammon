@@ -30,7 +30,7 @@ public class ExampleAccountHolder
 
 	@Override
 	protected AbstractWithdrawingCoinOne<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newWithdrawingCoinOne(
-			ObtainCoinsMessage<String> request) {
+			ObtainCoinsMessage request) {
 		return new WithdrawingCoinOne(this, (ExampleBank) getBank(), getPublicKey(), request.getCount());
 	}
 

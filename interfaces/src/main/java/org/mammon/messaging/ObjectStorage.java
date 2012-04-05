@@ -4,7 +4,7 @@ package org.mammon.messaging;
  * An implementation of this object is capable of persistently storing an
  * retrieving objects.
  */
-public interface ObjectStorage<I> {
+public interface ObjectStorage {
 
 	/**
 	 * Register a class, such that it can be persisted.
@@ -21,7 +21,7 @@ public interface ObjectStorage<I> {
 	 *            The identity of the object to retrieve.
 	 * @return The retrieved object.
 	 */
-	Identifiable<I> get(I identity);
+	Identifiable get(String identity);
 
 	/**
 	 * Store an object into persistent storage.
@@ -29,7 +29,7 @@ public interface ObjectStorage<I> {
 	 * @param object
 	 *            The object to store.
 	 */
-	void store(Identifiable<I> object);
+	void store(Identifiable object);
 
 	/**
 	 * Replace an existing object in persistent storage.
@@ -39,7 +39,7 @@ public interface ObjectStorage<I> {
 	 * @param object
 	 *            The replacement object.
 	 */
-	void replace(I identity, Identifiable<I> object);
+	void replace(String identity, Identifiable object);
 
 	/**
 	 * Remove an existing object from persistent storage.
@@ -47,6 +47,6 @@ public interface ObjectStorage<I> {
 	 * @param identity
 	 *            The identity of the object to remove.
 	 */
-	void remove(I identity);
+	void remove(String identity);
 
 }
