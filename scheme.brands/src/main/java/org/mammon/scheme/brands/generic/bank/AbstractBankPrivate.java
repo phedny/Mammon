@@ -27,11 +27,10 @@ public abstract class AbstractBankPrivate<G extends Group<G>, F extends FiniteFi
 	}
 
 	public AbstractBlindedIdentity<G, F, I, T, H, H0> transact(BlindedIdentityRequest<G> request) {
-		return newBlindedIdentity(getSetup(), this, request.getIdentity().multiply(getSetup().getGenerator(2))
-				.exponentiate(privateKey));
+		return newBlindedIdentity(getSetup(), this, request.getIdentity());
 	}
 
-	public I transact(BankWitnessesRequest<G> request) {
+	public String transact(BankWitnessesRequest<G> request) {
 		return getIdentityForPayerIdentity(request.getIdentity().multiply(getSetup().getGenerator(2)).exponentiate(
 				privateKey));
 	}
@@ -40,6 +39,6 @@ public abstract class AbstractBankPrivate<G extends Group<G>, F extends FiniteFi
 			BrandsSchemeSetup<G, F, I, T, H, H0> setup, AbstractBankPrivate<G, F, I, T, H, H0> bank,
 			Group.Element<G> payerIdentity);
 
-	protected abstract I getIdentityForPayerIdentity(Group.Element<G> payerIdentity);
+	protected abstract String getIdentityForPayerIdentity(Group.Element<G> payerIdentity);
 
 }

@@ -46,12 +46,16 @@ public abstract class AbstractBlindedIdentity<G extends Group<G>, F extends Fini
 		return payerIdentity;
 	}
 
-	@Override
-	public Message emitMessage() {
-		return new BlindedIdentityResponse<G>(payerIdentity);
+	public Group.Element<G> getBlindedIdentity() {
+		return payerIdentity.multiply(getSetup().getGenerator(2)).exponentiate(getBank().getPrivateKey());
 	}
 
-	public AbstractIssuedWitnesses<G,F,I,T,H,H0> transact(BankWitnessesRequest<G> request) {
+	@Override
+	public Message emitMessage() {
+		return new BlindedIdentityResponse<G>(getBlindedIdentity());
+	}
+
+	public AbstractIssuedWitnesses<G, F, I, T, H, H0> transact(BankWitnessesRequest<G> request) {
 		final Group.Element<G> identity = request.getIdentity();
 		for (int i = 0; i < request.getCount(); i++) {
 			final FiniteField.Element<F> w = getSetup().getFiniteField().getRandomElement();

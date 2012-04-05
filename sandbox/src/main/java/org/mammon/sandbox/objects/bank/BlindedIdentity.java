@@ -27,7 +27,7 @@ public class BlindedIdentity
 
 	@Override
 	public String getIdentity() {
-		return "blindedidentity-" + getBank().getIdentity() + "-" + getPayerIdentity();
+		return "blindedidentity-" + getBank().getIdentity() + "-" + getBlindedIdentity();
 	}
 
 	@Override
