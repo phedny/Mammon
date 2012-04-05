@@ -1,7 +1,10 @@
 package org.mammon.sandbox.objects.example;
 
+import org.mammon.Bearer;
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
+import org.mammon.messaging.FromPersistent;
+import org.mammon.messaging.PersistAs;
 import org.mammon.sandbox.objects.accountholder.WithdrawingCoinOne;
 import org.mammon.scheme.brands.generic.accountholder.AbstractAccountHolderPrivate;
 import org.mammon.scheme.brands.generic.coin.AbstractWithdrawingCoinOne;
@@ -11,10 +14,12 @@ public class ExampleAccountHolder
 		extends
 		AbstractAccountHolderPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
-	public ExampleAccountHolder(ExampleSetup setup,
-			FiniteField.Element<ExampleFiniteField> privateKey,
-			Group.Element<ExampleGroup> publicKey,
-			Group.Element<ExampleGroup> blindedIdentity, ExampleBank bank) {
+	@FromPersistent(Bearer.class)
+	public ExampleAccountHolder(@PersistAs("setup") ExampleSetup setup,
+			@PersistAs("privateKey") FiniteField.Element<ExampleFiniteField> privateKey,
+			@PersistAs("publicKey") Group.Element<ExampleGroup> publicKey,
+			@PersistAs("blindedIdentity") Group.Element<ExampleGroup> blindedIdentity,
+			@PersistAs("bank") ExampleBank bank) {
 		super(setup, privateKey, publicKey, blindedIdentity, bank);
 	}
 
@@ -26,8 +31,7 @@ public class ExampleAccountHolder
 	@Override
 	protected AbstractWithdrawingCoinOne<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newWithdrawingCoinOne(
 			ObtainCoinsMessage<String> request) {
-		return new WithdrawingCoinOne(this, (ExampleBank) getBank(),
-				getPublicKey(), request.getCount());
+		return new WithdrawingCoinOne(this, (ExampleBank) getBank(), getPublicKey(), request.getCount());
 	}
 
 }

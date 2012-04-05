@@ -2,6 +2,7 @@ package org.mammon.sandbox.objects.example;
 
 import org.mammon.math.Group;
 import org.mammon.math.Group.Element;
+import org.mammon.messaging.FromPersistent;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
 import org.mammon.util.HashCodeUtil;
 
@@ -25,6 +26,7 @@ public class ExampleSetup
 
 	private final Group.Element<ExampleGroup> g2;
 
+	@FromPersistent(BrandsSchemeSetup.class)
 	public ExampleSetup() {
 		g = group.getRandomElement();
 		g1 = group.getRandomElement();

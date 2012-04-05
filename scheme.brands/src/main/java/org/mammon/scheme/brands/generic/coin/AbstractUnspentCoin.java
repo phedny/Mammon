@@ -73,6 +73,10 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteFi
 	public FiniteField.Element<F> getPayerWitness2() {
 		return x2;
 	}
+	
+	public FiniteField.Element<F> getR() {
+		return r;
+	}
 
 	@Override
 	public boolean isSellable() {

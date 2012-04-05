@@ -9,12 +9,10 @@ public interface ObjectStorage<I> {
 	/**
 	 * Register a class, such that it can be persisted.
 	 * 
-	 * @param iface
-	 *            Interface that can be persisted.
 	 * @param clazz
 	 *            Class to use when instantiating an object of this interface.
 	 */
-	<C> void registerClass(Class<C> iface, Class<? extends C> clazz);
+	void registerClass(Class<?> clazz);
 
 	/**
 	 * Retrieve an object from persistent storage.

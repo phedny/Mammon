@@ -37,7 +37,7 @@ public abstract class AbstractAccountHolderPrivate<G extends Group<G>, F extends
 		return newWithdrawingCoinOne(request);
 	}
 
-	protected Bank<G, F, I, T, H, H0> getBank() {
+	public Bank<G, F, I, T, H, H0> getBank() {
 		return bank;
 	}
 

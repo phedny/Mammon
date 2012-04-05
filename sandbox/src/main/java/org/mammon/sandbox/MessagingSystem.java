@@ -23,8 +23,11 @@ public class MessagingSystem<I> {
 
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
 
-	public MessagingSystem() {
+	public MessagingSystem(Class<?>... registerClasses) {
 		registerStateHandler(MessageEmitter.class, new MessageEmitterHandler());
+		for (Class<?> registerClass : registerClasses) {
+			storage.registerClass(registerClass);
+		}
 	}
 
 	public void shutdown() {
@@ -35,10 +38,6 @@ public class MessagingSystem<I> {
 		executor.awaitTermination(timeout, unit);
 	}
 	
-	public <C> void registerClass(Class<C> iface, Class<? extends C> clazz) {
-		storage.registerClass(iface, clazz);
-	}
-
 	public void addObject(Identifiable<I> object) {
 		storage.store(object);
 		enteredState(object, null);

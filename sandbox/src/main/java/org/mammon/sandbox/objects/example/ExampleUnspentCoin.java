@@ -4,18 +4,26 @@ import java.util.UUID;
 
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
+import org.mammon.messaging.FromPersistent;
+import org.mammon.messaging.PersistAs;
 import org.mammon.scheme.brands.coin.CoinSignature;
+import org.mammon.scheme.brands.coin.UnspentCoin;
 import org.mammon.scheme.brands.generic.coin.AbstractUnspentCoin;
 
 public class ExampleUnspentCoin
 		extends
 		AbstractUnspentCoin<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
-	public ExampleUnspentCoin(ExampleSetup setup, ExampleAccountHolder bearer, ExampleBank bank, String dualIdentity,
-			FiniteField.Element<ExampleFiniteField> blindingFactor, FiniteField.Element<ExampleFiniteField> x1,
-			FiniteField.Element<ExampleFiniteField> x2, Group.Element<ExampleGroup> blindedIdentity,
-			Group.Element<ExampleGroup> commitment, FiniteField.Element<ExampleFiniteField> r,
-			CoinSignature<ExampleGroup, ExampleFiniteField> coinSignature) {
+	@FromPersistent(UnspentCoin.class)
+	public ExampleUnspentCoin(@PersistAs("setup") ExampleSetup setup, @PersistAs("bearer") ExampleAccountHolder bearer,
+			@PersistAs("issuer") ExampleBank bank, @PersistAs("dualIdentity") String dualIdentity,
+			@PersistAs("blindingFactor") FiniteField.Element<ExampleFiniteField> blindingFactor,
+			@PersistAs("payerWitness1") FiniteField.Element<ExampleFiniteField> x1,
+			@PersistAs("payerWitness2") FiniteField.Element<ExampleFiniteField> x2,
+			@PersistAs("blindedIdentity") Group.Element<ExampleGroup> blindedIdentity,
+			@PersistAs("commitment") Group.Element<ExampleGroup> commitment,
+			@PersistAs("r") FiniteField.Element<ExampleFiniteField> r,
+			@PersistAs("coinSignature") CoinSignature<ExampleGroup, ExampleFiniteField> coinSignature) {
 		super(setup, bearer, bank, UUID.randomUUID().toString(), dualIdentity, blindingFactor, x1, x2, blindedIdentity,
 				commitment, r, coinSignature);
 	}
@@ -27,6 +35,10 @@ public class ExampleUnspentCoin
 				+ getPayerWitness1() + "," + getPayerWitness2() + "), COIN=(" + getBlindedIdentity() + ","
 				+ getCommitment() + ",(" + getCoinSignature().getValZ() + "," + getCoinSignature().getValA() + ","
 				+ getCoinSignature().getValB() + "," + getCoinSignature().getValR() + "))]";
+	}
+	
+	public String getDualIdentity() {
+		return getSecondaryTransitionable().getIdentity();
 	}
 
 }

@@ -6,8 +6,12 @@ import java.util.TreeSet;
 
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
+import org.mammon.messaging.AvailableAtRuntime;
+import org.mammon.messaging.FromPersistent;
+import org.mammon.messaging.PersistAs;
 import org.mammon.util.HashCodeUtil;
 
+@AvailableAtRuntime(Group.class)
 public class ExampleGroup implements Group<ExampleGroup> {
 
 	private final ExampleRandomGenerator randomGenerator;
@@ -108,8 +112,13 @@ public class ExampleGroup implements Group<ExampleGroup> {
 
 		private final String value;
 
-		private StaticElement(String value) {
+		@FromPersistent(Group.Element.class)
+		public StaticElement(@PersistAs("value") String value) {
 			this.value = value;
+		}
+
+		public String getValue() {
+			return value;
 		}
 
 		@Override
@@ -141,12 +150,17 @@ public class ExampleGroup implements Group<ExampleGroup> {
 
 		private final ExampleElement[] operands;
 
-		private MultiplicationElement(ExampleElement... operands) {
+		@FromPersistent(Group.Element.class)
+		public MultiplicationElement(@PersistAs("operands") ExampleElement... operands) {
 			this.operands = operands;
 		}
 
-		private MultiplicationElement(ExampleElement firstOperand, ExampleElement secondOperand) {
+		public MultiplicationElement(ExampleElement firstOperand, ExampleElement secondOperand) {
 			operands = new ExampleElement[] { firstOperand, secondOperand };
+		}
+
+		public ExampleElement[] getOperands() {
+			return operands.clone();
 		}
 
 		@Override
@@ -207,9 +221,19 @@ public class ExampleGroup implements Group<ExampleGroup> {
 
 		private final ExampleFiniteField.ExampleElement exponent;
 
-		private ExponentiationElement(ExampleElement base, ExampleFiniteField.ExampleElement exponent) {
+		@FromPersistent(Group.Element.class)
+		public ExponentiationElement(@PersistAs("base") ExampleElement base,
+				@PersistAs("exponent") ExampleFiniteField.ExampleElement exponent) {
 			this.base = base;
 			this.exponent = exponent;
+		}
+
+		public ExampleElement getBase() {
+			return base;
+		}
+
+		public ExampleFiniteField.ExampleElement getExponent() {
+			return exponent;
 		}
 
 		@Override

@@ -3,6 +3,8 @@ package org.mammon.sandbox.objects.accountholder;
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
 import org.mammon.math.Group.Element;
+import org.mammon.messaging.FromPersistent;
+import org.mammon.messaging.PersistAs;
 import org.mammon.sandbox.objects.example.ExampleAccountHolder;
 import org.mammon.sandbox.objects.example.ExampleBank;
 import org.mammon.sandbox.objects.example.ExampleCoinSignature;
@@ -22,13 +24,18 @@ public class WithdrawingCoinTwo
 
 	private final String identity;
 
-	public WithdrawingCoinTwo(ExampleSetup setup, ExampleAccountHolder accountHolder, String identity,
-			ExampleBank bank, Group.Element<ExampleGroup> publicKey, int count,
-			FiniteField.Element<ExampleFiniteField> s, FiniteField.Element<ExampleFiniteField> x1,
-			FiniteField.Element<ExampleFiniteField> x2, FiniteField.Element<ExampleFiniteField> u,
-			FiniteField.Element<ExampleFiniteField> v, Group.Element<ExampleGroup> bigA,
-			Group.Element<ExampleGroup> bigB, Group.Element<ExampleGroup> a, Group.Element<ExampleGroup> b,
-			FiniteField.Element<ExampleFiniteField> c) {
+	@FromPersistent(AbstractWithdrawingCoinTwo.class)
+	public WithdrawingCoinTwo(@PersistAs("setup") ExampleSetup setup,
+			@PersistAs("accountHolder") ExampleAccountHolder accountHolder, @PersistAs("identity") String identity,
+			@PersistAs("bank") ExampleBank bank, @PersistAs("publicKey") Group.Element<ExampleGroup> publicKey,
+			@PersistAs("count") int count, @PersistAs("blindingFactor") FiniteField.Element<ExampleFiniteField> s,
+			@PersistAs("x1") FiniteField.Element<ExampleFiniteField> x1,
+			@PersistAs("x2") FiniteField.Element<ExampleFiniteField> x2,
+			@PersistAs("u") FiniteField.Element<ExampleFiniteField> u,
+			@PersistAs("v") FiniteField.Element<ExampleFiniteField> v,
+			@PersistAs("bigA") Group.Element<ExampleGroup> bigA, @PersistAs("bigB") Group.Element<ExampleGroup> bigB,
+			@PersistAs("a") Group.Element<ExampleGroup> a, @PersistAs("b") Group.Element<ExampleGroup> b,
+			@PersistAs("c") FiniteField.Element<ExampleFiniteField> c) {
 		super(setup, accountHolder, bank, publicKey, count, s, x1, x2, u, v, bigA, bigB, a, b, c);
 		this.identity = identity;
 	}

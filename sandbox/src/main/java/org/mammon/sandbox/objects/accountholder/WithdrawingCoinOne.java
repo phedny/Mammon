@@ -4,6 +4,8 @@ import java.util.UUID;
 
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
+import org.mammon.messaging.FromPersistent;
+import org.mammon.messaging.PersistAs;
 import org.mammon.sandbox.objects.example.ExampleAccountHolder;
 import org.mammon.sandbox.objects.example.ExampleBank;
 import org.mammon.sandbox.objects.example.ExampleFiniteField;
@@ -20,8 +22,10 @@ public class WithdrawingCoinOne
 
 	private final String identity = UUID.randomUUID().toString();
 
-	public WithdrawingCoinOne(ExampleAccountHolder accountHolder, ExampleBank bank,
-			Group.Element<ExampleGroup> publicKey, int count) {
+	@FromPersistent(AbstractWithdrawingCoinOne.class)
+	public WithdrawingCoinOne(@PersistAs("accountHolder") ExampleAccountHolder accountHolder,
+			@PersistAs("bank") ExampleBank bank, @PersistAs("publicKey") Group.Element<ExampleGroup> publicKey,
+			@PersistAs("count") int count) {
 		super(accountHolder, bank, publicKey, count);
 	}
 

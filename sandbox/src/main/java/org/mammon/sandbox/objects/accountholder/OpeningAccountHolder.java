@@ -1,6 +1,8 @@
 package org.mammon.sandbox.objects.accountholder;
 
 import org.mammon.math.Group;
+import org.mammon.messaging.FromPersistent;
+import org.mammon.messaging.PersistAs;
 import org.mammon.sandbox.objects.example.ExampleAccountHolder;
 import org.mammon.sandbox.objects.example.ExampleBank;
 import org.mammon.sandbox.objects.example.ExampleFiniteField;
@@ -15,7 +17,8 @@ public class OpeningAccountHolder
 		extends
 		AbstractOpeningAccountHolder<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
-	public OpeningAccountHolder(ExampleSetup setup, ExampleBank bank) {
+	@FromPersistent(AbstractOpeningAccountHolder.class)
+	public OpeningAccountHolder(@PersistAs("setup") ExampleSetup setup, @PersistAs("bank") ExampleBank bank) {
 		super(setup, bank, setup.getFiniteField().getRandomElement());
 	}
 

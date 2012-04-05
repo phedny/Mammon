@@ -112,63 +112,63 @@ public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends F
 		}, Integer.valueOf(1), a, c);
 	}
 
-	protected BrandsSchemeSetup<G, F, I, T, H, H0> getSetup() {
+	public BrandsSchemeSetup<G, F, I, T, H, H0> getSetup() {
 		return setup;
 	}
 
-	protected AccountHolderForBank<G, F, I, T, H, H0> getAccountHolder() {
+	public AccountHolderForBank<G, F, I, T, H, H0> getAccountHolder() {
 		return accountHolder;
 	}
 
-	protected Bank<G, F, I, T, H, H0> getBank() {
+	public Bank<G, F, I, T, H, H0> getBank() {
 		return bank;
 	}
 
-	protected Group.Element<G> getPublicKey() {
+	public Group.Element<G> getPublicKey() {
 		return publicKey;
 	}
 
-	protected int getCount() {
+	public int getCount() {
 		return count;
 	}
 
-	protected FiniteField.Element<F> getBlindingFactor() {
+	public FiniteField.Element<F> getBlindingFactor() {
 		return s;
 	}
 
-	protected FiniteField.Element<F> getX1() {
+	public FiniteField.Element<F> getX1() {
 		return x1;
 	}
 
-	protected FiniteField.Element<F> getX2() {
+	public FiniteField.Element<F> getX2() {
 		return x2;
 	}
 
-	protected FiniteField.Element<F> getU() {
+	public FiniteField.Element<F> getU() {
 		return u;
 	}
 
-	protected FiniteField.Element<F> getV() {
+	public FiniteField.Element<F> getV() {
 		return v;
 	}
 
-	protected Group.Element<G> getBigA() {
+	public Group.Element<G> getBigA() {
 		return bigA;
 	}
 
-	protected Group.Element<G> getBigB() {
+	public Group.Element<G> getBigB() {
 		return bigB;
 	}
 
-	protected Group.Element<G> getA() {
+	public Group.Element<G> getA() {
 		return a;
 	}
 
-	protected Group.Element<G> getB() {
+	public Group.Element<G> getB() {
 		return b;
 	}
 
-	protected FiniteField.Element<F> getC() {
+	public FiniteField.Element<F> getC() {
 		return c;
 	}
 

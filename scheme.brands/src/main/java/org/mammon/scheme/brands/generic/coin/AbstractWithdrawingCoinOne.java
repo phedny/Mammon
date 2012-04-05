@@ -71,23 +71,23 @@ public abstract class AbstractWithdrawingCoinOne<G extends Group<G>, F extends F
 		return new BankWitnessesRequest<G, I>(bank.getIdentity(), publicKey, count);
 	}
 
-	protected BrandsSchemeSetup<G, F, I, T, H, H0> getSetup() {
+	public BrandsSchemeSetup<G, F, I, T, H, H0> getSetup() {
 		return setup;
 	}
 
-	protected AccountHolderForBank<G, F, I, T, H, H0> getAccountHolder() {
+	public AccountHolderForBank<G, F, I, T, H, H0> getAccountHolder() {
 		return accountHolder;
 	}
 
-	protected Bank<G, F, I, T, H, H0> getBank() {
+	public Bank<G, F, I, T, H, H0> getBank() {
 		return bank;
 	}
 
-	protected Group.Element<G> getPublicKey() {
+	public Group.Element<G> getPublicKey() {
 		return publicKey;
 	}
 
-	protected int getCount() {
+	public int getCount() {
 		return count;
 	}
 

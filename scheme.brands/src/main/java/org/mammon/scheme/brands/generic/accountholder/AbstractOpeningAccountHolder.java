@@ -43,19 +43,19 @@ public abstract class AbstractOpeningAccountHolder<G extends Group<G>, F extends
 		return new BlindedIdentityRequest<G, I>(((Identifiable<I>) bank).getIdentity(), publicKey);
 	}
 
-	protected BrandsSchemeSetup<G, F, I, T, H, H0> getSetup() {
+	public BrandsSchemeSetup<G, F, I, T, H, H0> getSetup() {
 		return setup;
 	}
 
-	protected FiniteField.Element<F> getPrivateKey() {
+	public FiniteField.Element<F> getPrivateKey() {
 		return privateKey;
 	}
 
-	protected Group.Element<G> getPublicKey() {
+	public Group.Element<G> getPublicKey() {
 		return publicKey;
 	}
 
-	protected Bank<G, F, I, T, H, H0> getBank() {
+	public Bank<G, F, I, T, H, H0> getBank() {
 		return bank;
 	}
 

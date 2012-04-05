@@ -10,9 +10,14 @@ import java.util.TreeSet;
 
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
+import org.mammon.messaging.AvailableAtRuntime;
+import org.mammon.messaging.FromPersistent;
+import org.mammon.messaging.Identifiable;
+import org.mammon.messaging.PersistAs;
 import org.mammon.util.HashCodeUtil;
 
-public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
+@AvailableAtRuntime(FiniteField.class)
+public class ExampleFiniteField implements Identifiable<String>, FiniteField<ExampleFiniteField> {
 
 	private final ExampleRandomGenerator randomGenerator;
 
@@ -134,8 +139,13 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 
 		private final String value;
 
-		public StaticElement(String value) {
+		@FromPersistent(FiniteField.Element.class)
+		public StaticElement(@PersistAs("value") String value) {
 			this.value = value;
+		}
+
+		public String getValue() {
+			return value;
 		}
 
 		@Override
@@ -166,11 +176,12 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 
 		private final ExampleElement[] operands;
 
-		private AdditionElement(ExampleElement... operands) {
+		@FromPersistent(FiniteField.Element.class)
+		public AdditionElement(@PersistAs("operands") ExampleElement... operands) {
 			this.operands = operands;
 		}
 
-		private AdditionElement(ExampleElement firstOperand, ExampleElement secondOperand) {
+		public AdditionElement(ExampleElement firstOperand, ExampleElement secondOperand) {
 			operands = new ExampleElement[] { firstOperand, secondOperand };
 		}
 
@@ -237,12 +248,17 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 
 		private final ExampleElement[] operands;
 
-		private MultiplicationElement(ExampleElement... operands) {
+		@FromPersistent(FiniteField.Element.class)
+		public MultiplicationElement(@PersistAs("operands") ExampleElement... operands) {
 			this.operands = operands;
 		}
 
-		private MultiplicationElement(ExampleElement firstOperand, ExampleElement secondOperand) {
+		public MultiplicationElement(ExampleElement firstOperand, ExampleElement secondOperand) {
 			operands = new ExampleElement[] { firstOperand, secondOperand };
+		}
+
+		public ExampleElement[] getOperands() {
+			return operands.clone();
 		}
 
 		@Override
@@ -354,9 +370,19 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 
 		private final ExampleElement exponent;
 
-		private ExponentiationElement(ExampleElement base, ExampleElement exponent) {
+		@FromPersistent(FiniteField.Element.class)
+		public ExponentiationElement(@PersistAs("base") ExampleElement base,
+				@PersistAs("exponent") ExampleElement exponent) {
 			this.base = base;
 			this.exponent = exponent;
+		}
+
+		public ExampleElement getBase() {
+			return base;
+		}
+
+		public ExampleElement getExponent() {
+			return exponent;
 		}
 
 		@Override
@@ -422,6 +448,11 @@ public class ExampleFiniteField implements FiniteField<ExampleFiniteField> {
 			return o1.hashCode() - o2.hashCode();
 		}
 
+	}
+
+	@Override
+	public String getIdentity() {
+		return "ExampleFiniteField";
 	}
 
 }
