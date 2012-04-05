@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.mammon.messaging.DualIdentityTransitionable;
 import org.mammon.messaging.Identifiable;
+import org.mammon.messaging.Message;
 import org.mammon.messaging.ObjectStorage;
 import org.mammon.messaging.Transitionable;
 
@@ -89,17 +90,8 @@ public class ExampleObjectStorage implements ObjectStorage {
 		Constructor implementationConstructor = jsonUtil.getImplementationConstructor(implementationClass.getName());
 		if (implementationConstructor != null) {
 			System.out.println("Storing " + object.getIdentity() + " (" + object.getClass() + " as " + clazz + ")");
-			Set<Identifiable> referencedObjects = new HashSet<Identifiable>();
-			String serializedObject = jsonUtil.serializeObject(object, referencedObjects);
+			String serializedObject = serializeObject(object);
 			// System.out.println(":-> " + serializedObject);
-
-			for (Identifiable obj : referencedObjects) {
-				if (!runtimeObjectMap.containsKey(obj.getIdentity())
-						&& !persistedObjectMap.containsKey(obj.getIdentity())) {
-					store(obj);
-				}
-			}
-
 			// Object deserializedObject = deserializeObject(serializedObject);
 			// System.out.println(":<- " + deserializedObject);
 			// System.out.println(":.. " + object);
@@ -118,6 +110,21 @@ public class ExampleObjectStorage implements ObjectStorage {
 				secondaryIdentities.add(secT.getIdentity());
 			}
 		}
+	}
+
+	public String serializeObject(Object object) {
+		Set<Identifiable> referencedObjects = new HashSet<Identifiable>();
+		String serializedObject = jsonUtil.serializeObject(object, referencedObjects);
+		// System.out.println(":-> " + serializedObject);
+
+		for (Identifiable obj : referencedObjects) {
+			if (!runtimeObjectMap.containsKey(obj.getIdentity())
+					&& !persistedObjectMap.containsKey(obj.getIdentity())) {
+				store(obj);
+			}
+		}
+
+		return serializedObject;
 	}
 
 }

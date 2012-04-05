@@ -1,7 +1,9 @@
 package org.mammon.sandbox;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -17,6 +19,8 @@ import org.mammon.messaging.Transitionable;
 
 public class MessagingSystem {
 
+	private JsonUtil jsonUtil;
+	
 	private ExampleObjectStorage storage;
 
 	private Map<Class<?>, StateHandler<?>> stateHandlers = new HashMap<Class<?>, StateHandler<?>>();
@@ -24,6 +28,7 @@ public class MessagingSystem {
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
 
 	public MessagingSystem(JsonUtil jsonUtil) {
+		this.jsonUtil = jsonUtil;
 		jsonUtil.registerClass(StringRedeliverableMessage.class);
 		storage = new ExampleObjectStorage(jsonUtil);
 		registerStateHandler(MessageEmitter.class, new MessageEmitterHandler());
@@ -70,11 +75,14 @@ public class MessagingSystem {
 		sendMessage(message, message.getDestination(), null);
 	}
 
-	private void sendMessage(final Message message, final String destination, final String replyDestination) {
+	private void sendMessage(Message message, final String destination, final String replyDestination) {
+		final String serializedMessage = storage.serializeObject(message);
+		
 		executor.execute(new Runnable() {
 
 			@Override
 			public void run() {
+				Message message = (Message) jsonUtil.deserializeObject(serializedMessage);
 				Identifiable destObj = storage.get(destination);
 				System.out.println("Message " + message + " to " + destination + " (" + destObj + ")");
 				Object newObject = null;
