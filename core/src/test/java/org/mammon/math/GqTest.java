@@ -11,12 +11,12 @@ public class GqTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void qShouldDividePminus1() {
-		new Gq(12, 23);
+		new Gq(new GqSetup(12, 23));
 	}
 
 	@Before
 	public void createGroup() {
-		this.group = new Gq(11, 23);
+		this.group = new Gq(new GqSetup(11, 23));
 	}
 
 	@Test
