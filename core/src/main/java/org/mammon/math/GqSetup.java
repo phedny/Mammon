@@ -8,7 +8,7 @@ import org.mammon.math.util.PrimeFactors;
 public class GqSetup {
 	public final BigInteger p;
 	public final BigInteger q;
-	public BigInteger generator;
+	public final BigInteger generator;
 	private BigInteger primitiveRoot;
 	private List<BigInteger> factorsOftotientP;
 
@@ -24,15 +24,19 @@ public class GqSetup {
 	}
 
 	private void qShouldDivideTotientP(BigInteger q, BigInteger p) {
-		BigInteger[] divmod = p.subtract(BigInteger.ONE).divideAndRemainder(q);
+		BigInteger[] divmod = totient(p).divideAndRemainder(q);
 		if (!divmod[1].equals(BigInteger.ZERO)) {
 			throw new IllegalArgumentException("q should divide p-1");
 		}
 	}
 
+	private BigInteger totient(BigInteger p) {
+		return p.subtract(BigInteger.ONE);
+	}
+
 	public BigInteger createGenerator() {
 		BigInteger primitiveRoot = getPrimitiveRoot();
-		return primitiveRoot.modPow(p.subtract(BigInteger.ONE).divide(q), p);
+		return primitiveRoot.modPow(totient(p).divide(q), p);
 	}
 
 	private BigInteger getPrimitiveRoot() {
