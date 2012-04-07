@@ -16,16 +16,13 @@ public class GqSetupFactory {
 
 	private final BigInteger q;
 	private final BigInteger p;
-	private final BigInteger generator;
-	private BigInteger primitiveRoot;
 	private List<BigInteger> factorsOftotientP;
+	private BigInteger candidate;
 
 	private GqSetupFactory(BigInteger q, BigInteger p) {
 		qShouldDivideTotientP(q, p);
 		this.q = q;
 		this.p = p;
-		this.generator = createGenerator();
-
 	}
 
 	private void qShouldDivideTotientP(BigInteger q, BigInteger p) {
@@ -39,23 +36,18 @@ public class GqSetupFactory {
 		return p.subtract(BigInteger.ONE);
 	}
 
-	public BigInteger createGenerator() {
-		BigInteger primitiveRoot = getPrimitiveRoot();
+	private BigInteger createGenerator() {
+		BigInteger primitiveRoot = generatePrimitiveRoot();
 		return primitiveRoot.modPow(totient(p).divide(q), p);
 	}
 
-	private BigInteger getPrimitiveRoot() {
-		if (primitiveRoot == null) {
-			primitiveRoot = generatePrimitiveRoot();
-		}
-		return primitiveRoot;
-	}
-
 	private BigInteger generatePrimitiveRoot() {
-		BigInteger candidate = BigInteger.valueOf(2);
-		while (!isPrimitiveRoot(candidate)) {
-			candidate = candidate.add(BigInteger.ONE);
+		if (candidate == null) {
+			candidate = BigInteger.valueOf(1);
 		}
+		do {
+			candidate = candidate.add(BigInteger.ONE);
+		} while (!isPrimitiveRoot(candidate));
 		return candidate;
 	}
 
@@ -71,14 +63,14 @@ public class GqSetupFactory {
 
 	private List<BigInteger> factorsOfTotientP() {
 		if (factorsOftotientP == null) {
-			factorsOftotientP = PrimeFactors.of(p.subtract(BigInteger.ONE));
+			factorsOftotientP = PrimeFactors.of(totient(p));
 
 		}
 		return factorsOftotientP;
 	}
 
 	public GqSetup generateSetup() {
-		return new GqSetup(q, p, generator);
+		return new GqSetup(q, p, createGenerator());
 
 	}
 }
