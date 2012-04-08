@@ -6,6 +6,8 @@ import org.mammon.math.Group.Element;
 
 import static org.junit.Assert.assertEquals;
 
+import static org.mammon.math.GqSetupFactory.factory;
+
 public class GqElementTest {
 
 	private Group<Gq> group;
@@ -14,7 +16,7 @@ public class GqElementTest {
 
 	@Before
 	public void createGroup() {
-		group = new Gq(11, 23);
+		group = new Gq(factory(11, 23).generateSetup());
 		identity = group.getIdentityElement();
 		generator = group.getGenerator();
 	}
