@@ -3,6 +3,8 @@ package org.mammon.math;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.mammon.math.candidate.CandidateStrategy;
+import org.mammon.math.candidate.SequentialCandidateStrategy;
 import org.mammon.math.util.PrimeFactors;
 
 public class GqSetupFactory {
@@ -17,7 +19,7 @@ public class GqSetupFactory {
 	private final BigInteger q;
 	private final BigInteger p;
 	private List<BigInteger> factorsOftotientP;
-	private BigInteger candidate;
+	private final CandidateStrategy strategy = new SequentialCandidateStrategy();
 
 	private GqSetupFactory(BigInteger q, BigInteger p) {
 		qShouldDivideTotientP(q, p);
@@ -42,11 +44,9 @@ public class GqSetupFactory {
 	}
 
 	private BigInteger generatePrimitiveRoot() {
-		if (candidate == null) {
-			candidate = BigInteger.valueOf(1);
-		}
+		BigInteger candidate;
 		do {
-			candidate = candidate.add(BigInteger.ONE);
+			candidate = strategy.next();
 		} while (!isPrimitiveRoot(candidate));
 		return candidate;
 	}
