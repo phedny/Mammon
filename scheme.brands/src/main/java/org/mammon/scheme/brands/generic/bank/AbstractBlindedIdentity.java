@@ -111,4 +111,9 @@ public abstract class AbstractBlindedIdentity<G extends Group<G>, F extends Fini
 		return true;
 	}
 
+	@Override
+	public String getIdentity() {
+		return "blindedidentity-" + getBank().getIdentity() + "-" + getBlindedIdentity();
+	}
+
 }

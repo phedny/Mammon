@@ -6,13 +6,13 @@ import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
 import org.mammon.messaging.FromPersistent;
 import org.mammon.messaging.PersistAs;
-import org.mammon.sandbox.objects.example.ExampleAccountHolder;
-import org.mammon.sandbox.objects.example.ExampleBank;
 import org.mammon.sandbox.objects.example.ExampleFiniteField;
 import org.mammon.sandbox.objects.example.ExampleGroup;
 import org.mammon.sandbox.objects.example.ExamplePaymentHashFunction;
 import org.mammon.sandbox.objects.example.ExampleSetup;
 import org.mammon.sandbox.objects.example.ExampleSignatureHashFunction;
+import org.mammon.scheme.brands.generic.accountholder.AbstractAccountHolderPrivate;
+import org.mammon.scheme.brands.generic.bank.AbstractBankPrivate;
 import org.mammon.scheme.brands.generic.coin.AbstractWithdrawingCoinOne;
 import org.mammon.scheme.brands.generic.coin.AbstractWithdrawingCoinTwo;
 
@@ -23,8 +23,8 @@ public class WithdrawingCoinOne
 	private final String identity = UUID.randomUUID().toString();
 
 	@FromPersistent(AbstractWithdrawingCoinOne.class)
-	public WithdrawingCoinOne(@PersistAs("accountHolder") ExampleAccountHolder accountHolder,
-			@PersistAs("bank") ExampleBank bank, @PersistAs("publicKey") Group.Element<ExampleGroup> publicKey,
+	public WithdrawingCoinOne(@PersistAs("accountHolder") AbstractAccountHolderPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> accountHolder,
+			@PersistAs("bank") AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank, @PersistAs("publicKey") Group.Element<ExampleGroup> publicKey,
 			@PersistAs("count") int count) {
 		super(accountHolder, bank, publicKey, count);
 	}
@@ -41,8 +41,8 @@ public class WithdrawingCoinOne
 			FiniteField.Element<ExampleFiniteField> x2, FiniteField.Element<ExampleFiniteField> u,
 			FiniteField.Element<ExampleFiniteField> v, Group.Element<ExampleGroup> bigA,
 			Group.Element<ExampleGroup> bigB) {
-		return new WithdrawingCoinTwo((ExampleSetup) getSetup(), (ExampleAccountHolder) getAccountHolder(),
-				getIdentity(), (ExampleBank) getBank(), getPublicKey(), getCount(), s, x1, x2, u, v, bigA, bigB, a, b,
+		return new WithdrawingCoinTwo((ExampleSetup) getSetup(), (AbstractAccountHolderPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getAccountHolder(),
+				getIdentity(), (AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getBank(), getPublicKey(), getCount(), s, x1, x2, u, v, bigA, bigB, a, b,
 				c);
 	}
 

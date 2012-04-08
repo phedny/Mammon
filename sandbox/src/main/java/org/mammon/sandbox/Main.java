@@ -15,12 +15,16 @@ import org.mammon.sandbox.objects.example.ExampleBank;
 import org.mammon.sandbox.objects.example.ExampleCoinSignature;
 import org.mammon.sandbox.objects.example.ExampleFiniteField;
 import org.mammon.sandbox.objects.example.ExampleGroup;
+import org.mammon.sandbox.objects.example.ExamplePaymentHashFunction;
 import org.mammon.sandbox.objects.example.ExampleSetup;
 import org.mammon.sandbox.objects.example.ExampleShop;
+import org.mammon.sandbox.objects.example.ExampleSignatureHashFunction;
 import org.mammon.sandbox.objects.example.ExampleSpentCoin;
 import org.mammon.sandbox.objects.example.ExampleUnspentCoin;
 import org.mammon.scheme.brands.accountholder.AccountHolder;
+import org.mammon.scheme.brands.generic.accountholder.AbstractOpeningAccountHolder;
 import org.mammon.scheme.brands.generic.assettypes.EuroAssetType;
+import org.mammon.scheme.brands.generic.bank.AbstractBankPrivate;
 import org.mammon.scheme.brands.messages.BankWitnessesRequest;
 import org.mammon.scheme.brands.messages.BankWitnessesResponse;
 import org.mammon.scheme.brands.messages.BlindedIdentityRequest;
@@ -52,7 +56,7 @@ public class Main {
 		final ExampleSetup setup = new ExampleSetup();
 
 		// Setup the bank.
-		final ExampleBank bank = new ExampleBank(setup, setup.getFiniteField().getRandomElement());
+		final AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank = new ExampleBank(setup, setup.getFiniteField().getRandomElement());
 		messaging.addObject(bank);
 
 		// Test handler that automatically requests issuing 1 IOweYou of value
@@ -98,7 +102,7 @@ public class Main {
 		});
 
 		// Request a new account to be opened.
-		OpeningAccountHolder openingAccountHolder = new OpeningAccountHolder(setup, bank);
+		AbstractOpeningAccountHolder<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> openingAccountHolder = new OpeningAccountHolder(setup, bank);
 		messaging.addObject(openingAccountHolder);
 
 		// Wait for test to be finished.

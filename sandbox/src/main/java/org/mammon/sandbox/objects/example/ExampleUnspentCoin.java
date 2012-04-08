@@ -8,6 +8,8 @@ import org.mammon.messaging.FromPersistent;
 import org.mammon.messaging.PersistAs;
 import org.mammon.scheme.brands.coin.CoinSignature;
 import org.mammon.scheme.brands.coin.UnspentCoin;
+import org.mammon.scheme.brands.generic.accountholder.AbstractAccountHolderPrivate;
+import org.mammon.scheme.brands.generic.bank.AbstractBankPrivate;
 import org.mammon.scheme.brands.generic.coin.AbstractUnspentCoin;
 
 public class ExampleUnspentCoin
@@ -15,8 +17,8 @@ public class ExampleUnspentCoin
 		AbstractUnspentCoin<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	@FromPersistent(UnspentCoin.class)
-	public ExampleUnspentCoin(@PersistAs("setup") ExampleSetup setup, @PersistAs("bearer") ExampleAccountHolder bearer,
-			@PersistAs("issuer") ExampleBank bank, @PersistAs("dualIdentity") String dualIdentity,
+	public ExampleUnspentCoin(@PersistAs("setup") ExampleSetup setup, @PersistAs("bearer") AbstractAccountHolderPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bearer,
+			@PersistAs("issuer") AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank, @PersistAs("dualIdentity") String dualIdentity,
 			@PersistAs("blindingFactor") FiniteField.Element<ExampleFiniteField> blindingFactor,
 			@PersistAs("payerWitness1") FiniteField.Element<ExampleFiniteField> x1,
 			@PersistAs("payerWitness2") FiniteField.Element<ExampleFiniteField> x2,

@@ -23,16 +23,11 @@ public class ExampleBank
 	}
 
 	@Override
-	public String getIdentity() {
-		return "bank-" + getPublicKey();
-	}
-
-	@Override
 	protected AbstractBlindedIdentity<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newBlindedIdentity(
 			BrandsSchemeSetup<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> setup,
 			AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
 			Group.Element<ExampleGroup> payerIdentity) {
-		return new BlindedIdentity((ExampleSetup) setup, (ExampleBank) bank, payerIdentity);
+		return new BlindedIdentity((ExampleSetup) setup, (AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) bank, payerIdentity);
 	}
 
 	@Override

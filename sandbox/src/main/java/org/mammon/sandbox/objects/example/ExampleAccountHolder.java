@@ -7,6 +7,7 @@ import org.mammon.messaging.FromPersistent;
 import org.mammon.messaging.PersistAs;
 import org.mammon.sandbox.objects.accountholder.WithdrawingCoinOne;
 import org.mammon.scheme.brands.generic.accountholder.AbstractAccountHolderPrivate;
+import org.mammon.scheme.brands.generic.bank.AbstractBankPrivate;
 import org.mammon.scheme.brands.generic.coin.AbstractWithdrawingCoinOne;
 import org.mammon.scheme.brands.messages.ObtainCoinsMessage;
 
@@ -19,19 +20,14 @@ public class ExampleAccountHolder
 			@PersistAs("privateKey") FiniteField.Element<ExampleFiniteField> privateKey,
 			@PersistAs("publicKey") Group.Element<ExampleGroup> publicKey,
 			@PersistAs("blindedIdentity") Group.Element<ExampleGroup> blindedIdentity,
-			@PersistAs("bank") ExampleBank bank) {
+			@PersistAs("bank") AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank) {
 		super(setup, privateKey, publicKey, blindedIdentity, bank);
-	}
-
-	@Override
-	public String getIdentity() {
-		return "accountholder-" + getBlindedIdentity();
 	}
 
 	@Override
 	protected AbstractWithdrawingCoinOne<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newWithdrawingCoinOne(
 			ObtainCoinsMessage request) {
-		return new WithdrawingCoinOne(this, (ExampleBank) getBank(), getPublicKey(), request.getCount());
+		return new WithdrawingCoinOne(this, (AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getBank(), getPublicKey(), request.getCount());
 	}
 
 }

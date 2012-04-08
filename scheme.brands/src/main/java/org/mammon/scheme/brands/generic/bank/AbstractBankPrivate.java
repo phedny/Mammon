@@ -41,4 +41,9 @@ public abstract class AbstractBankPrivate<G extends Group<G>, F extends FiniteFi
 
 	protected abstract String getIdentityForPayerIdentity(Group.Element<G> payerIdentity);
 
+	@Override
+	public String getIdentity() {
+		return "bank-" + getPublicKey();
+	}
+
 }

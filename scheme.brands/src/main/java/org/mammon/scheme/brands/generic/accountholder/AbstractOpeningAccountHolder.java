@@ -104,4 +104,9 @@ public abstract class AbstractOpeningAccountHolder<G extends Group<G>, F extends
 		return true;
 	}
 
+	@Override
+	public String getIdentity() {
+		return "opening-" + getPublicKey().toString();
+	}
+
 }

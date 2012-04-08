@@ -44,4 +44,9 @@ public abstract class AbstractAccountHolderPrivate<G extends Group<G>, F extends
 	protected abstract AbstractWithdrawingCoinOne<G, F, I, T, H, H0> newWithdrawingCoinOne(
 			ObtainCoinsMessage request);
 
+	@Override
+	public String getIdentity() {
+		return "accountholder-" + getBlindedIdentity();
+	}
+
 }

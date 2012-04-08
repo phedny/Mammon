@@ -66,4 +66,9 @@ public abstract class AbstractIssuedWitnesses<G extends Group<G>, F extends Fini
 		return new IssueCoinsResponse<F>(request.getBlindedChallenge().multiply(getBank().getPrivateKey()).add(w));
 	}
 
+	@Override
+	public String getIdentity() {
+		return "issuedwitnesses-" + getBank().getIdentity() + "-" + getPayerIdentity() + "-" + getA();
+	}
+
 }

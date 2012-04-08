@@ -4,7 +4,6 @@ import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
 import org.mammon.messaging.FromPersistent;
 import org.mammon.messaging.PersistAs;
-import org.mammon.sandbox.objects.example.ExampleBank;
 import org.mammon.sandbox.objects.example.ExampleFiniteField;
 import org.mammon.sandbox.objects.example.ExampleGroup;
 import org.mammon.sandbox.objects.example.ExamplePaymentHashFunction;
@@ -20,14 +19,9 @@ public class BlindedIdentity
 		AbstractBlindedIdentity<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	@FromPersistent(AbstractBlindedIdentity.class)
-	public BlindedIdentity(@PersistAs("setup") ExampleSetup setup, @PersistAs("bank") ExampleBank bank,
+	public BlindedIdentity(@PersistAs("setup") ExampleSetup setup, @PersistAs("bank") AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
 			@PersistAs("payerIdentity") Group.Element<ExampleGroup> payerIdentity) {
 		super(setup, bank, payerIdentity);
-	}
-
-	@Override
-	public String getIdentity() {
-		return "blindedidentity-" + getBank().getIdentity() + "-" + getBlindedIdentity();
 	}
 
 	@Override
@@ -35,7 +29,7 @@ public class BlindedIdentity
 			BrandsSchemeSetup<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> setup,
 			AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
 			Group.Element<ExampleGroup> payerIdentity, FiniteField.Element<ExampleFiniteField> w) {
-		return new IssuedWitnesses((ExampleSetup) setup, (ExampleBank) bank, payerIdentity, w);
+		return new IssuedWitnesses((ExampleSetup) setup, (AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) bank, payerIdentity, w);
 	}
 
 }

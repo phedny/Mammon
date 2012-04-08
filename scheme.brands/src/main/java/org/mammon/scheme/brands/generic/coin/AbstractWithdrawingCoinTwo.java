@@ -1,6 +1,5 @@
 package org.mammon.scheme.brands.generic.coin;
 
-import org.mammon.AssetType;
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
 import org.mammon.messaging.Identifiable;
@@ -52,13 +51,16 @@ public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends F
 
 	private final FiniteField.Element<F> c;
 
+	protected final String identity;
+
 	public AbstractWithdrawingCoinTwo(BrandsSchemeSetup<G, F, I, T, H, H0> setup,
-			AccountHolderForBank<G, F, I, T, H, H0> accountHolder, Bank<G, F, I, T, H, H0> bank,
+			AccountHolderForBank<G, F, I, T, H, H0> accountHolder, String identity, Bank<G, F, I, T, H, H0> bank,
 			Group.Element<G> publicKey, int count, FiniteField.Element<F> s, FiniteField.Element<F> x1,
 			FiniteField.Element<F> x2, FiniteField.Element<F> u, FiniteField.Element<F> v, Group.Element<G> bigA,
 			Group.Element<G> bigB, Group.Element<G> a, Group.Element<G> b, FiniteField.Element<F> c) {
 		this.setup = setup;
 		this.accountHolder = accountHolder;
+		this.identity = identity;
 		this.bank = bank;
 		this.publicKey = publicKey;
 		this.count = count;
@@ -167,7 +169,8 @@ public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends F
 		return c;
 	}
 
-	protected abstract AbstractUnspentCoin<G, F, I, T, H, H0> newUnspentCoin(FiniteField.Element<F> r, CoinSignature<G, F> coinSignature);
+	protected abstract AbstractUnspentCoin<G, F, I, T, H, H0> newUnspentCoin(FiniteField.Element<F> r,
+			CoinSignature<G, F> coinSignature);
 
 	protected abstract AbstractCoinSignature<G, F> newCoinSignature(Group.Element<G> z, Group.Element<G> a,
 			Group.Element<G> b, FiniteField.Element<F> r);
@@ -276,6 +279,11 @@ public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends F
 		} else if (!x2.equals(other.x2))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String getIdentity() {
+		return identity.toString();
 	}
 
 }
