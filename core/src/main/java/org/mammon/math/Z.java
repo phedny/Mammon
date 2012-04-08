@@ -5,8 +5,14 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 import org.mammon.math.util.Gcd;
+import org.mammon.messaging.AvailableAtRuntime;
+import org.mammon.messaging.FromPersistent;
+import org.mammon.messaging.Identifiable;
+import org.mammon.messaging.PersistAs;
+import org.mammon.messaging.ReturnsEnclosing;
 
-public class Z implements FiniteField<Z> {
+@AvailableAtRuntime(FiniteField.class)
+public class Z implements Identifiable, FiniteField<Z> {
 
 	private final Random random;
 	private final BigInteger q;
@@ -26,6 +32,11 @@ public class Z implements FiniteField<Z> {
 	public Z(BigInteger q, Random random) {
 		this.q = q;
 		this.random = new Random();
+	}
+
+	@Override
+	public String getIdentity() {
+		return "Z(" + q + ")";
 	}
 
 	@Override
@@ -52,17 +63,23 @@ public class Z implements FiniteField<Z> {
 		return element(random.nextInt(q.intValue()));
 	}
 
-	class ZElement implements FiniteField.Element<Z> {
+	public class ZElement implements FiniteField.Element<Z> {
 
 		private final BigInteger element;
 
-		public ZElement(BigInteger element) {
+		@FromPersistent(FiniteField.Element.class)
+		public ZElement(@PersistAs("element") BigInteger element) {
 			this.element = element.mod(q);
 		}
 
 		@Override
+		@ReturnsEnclosing
 		public Z getFiniteField() {
 			return Z.this;
+		}
+		
+		public BigInteger getElement() {
+			return element;
 		}
 
 		@Override
@@ -105,6 +122,11 @@ public class Z implements FiniteField<Z> {
 				result = result.multiply(groupElement);
 			}
 			return result;
+		}
+
+		@Override
+		public String toString() {
+			return element.toString();
 		}
 
 		@Override

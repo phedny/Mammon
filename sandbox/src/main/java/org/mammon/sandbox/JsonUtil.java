@@ -5,6 +5,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -230,6 +231,8 @@ public class JsonUtil {
 			return Integer.valueOf(((Number) object).intValue());
 		} else if (Long.TYPE.isAssignableFrom(propertyType) && object instanceof Number) {
 			return Long.valueOf(((Number) object).longValue());
+		} else if (BigInteger.class.isAssignableFrom(propertyType) && object instanceof Number) {
+			return new BigInteger(object.toString());
 		} else if (object instanceof String) {
 			return storage.get((String) object);
 		} else if (object instanceof JSONObject) {

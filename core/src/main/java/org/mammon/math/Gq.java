@@ -3,8 +3,14 @@ package org.mammon.math;
 import java.math.BigInteger;
 
 import org.mammon.math.util.Gcd;
+import org.mammon.messaging.AvailableAtRuntime;
+import org.mammon.messaging.FromPersistent;
+import org.mammon.messaging.Identifiable;
+import org.mammon.messaging.PersistAs;
+import org.mammon.messaging.ReturnsEnclosing;
 
-public class Gq implements Group<Gq> {
+@AvailableAtRuntime(Group.class)
+public class Gq implements Identifiable, Group<Gq> {
 
 	private final BigInteger q;
 	private final BigInteger p;
@@ -31,22 +37,33 @@ public class Gq implements Group<Gq> {
 	}
 
 	@Override
+	public String getIdentity() {
+		return "Gq(" + q + "," + p + "," + generator + ")";
+	}
+
+	@Override
 	public Group.Element<Gq> getRandomElement() {
 		Z field = new Z(q);
 		return getGenerator().exponentiate(field.getRandomElement());
 	}
 
-	class GqElement implements Group.Element<Gq> {
+	public class GqElement implements Group.Element<Gq> {
 
 		private final BigInteger element;
 
-		public GqElement(BigInteger element) {
+		@FromPersistent(Group.Element.class)
+		public GqElement(@PersistAs("element") BigInteger element) {
 			this.element = element.mod(p);
 		}
 
 		@Override
+		@ReturnsEnclosing
 		public Gq getGroup() {
 			return Gq.this;
+		}
+		
+		public BigInteger getElement() {
+			return element;
 		}
 
 		@Override
@@ -63,6 +80,11 @@ public class Gq implements Group<Gq> {
 		@Override
 		public <F extends FiniteField<F>> Group.Element<Gq> exponentiate(FiniteField.Element<F> exponent) {
 			return exponent.raise(this);
+		}
+		
+		@Override
+		public String toString() {
+			return element.toString();
 		}
 
 		@Override
