@@ -30,10 +30,17 @@ public interface SpentCoin<G extends Group<G>, F extends FiniteField<F>, S, T, H
 	T getTime();
 
 	/**
-	 * @return array of length 2, containing $r_1$ and $r_2$, which can be used
-	 *         to prove that the coin has been spent by the original
+	 * @return the first spending commitment $r_1$, which can be used to prove
+	 *         that the coin has been spent by the original
 	 *         AccountHolderPrivate.
 	 */
-	FiniteField.Element<F>[] getSpendingCommitments();
+	FiniteField.Element<F> getR1();
+
+	/**
+	 * @return the first spending commitment $r_2$, which can be used to prove
+	 *         that the coin has been spent by the original
+	 *         AccountHolderPrivate.
+	 */
+	FiniteField.Element<F> getR2();
 
 }

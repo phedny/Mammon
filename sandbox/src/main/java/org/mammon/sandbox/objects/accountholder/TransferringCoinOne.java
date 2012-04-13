@@ -20,7 +20,9 @@ public class TransferringCoinOne
 		AbstractTransferringCoinOne<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	@FromPersistent(AbstractTransferringCoinOne.class)
-	public TransferringCoinOne(@PersistAs("setup") ExampleSetup setup, @PersistAs("bank") AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
+	public TransferringCoinOne(
+			@PersistAs("setup") ExampleSetup setup,
+			@PersistAs("bank") AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
 			@PersistAs("bearer") AbstractAccountHolderPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bearer,
 			@PersistAs("blindedIdentity") Group.Element<ExampleGroup> blindedIdentity,
 			@PersistAs("commitment") Group.Element<ExampleGroup> commitment,
@@ -28,9 +30,10 @@ public class TransferringCoinOne
 			@PersistAs("assetType") AssetType assetType, @PersistAs("faceValue") Number faceValue,
 			@PersistAs("s") FiniteField.Element<ExampleFiniteField> s,
 			@PersistAs("x1") FiniteField.Element<ExampleFiniteField> x1,
-			@PersistAs("x2") FiniteField.Element<ExampleFiniteField> x2, @PersistAs("identity") String identity) {
+			@PersistAs("x2") FiniteField.Element<ExampleFiniteField> x2, @PersistAs("identity") String identity,
+			@PersistAs("shop") String shop) {
 		super(setup, bank, bearer, blindedIdentity, commitment, coinSignature, assetType, faceValue, s, x1, x2,
-				identity);
+				identity, shop);
 	}
 
 }

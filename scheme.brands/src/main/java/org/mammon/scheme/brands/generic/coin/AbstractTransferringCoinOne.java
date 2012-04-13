@@ -14,6 +14,8 @@ import org.mammon.scheme.brands.accountholder.AccountHolderPrivate;
 import org.mammon.scheme.brands.bank.Bank;
 import org.mammon.scheme.brands.coin.CoinSignature;
 import org.mammon.scheme.brands.messages.CoinHashRequest;
+import org.mammon.scheme.brands.messages.CoinHashResponse;
+import org.mammon.scheme.brands.messages.CoinTransferMessage;
 import org.mammon.util.messaging.AbstractTransitionable;
 
 public abstract class AbstractTransferringCoinOne<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
@@ -43,10 +45,12 @@ public abstract class AbstractTransferringCoinOne<G extends Group<G>, F extends 
 
 	private final String identity;
 
+	private final String shop;
+
 	public AbstractTransferringCoinOne(BrandsSchemeSetup<G, F, I, T, H, H0> setup, Bank<G, F, I, T, H, H0> bank,
 			AccountHolderPrivate<G, F, I, T, H, H0> bearer, Group.Element<G> blindedIdentity,
 			Group.Element<G> commitment, CoinSignature<G, F> coinSignature, AssetType assetType, Number faceValue,
-			FiniteField.Element<F> s, FiniteField.Element<F> x1, FiniteField.Element<F> x2, String identity) {
+			FiniteField.Element<F> s, FiniteField.Element<F> x1, FiniteField.Element<F> x2, String identity, String shop) {
 		this.setup = setup;
 		this.bank = bank;
 		this.bearer = bearer;
@@ -59,6 +63,7 @@ public abstract class AbstractTransferringCoinOne<G extends Group<G>, F extends 
 		this.x1 = x1;
 		this.x2 = x2;
 		this.identity = identity;
+		this.shop = shop;
 	}
 
 	@Override
@@ -110,9 +115,21 @@ public abstract class AbstractTransferringCoinOne<G extends Group<G>, F extends 
 		return x2;
 	}
 
+	public String getShop() {
+		return shop;
+	}
+
 	@Override
 	public Message emitMessage() {
 		return new CoinHashRequest<G, F, I, T, H, H0>(setup, bank, blindedIdentity, commitment, coinSignature,
-				assetType, faceValue);
+				assetType, faceValue, shop);
 	}
+
+	public CoinTransferMessage<F> transition(CoinHashResponse<F> response) {
+		FiniteField.Element<F> r1 = response.getHash().multiply(getBearer().getPrivateKey()).multiply(getS()).add(
+				getX1());
+		FiniteField.Element<F> r2 = response.getHash().multiply(getS()).add(getX2());
+		return new CoinTransferMessage<F>(r1, r2);
+	}
+
 }

@@ -1,5 +1,6 @@
 package org.mammon.scheme.brands.generic.coin;
 
+import org.mammon.AssetType;
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
 import org.mammon.messaging.DualIdentityTransitionable;
@@ -15,6 +16,7 @@ import org.mammon.scheme.brands.coin.CoinSignature;
 import org.mammon.scheme.brands.coin.UnspentCoin;
 import org.mammon.scheme.brands.generic.assettypes.EuroAssetType;
 import org.mammon.scheme.brands.messages.IssueCoinsResponse;
+import org.mammon.scheme.brands.messages.TransferToShopMessage;
 import org.mammon.util.HashCodeUtil;
 import org.mammon.util.messaging.AbstractTransitionable;
 
@@ -83,6 +85,11 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteFi
 		return new SecondaryTransitionable();
 	}
 
+	public AbstractTransferringCoinOne<G, F, I, T, H, H0> transition(TransferToShopMessage message) {
+		return newAbstractTransferringCoinOne(getSetup(), getIssuer(), bearer, getBlindedIdentity(), getCommitment(),
+				getCoinSignature(), getAssetType(), getFaceValue(), s, x1, x2, getIdentity(), message.getShop());
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null || !(obj instanceof AbstractUnspentCoin<?, ?, ?, ?, ?, ?>)) {
@@ -119,5 +126,11 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteFi
 			}
 		}
 	}
+
+	protected abstract AbstractTransferringCoinOne<G, F, I, T, H, H0> newAbstractTransferringCoinOne(
+			BrandsSchemeSetup<G, F, I, T, H, H0> setup, Bank<G, F, I, T, H, H0> bank,
+			AccountHolderPrivate<G, F, I, T, H, H0> bearer, Group.Element<G> blindedIdentity,
+			Group.Element<G> commitment, CoinSignature<G, F> coinSignature, AssetType assetType, Number faceValue,
+			FiniteField.Element<F> s, FiniteField.Element<F> x1, FiniteField.Element<F> x2, String identity, String shop);
 
 }

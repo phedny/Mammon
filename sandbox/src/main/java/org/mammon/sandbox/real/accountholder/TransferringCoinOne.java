@@ -15,22 +15,23 @@ import org.mammon.scheme.brands.generic.accountholder.AbstractAccountHolderPriva
 import org.mammon.scheme.brands.generic.bank.AbstractBankPrivate;
 import org.mammon.scheme.brands.generic.coin.AbstractTransferringCoinOne;
 
-public class TransferringCoinOne
-		extends
+public class TransferringCoinOne extends
 		AbstractTransferringCoinOne<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	@FromPersistent(AbstractTransferringCoinOne.class)
-	public TransferringCoinOne(@PersistAs("setup") ExampleSetup setup, @PersistAs("bank") AbstractBankPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
+	public TransferringCoinOne(
+			@PersistAs("setup") ExampleSetup setup,
+			@PersistAs("bank") AbstractBankPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
 			@PersistAs("bearer") AbstractAccountHolderPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bearer,
 			@PersistAs("blindedIdentity") Group.Element<Gq> blindedIdentity,
 			@PersistAs("commitment") Group.Element<Gq> commitment,
 			@PersistAs("coinSignature") ExampleCoinSignature coinSignature,
 			@PersistAs("assetType") AssetType assetType, @PersistAs("faceValue") Number faceValue,
-			@PersistAs("s") FiniteField.Element<Z> s,
-			@PersistAs("x1") FiniteField.Element<Z> x1,
-			@PersistAs("x2") FiniteField.Element<Z> x2, @PersistAs("identity") String identity) {
+			@PersistAs("s") FiniteField.Element<Z> s, @PersistAs("x1") FiniteField.Element<Z> x1,
+			@PersistAs("x2") FiniteField.Element<Z> x2, @PersistAs("identity") String identity,
+			@PersistAs("shop") String shop) {
 		super(setup, bank, bearer, blindedIdentity, commitment, coinSignature, assetType, faceValue, s, x1, x2,
-				identity);
+				identity, shop);
 	}
 
 }
