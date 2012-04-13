@@ -83,6 +83,17 @@ public class ZElementTest {
 		assertEquals(one, result);
 	}
 
+	@Test
+	public void exponentiationShouldBeCorrectlyPerfomed() {
+		FiniteField.Element<Z> base = ((Z) field).element(2);
+		FiniteField.Element<Z> exponent = ((Z) field).element(3);
+		FiniteField.Element<Z> expected = base.multiply(base).multiply(base);
+
+		FiniteField.Element<Z> actual = base.exponentiate(exponent);
+
+		assertEquals(expected, actual);
+	}
+
 	@Parameters
 	public static Collection<Object[]> data() {
 		List<Object[]> data = new ArrayList<Object[]>();
