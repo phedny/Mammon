@@ -77,7 +77,7 @@ public class Z implements Identifiable, FiniteField<Z> {
 		public Z getFiniteField() {
 			return Z.this;
 		}
-		
+
 		public BigInteger getElement() {
 			return element;
 		}
@@ -106,10 +106,14 @@ public class Z implements Identifiable, FiniteField<Z> {
 		@Override
 		public FiniteField.Element<Z> exponentiate(FiniteField.Element<Z> other) {
 			FiniteField.Element<Z> result = this.getFiniteField().getOne();
-			for (BigInteger power = BigInteger.ZERO; power.compareTo(((ZElement) other).element) < 0; power = power
-				.add(BigInteger.ONE)) {
-				// TODO Use Binary Quadratation.
-				result = result.multiply(this);
+			FiniteField.Element<Z> power = this;
+			BigInteger value = ((Z.ZElement) other).element;
+			while (value.compareTo(BigInteger.ZERO) > 0) {
+				if (value.mod(BigInteger.valueOf(2)).equals(BigInteger.ONE)) {
+					result = result.multiply(power);
+				}
+				power = power.multiply(power);
+				value = value.divide(BigInteger.valueOf(2));
 			}
 			return result;
 		}
