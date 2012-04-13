@@ -31,4 +31,15 @@ public class GqElementTest {
 	public void inverseShouldMultiplyToIdentity() {
 		assertEquals(identity, generator.multiply(generator.getInverse()));
 	}
+
+	@Test
+	public void exponentiationShouldWorkCorrectly() {
+		FiniteField<Z> field = new Z(11);
+		FiniteField.Element<Z> exponent = field.getOne().add(field.getOne()).add(field.getOne());
+		Group.Element<Gq> expected = generator.multiply(generator).multiply(generator);
+
+		Group.Element<Gq> actual = generator.exponentiate(exponent);
+
+		assertEquals(expected, actual);
+	}
 }

@@ -121,9 +121,14 @@ public class Z implements Identifiable, FiniteField<Z> {
 		@Override
 		public <G extends Group<G>> Group.Element<G> raise(Group.Element<G> groupElement) {
 			Group.Element<G> result = groupElement.getGroup().getIdentityElement();
-			for (BigInteger power = BigInteger.ZERO; power.compareTo(element) < 0; power = power.add(BigInteger.ONE)) {
-				// TODO Use Binary Quadratation.
-				result = result.multiply(groupElement);
+			Group.Element<G> power = groupElement;
+			BigInteger value = element;
+			while (value.compareTo(BigInteger.ZERO) > 0) {
+				if (value.mod(BigInteger.valueOf(2)).equals(BigInteger.ONE)) {
+					result = result.multiply(power);
+				}
+				power = power.multiply(power);
+				value = value.divide(BigInteger.valueOf(2));
 			}
 			return result;
 		}
