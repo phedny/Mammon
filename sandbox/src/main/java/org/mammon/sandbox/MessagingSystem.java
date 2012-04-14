@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 import org.mammon.messaging.DirectedMessage;
 import org.mammon.messaging.DualIdentityTransitionable;
@@ -18,6 +19,8 @@ import org.mammon.messaging.Transactable;
 import org.mammon.messaging.Transitionable;
 
 public class MessagingSystem {
+
+	private static final Logger LOG = Logger.getLogger(MessagingSystem.class.getName());
 
 	private JsonUtil jsonUtil;
 	
@@ -84,11 +87,11 @@ public class MessagingSystem {
 			public void run() {
 				Message message = (Message) jsonUtil.deserializeObject(serializedMessage);
 				Identifiable destObj = storage.get(destination);
-				System.out.println("Message " + message + " to " + destination + " (" + destObj + ")");
+				LOG.fine("Message " + serializedMessage + " to " + destination + " (" + destObj + ")");
 				Object newObject = null;
 
 				if (destObj == null) {
-					System.out.println("Discarded message");
+					LOG.info("Discarded message: " + serializedMessage);
 				} else if (destObj instanceof Transactable) {
 					Transactable t = (Transactable) destObj;
 					Object reply = t.transact(message);
@@ -125,7 +128,7 @@ public class MessagingSystem {
 						if (newObject instanceof Transitionable && destination.equals(testObj.getIdentity())) {
 							Object testState = ((Transitionable) testObj).transition(message);
 							if (testState == null || !testState.equals(newObject)) {
-								System.err.println(message + " transitioned " + destObj + " into " + newObject
+								LOG.warning(message + " transitioned " + destObj + " into " + newObject
 										+ ", but fails Redeliverable requirement");
 							}
 						}

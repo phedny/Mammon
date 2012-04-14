@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.mammon.messaging.DualIdentityTransitionable;
 import org.mammon.messaging.Identifiable;
@@ -13,6 +15,8 @@ import org.mammon.messaging.ObjectStorage;
 import org.mammon.messaging.Transitionable;
 
 public class ExampleObjectStorage implements ObjectStorage {
+	
+	private static final Logger LOG = Logger.getLogger(ExampleObjectStorage.class.getName());
 
 	private Map<String, Identifiable> runtimeObjectMap = new HashMap<String, Identifiable>();
 
@@ -50,11 +54,11 @@ public class ExampleObjectStorage implements ObjectStorage {
 		}
 		Identifiable object = runtimeObjectMap.get(identity);
 		if (object != null) {
-			System.out.println("Removing " + identity);
+			LOG.fine("Removing " + identity);
 			runtimeObjectMap.remove(object.getIdentity());
 			if (object instanceof DualIdentityTransitionable) {
 				Transitionable secT = ((DualIdentityTransitionable) object).getSecondaryTransitionable();
-				System.out.println("Also removing " + secT.getIdentity());
+				LOG.fine("Also removing " + secT.getIdentity());
 				runtimeObjectMap.remove(secT.getIdentity());
 				secondaryIdentities.remove(secT.getIdentity());
 			}
@@ -89,13 +93,17 @@ public class ExampleObjectStorage implements ObjectStorage {
 		Class implementationClass = jsonUtil.getStorableInterface(clazz);
 		Constructor implementationConstructor = jsonUtil.getImplementationConstructor(implementationClass.getName());
 		if (implementationConstructor != null) {
-			System.out.println("Storing " + object.getIdentity() + " (" + object.getClass() + " as " + clazz + ")");
+			LOG.fine("Storing " + object.getIdentity() + " (" + object.getClass() + " as " + clazz + ")");
 			String serializedObject = serializeObject(object);
-			// System.out.println(":-> " + serializedObject);
-			// Object deserializedObject = deserializeObject(serializedObject);
-			// System.out.println(":<- " + deserializedObject);
-			// System.out.println(":.. " + object);
-			// System.out.println(":== " + deserializedObject.equals(object));
+			if (LOG.isLoggable(Level.FINER)) {
+				LOG.finer(":-> " + serializedObject);
+			}
+			if (LOG.isLoggable(Level.FINEST)) {
+				 Object deserializedObject = jsonUtil.deserializeObject(serializedObject);
+				 LOG.finest(":<- " + deserializedObject);
+				 LOG.finest(":.. " + object);
+				 LOG.finest(":== " + deserializedObject.equals(object));
+			}
 
 			persistedObjectMap.put(object.getIdentity(), serializedObject);
 			if (secT != null) {
@@ -115,7 +123,6 @@ public class ExampleObjectStorage implements ObjectStorage {
 	public String serializeObject(Object object) {
 		Set<Identifiable> referencedObjects = new HashSet<Identifiable>();
 		String serializedObject = jsonUtil.serializeObject(object, referencedObjects);
-		// System.out.println(":-> " + serializedObject);
 
 		for (Identifiable obj : referencedObjects) {
 			if (!runtimeObjectMap.containsKey(obj.getIdentity())

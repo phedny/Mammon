@@ -1,6 +1,7 @@
 package org.mammon.scheme.brands.generic.coin;
 
 import java.lang.reflect.Array;
+import java.util.logging.Logger;
 
 import org.mammon.AssetType;
 import org.mammon.math.FiniteField;
@@ -21,6 +22,8 @@ import org.mammon.util.HashCodeUtil;
 
 public abstract class AbstractSpentCoin<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
 		extends AbstractCoin<G, F, I, T, H, H0> implements SpentCoin<G, F, I, T, H, H0> {
+	
+	private static final Logger LOG = Logger.getLogger(AbstractSpentCoin.class.getName());
 
 	private final Shop<G, F, I, T, H, H0> bearer;
 
@@ -62,7 +65,7 @@ public abstract class AbstractSpentCoin<G extends Group<G>, F extends FiniteFiel
 		Group.Element<G> left = getSetup().getGenerator(1).exponentiate(r1).multiply(
 				getSetup().getGenerator(2).exponentiate(r2));
 		Group.Element<G> right = getBlindedIdentity().exponentiate(d).multiply(getCommitment());
-		System.out.println(left.equals(right));
+		LOG.fine("left == right? " + left.equals(right));
 	}
 
 	@Override
