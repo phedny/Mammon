@@ -1,6 +1,5 @@
 package org.mammon.scheme.brands.generic.coin;
 
-import java.lang.reflect.Array;
 import java.util.logging.Logger;
 
 import org.mammon.AssetType;

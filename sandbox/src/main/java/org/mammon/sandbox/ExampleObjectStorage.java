@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 
 import org.mammon.messaging.DualIdentityTransitionable;
 import org.mammon.messaging.Identifiable;
-import org.mammon.messaging.Message;
 import org.mammon.messaging.ObjectStorage;
 import org.mammon.messaging.Transitionable;
 
