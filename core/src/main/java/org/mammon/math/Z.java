@@ -59,8 +59,12 @@ public class Z implements Identifiable, FiniteField<Z> {
 
 	@Override
 	public FiniteField.Element<Z> getRandomElement() {
-		// TODO Generate a random BigInteger
-		return element(random.nextInt(q.intValue()));
+		int n = q.bitLength() + 1;
+		BigInteger randomElement;
+		do {
+			randomElement = new BigInteger(n, random);
+		} while(randomElement.compareTo(q) >= 0);
+		return element(randomElement);
 	}
 
 	public class ZElement implements FiniteField.Element<Z> {
