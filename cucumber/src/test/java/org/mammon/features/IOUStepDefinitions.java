@@ -57,7 +57,7 @@ public class IOUStepDefinitions {
 	}
 
 	@Then("^(\\w+) should have no IOU's$")
-	public void thenLenderShouldHaveNoIOUs() {
+	public void thenLenderShouldHaveNoIOUs(String lender) {
 		fail(); // Express the Regexp above with the code you wish you had
 	}
 
