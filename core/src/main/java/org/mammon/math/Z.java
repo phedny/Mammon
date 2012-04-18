@@ -31,7 +31,7 @@ public class Z implements Identifiable, FiniteField<Z> {
 
 	public Z(BigInteger q, Random random) {
 		this.q = q;
-		this.random = new Random();
+		this.random = random;
 	}
 
 	@Override
