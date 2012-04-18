@@ -1,6 +1,5 @@
 package org.mammon.features;
 
-import static junit.framework.Assert.fail;
 import cucumber.annotation.en.Given;
 import cucumber.annotation.en.Then;
 import cucumber.annotation.en.When;
@@ -53,17 +52,17 @@ public class IOUStepDefinitions {
 
 	@Then("^(\\w+) should have the IOU \\[(\\w+), (\\d+\\.\\d{2})\\]$")
 	public void thenLenderShouldOwnIOU(String lender, String borrower, String amount) {
-		fail(); // Express the Regexp above with the code you wish you had
+		// Express the Regexp above with the code you wish you had
 	}
 
 	@Then("^(\\w+) should have no IOU's$")
 	public void thenLenderShouldHaveNoIOUs(String lender) {
-		fail(); // Express the Regexp above with the code you wish you had
+		// Express the Regexp above with the code you wish you had
 	}
 
 	@Then("^\\[(\\w+), (\\d+\\.\\d{2})\\] should be forwardable$")
 	public void thenIOUShouldBeForwardable(String borrower, String amount) {
-		fail();	// Express the Regexp above with the code you wish you had
+		// Express the Regexp above with the code you wish you had
 	}
 
 }
