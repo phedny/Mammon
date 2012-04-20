@@ -2,17 +2,8 @@
   <modelVersion>4.0.0</modelVersion>
   
   <groupId>mammon</groupId>
-  <artifactId>all</artifactId>
+  <artifactId>parent</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>Mammon All</name>
-  
-  <modules>
-    <module>parent</module>
-    <module>interfaces</module>
-    <module>core</module>
-    <module>scheme.brands</module>
-    <module>cucumber</module>
-    <module>sandbox</module>
-  </modules>
+  <name>Mammon Parent</name>
 </project>
