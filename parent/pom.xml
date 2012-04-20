@@ -7,6 +7,56 @@
   <packaging>pom</packaging>
   <name>Mammon Parent</name>
 
+  <organization>
+    <name>Mammon</name>
+    <url>http://phedny.github.com/Mammon/</url>
+  </organization>
+
+  <developers>
+    <developer>
+      <id>phedny</id>
+      <name>Mark</name>
+      <roles>
+        <role>architect</role>
+        <role>developer</role>
+      </roles>
+      <timezone>-1</timezone>
+    </developer>
+    <developer>
+      <id>dvberkel</id>
+      <name>Daan</name>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <timezone>-1</timezone>
+    </developer>
+    <developer>
+      <id>braat</id>
+      <name>Bram</name>
+      <roles>
+        <role>interaction designer</role>
+        <role>designer</role>
+      </roles>
+      <timezone>-1</timezone>
+    </developer>
+  </developers>
+
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://github.com/phedny/Mammon/issues</url>
+  </issueManagement>
+
+  <ciManagement>
+    <system>Travis CI</system>
+    <url>http://travis-ci.org/#!/phedny/Mammon</url>
+  </ciManagement>
+
+  <scm>
+    <connection>scm:git:git@github:phedny/Mammon.git</connection>
+    <developerConnection>scm:git:git@github:phedny/Mammon.git</developerConnection>
+    <url>https://dvberkel@github.com/phedny/Mammon.git</url>
+  </scm>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
