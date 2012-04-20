@@ -64,7 +64,7 @@ public class ExampleGroup implements Identifiable, Group<ExampleGroup> {
 		@Override
 		public <F extends FiniteField<F>> ExampleElement exponentiate(FiniteField.Element<F> exponent) {
 			try {
-				return new ExponentiationElement(this, (ExampleFiniteField.ExampleElement) exponent);
+				return new ExponentiationElement(this, (ExampleFiniteField.ExampleElement) ((Object) exponent));
 			} catch (ClassCastException e) {
 				throw new IllegalArgumentException("Argument must be of type ExampleElement");
 			}
