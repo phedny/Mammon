@@ -1,4 +1,7 @@
 language: java
+
+before_install: (cd parent && exec mvn install)
+
 notifications:
   irc: "irc.oftc.net#mammon"
 
