@@ -1,5 +1,6 @@
 package org.mammon.sandbox;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -20,22 +21,27 @@ public class MessagingSystem {
 
 	private static final Logger LOG = Logger.getLogger(MessagingSystem.class.getName());
 
-	private JsonUtil jsonUtil;
-	
-	private ExampleObjectStorage storage;
+	private final JsonUtil jsonUtil;
 
-	private Map<Class<?>, StateHandler<?>> stateHandlers = new HashMap<Class<?>, StateHandler<?>>();
+	private final ExampleObjectStorage storage;
 
-	private ExecutorService executor = Executors.newSingleThreadExecutor();
+	private final Map<Class<?>, StateHandler<?>> stateHandlers = new HashMap<Class<?>, StateHandler<?>>();
 
-	public MessagingSystem(JsonUtil jsonUtil) {
+	private final ExecutorService executor = Executors.newSingleThreadExecutor();
+
+	private final RemoteMessaging remoteMessaging;
+
+	public MessagingSystem(JsonUtil jsonUtil, String nodeId) throws IOException {
 		this.jsonUtil = jsonUtil;
 		jsonUtil.registerClass(StringRedeliverableMessage.class);
+		jsonUtil.registerClass(NetworkMessage.class);
 		storage = new ExampleObjectStorage(jsonUtil);
 		registerStateHandler(MessageEmitter.class, new MessageEmitterHandler());
+		remoteMessaging = new RemoteMessaging(this, jsonUtil, nodeId);
 	}
 
 	public void shutdown() {
+		remoteMessaging.shutdown();
 		executor.shutdown();
 	}
 
@@ -76,9 +82,9 @@ public class MessagingSystem {
 		sendMessage(message, message.getDestination(), null);
 	}
 
-	private void sendMessage(Message message, final String destination, final String replyDestination) {
+	void sendMessage(Message message, final String destination, final String replyDestination) {
 		final String serializedMessage = storage.serializeObject(message);
-		
+
 		executor.execute(new Runnable() {
 
 			@Override
@@ -89,7 +95,9 @@ public class MessagingSystem {
 				Object newObject = null;
 
 				if (destObj == null) {
-					LOG.info("Discarded message: " + serializedMessage);
+					if (!remoteMessaging.sendMessage(message, destination, replyDestination)) {
+						LOG.info("Discarded message: " + serializedMessage);
+					}
 				} else if (destObj instanceof Transactable) {
 					Transactable t = (Transactable) destObj;
 					Object reply = t.transact(message);

@@ -1,5 +1,7 @@
 package org.mammon.sandbox;
 
+import java.io.IOException;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.mammon.math.Gq;
@@ -42,7 +44,7 @@ import org.mammon.scheme.brands.messages.TransferToShopMessage;
 
 public class Main {
 
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException, IOException {
 		mainReal(args);
 	}
 
@@ -145,8 +147,9 @@ public class Main {
 	/**
 	 * @param args
 	 * @throws InterruptedException
+	 * @throws IOException
 	 */
-	public static void mainReal(String[] args) throws InterruptedException {
+	public static void mainReal(String[] args) throws InterruptedException, IOException {
 		final JsonUtil jsonUtil = new JsonUtil(EuroAssetType.class, Z.class, Z.ZElement.class, Gq.class,
 				Gq.GqElement.class, ExampleSetup.class, ExampleBank.class, BlindedIdentity.class,
 				IssuedWitnesses.class, ExampleAccountHolder.class, OpeningAccountHolder.class, ExampleShop.class,
@@ -156,7 +159,7 @@ public class Main {
 				BlindedIdentityResponse.class, IssueCoinsRequest.class, IssueCoinsResponse.class,
 				ObtainCoinsMessage.class, TransferToShopMessage.class, CoinHashRequest.class, CoinHashResponse.class,
 				CoinTransferMessage.class);
-		final MessagingSystem messaging = new MessagingSystem(jsonUtil);
+		final MessagingSystem messaging = new MessagingSystem(jsonUtil, UUID.randomUUID().toString());
 
 		// Setup the environment.
 		final ExampleSetup setup = new ExampleSetup();

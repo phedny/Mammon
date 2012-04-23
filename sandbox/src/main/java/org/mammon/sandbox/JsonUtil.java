@@ -193,6 +193,17 @@ public class JsonUtil {
 		return null;
 	}
 
+	public <C> C deserializeObject(String json, Class<C> implementation) {
+		try {
+			JSONObject jsonObject = new JSONObject(json);
+			jsonObject.put("implementation", implementation.getName());
+			return (C) deserializeObjectJSON(jsonObject);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	private Object deserializeObjectJSON(JSONObject json) throws JSONException {
 		String implementation = json.getString("implementation");
 		Constructor constructor = implementationConstructors.get(implementation);
@@ -257,16 +268,25 @@ public class JsonUtil {
 		if (referencedObjects == null) {
 			referencedObjects = new HashSet<Identifiable>();
 		}
-		return serializeObjectJSON(object, referencedObjects).toString();
+		return serializeObjectJSON(object, referencedObjects, true).toString();
 	}
 
-	private JSONObject serializeObjectJSON(Object object, Set<Identifiable> referencedObjects) {
+	public String serializeKnownObject(Object object, Set<Identifiable> referencedObjects) {
+		if (referencedObjects == null) {
+			referencedObjects = new HashSet<Identifiable>();
+		}
+		return serializeObjectJSON(object, referencedObjects, false).toString();
+	}
+
+	private JSONObject serializeObjectJSON(Object object, Set<Identifiable> referencedObjects, boolean includeClassInfo) {
 		JSONObject json = new JSONObject();
 		Class<? extends Object> clazz = object.getClass();
 		Class<?> registeredClass = getRegisteredClass(clazz);
 		try {
-			json.put("interface", registeredClass.getName());
-			json.put("implementation", clazz.getName());
+			if (includeClassInfo) {
+				json.put("interface", registeredClass.getName());
+				json.put("implementation", clazz.getName());
+			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -294,7 +314,7 @@ public class JsonUtil {
 						json.put(property, identifier);
 						referencedObjects.add(identifiable);
 					} else {
-						json.put(property, serializeObjectJSON(value, referencedObjects));
+						json.put(property, serializeObjectJSON(value, referencedObjects, true));
 					}
 				}
 			} catch (SecurityException e) {
@@ -322,7 +342,7 @@ public class JsonUtil {
 			if (componentObject.getClass().isArray()) {
 				array.put(serializeArrayJSON(componentObject, referencedObjects));
 			} else {
-				array.put(serializeObjectJSON(componentObject, referencedObjects));
+				array.put(serializeObjectJSON(componentObject, referencedObjects, true));
 			}
 		}
 		return array;
