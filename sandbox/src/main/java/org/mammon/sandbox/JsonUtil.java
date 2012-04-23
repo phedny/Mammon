@@ -183,41 +183,47 @@ public class JsonUtil {
 		classPropertyTypes.put(clazz, propertyTypes);
 	}
 
-	public Object deserializeObject(String json) {
+	public Object deserializeObject(String json, IdentityMapper identityMapper) {
+		if (identityMapper == null) {
+			identityMapper = new NoOpIdentityMapper();
+		}
 		try {
 			JSONObject jsonObject = new JSONObject(json);
-			return deserializeObjectJSON(jsonObject);
+			return deserializeObjectJSON(jsonObject, identityMapper);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
-	public <C> C deserializeObject(String json, Class<C> implementation) {
+	public <C> C deserializeObject(String json, Class<C> implementation, IdentityMapper identityMapper) {
+		if (identityMapper == null) {
+			identityMapper = new NoOpIdentityMapper();
+		}
 		try {
 			JSONObject jsonObject = new JSONObject(json);
 			jsonObject.put("implementation", implementation.getName());
-			return (C) deserializeObjectJSON(jsonObject);
+			return (C) deserializeObjectJSON(jsonObject, identityMapper);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
-	private Object deserializeObjectJSON(JSONObject json) throws JSONException {
+	private Object deserializeObjectJSON(JSONObject json, IdentityMapper identityMapper) throws JSONException {
 		String implementation = json.getString("implementation");
 		Constructor constructor = implementationConstructors.get(implementation);
 		Class clazz = constructor.getDeclaringClass();
 		List<String> properties = classProperties.get(clazz);
 		List<Class<?>> propertyTypes = classPropertyTypes.get(clazz);
-	
+
 		Object[] arguments = new Object[properties.size()];
 		for (int i = 0; i < arguments.length; i++) {
 			String propertyName = properties.get(i);
 			Class<?> propertyType = propertyTypes.get(i);
-			arguments[i] = deserializePropertyJSON(json.get(propertyName), propertyType);
+			arguments[i] = deserializePropertyJSON(json.get(propertyName), propertyType, identityMapper);
 		}
-	
+
 		try {
 			return constructor.newInstance(arguments);
 		} catch (IllegalArgumentException e) {
@@ -229,13 +235,13 @@ public class JsonUtil {
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
-	
+
 		return null;
 	}
 
-	private Object deserializePropertyJSON(Object object, Class<?> propertyType) throws JSONException {
+	private Object deserializePropertyJSON(Object object, Class<?> propertyType, IdentityMapper identityMapper) throws JSONException {
 		if (propertyType.isArray() && object instanceof JSONArray) {
-			return deserializeArrayJSON((JSONArray) object, propertyType.getComponentType());
+			return deserializeArrayJSON((JSONArray) object, propertyType.getComponentType(), identityMapper);
 		} else if (String.class.isAssignableFrom(propertyType) && object instanceof String) {
 			return object;
 		} else if (Integer.TYPE.isAssignableFrom(propertyType) && object instanceof Number) {
@@ -245,40 +251,47 @@ public class JsonUtil {
 		} else if (BigInteger.class.isAssignableFrom(propertyType) && object instanceof Number) {
 			return new BigInteger(object.toString());
 		} else if (object instanceof String) {
-			return storage.get((String) object);
+			return storage.get(identityMapper.deserializeIdentity((String) object));
 		} else if (object instanceof JSONObject) {
-			return deserializeObjectJSON((JSONObject) object);
+			return deserializeObjectJSON((JSONObject) object, identityMapper);
 		} else {
 			return null;
-	
+
 		}
 	}
 
-	private Object deserializeArrayJSON(JSONArray json, Class<?> expectedType) throws ArrayIndexOutOfBoundsException,
+	private Object deserializeArrayJSON(JSONArray json, Class<?> expectedType, IdentityMapper identityMapper) throws ArrayIndexOutOfBoundsException,
 			IllegalArgumentException, JSONException {
-				int length = json.length();
-				Object array = Array.newInstance(expectedType, length);
-				for (int i = 0; i < length; i++) {
-					Array.set(array, i, deserializePropertyJSON(json.get(i), expectedType));
-				}
-				return array;
-			}
+		int length = json.length();
+		Object array = Array.newInstance(expectedType, length);
+		for (int i = 0; i < length; i++) {
+			Array.set(array, i, deserializePropertyJSON(json.get(i), expectedType, identityMapper));
+		}
+		return array;
+	}
 
-	public String serializeObject(Object object, Set<Identifiable> referencedObjects) {
+	public String serializeObject(Object object, IdentityMapper identityMapper, Set<Identifiable> referencedObjects) {
 		if (referencedObjects == null) {
 			referencedObjects = new HashSet<Identifiable>();
 		}
-		return serializeObjectJSON(object, referencedObjects, true).toString();
+		if (identityMapper == null) {
+			identityMapper = new NoOpIdentityMapper();
+		}
+		return serializeObjectJSON(object, referencedObjects, identityMapper, true).toString();
 	}
 
-	public String serializeKnownObject(Object object, Set<Identifiable> referencedObjects) {
+	public String serializeKnownObject(Object object, IdentityMapper identityMapper, Set<Identifiable> referencedObjects) {
 		if (referencedObjects == null) {
 			referencedObjects = new HashSet<Identifiable>();
 		}
-		return serializeObjectJSON(object, referencedObjects, false).toString();
+		if (identityMapper == null) {
+			identityMapper = new NoOpIdentityMapper();
+		}
+		return serializeObjectJSON(object, referencedObjects, identityMapper, false).toString();
 	}
 
-	private JSONObject serializeObjectJSON(Object object, Set<Identifiable> referencedObjects, boolean includeClassInfo) {
+	private JSONObject serializeObjectJSON(Object object, Set<Identifiable> referencedObjects,
+			IdentityMapper identityMapper, boolean includeClassInfo) {
 		JSONObject json = new JSONObject();
 		Class<? extends Object> clazz = object.getClass();
 		Class<?> registeredClass = getRegisteredClass(clazz);
@@ -334,15 +347,15 @@ public class JsonUtil {
 		return json;
 	}
 
-	private JSONArray serializeArrayJSON(Object value, Set<Identifiable> referencedObjects) {
+	private JSONArray serializeArrayJSON(Object value, Set<Identifiable> referencedObjects, IdentityMapper outputMapper) {
 		JSONArray array = new JSONArray();
 		int length = Array.getLength(value);
 		for (int i = 0; i < length; i++) {
 			Object componentObject = Array.get(value, i);
 			if (componentObject.getClass().isArray()) {
-				array.put(serializeArrayJSON(componentObject, referencedObjects));
+				array.put(serializeArrayJSON(componentObject, referencedObjects, outputMapper));
 			} else {
-				array.put(serializeObjectJSON(componentObject, referencedObjects, true));
+				array.put(serializeObjectJSON(componentObject, referencedObjects, outputMapper, true));
 			}
 		}
 		return array;

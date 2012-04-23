@@ -89,7 +89,7 @@ public class MessagingSystem {
 
 			@Override
 			public void run() {
-				Message message = (Message) jsonUtil.deserializeObject(serializedMessage);
+				Message message = (Message) jsonUtil.deserializeObject(serializedMessage, null);
 				Identifiable destObj = storage.get(destination);
 				LOG.fine("Message " + serializedMessage + " to " + destination + " (" + destObj + ")");
 				Object newObject = null;

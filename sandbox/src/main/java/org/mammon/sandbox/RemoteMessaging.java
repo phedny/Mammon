@@ -10,6 +10,7 @@ import java.net.SocketTimeoutException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -78,8 +79,7 @@ public class RemoteMessaging {
 		}
 
 		try {
-			NetworkMessage output = new NetworkMessage(replyDestination, destinations[1], message);
-			connection.send(jsonUtil.serializeKnownObject(output, null));
+			connection.send(replyDestination, destinations[1], message);
 			return true;
 		} catch (IOException e) {
 			return false;
@@ -95,6 +95,8 @@ public class RemoteMessaging {
 		private final OutputStreamWriter out;
 
 		private final Thread inputThread;
+
+		private final IdentityMapper identityMapper = new ConnectionIdentityMapper();
 
 		public Connection(Socket socket) throws IOException {
 			this.socket = socket;
@@ -133,11 +135,12 @@ public class RemoteMessaging {
 							String json = new String(buffer);
 							buffer = null;
 
-							NetworkMessage message = jsonUtil.deserializeObject(json, NetworkMessage.class);
+							NetworkMessage message = jsonUtil.deserializeObject(json, NetworkMessage.class,
+									identityMapper);
 							LOG.log(Level.WARNING, message.getSource() + " => " + message.getDestination() + ": "
 									+ message.getMessage());
-							messaging.sendMessage(message.getMessage(), message.getDestination(), remoteId + ":"
-									+ message.getSource());
+							messaging.sendMessage(message.getMessage(), identityMapper.deserializeIdentity(message
+									.getDestination()), remoteId + ":" + message.getSource());
 						}
 					} catch (IOException e) {
 						LOG.log(Level.INFO, "Closing connection due to IOException", e);
@@ -159,12 +162,37 @@ public class RemoteMessaging {
 			inputThread.start();
 		}
 
-		public void send(String json) throws IOException {
+		public synchronized void send(String source, String destination, Message message) throws IOException {
+			NetworkMessage networkMessage = new NetworkMessage(identityMapper.serializeIdentity(source), destination,
+					message);
+			final String json = jsonUtil.serializeKnownObject(networkMessage, identityMapper, null);
 			StringBuffer output = new StringBuffer();
 			output.append(json.length()).append("\n").append(json);
-			synchronized (out) {
-				out.append(output.toString()).flush();
+			out.append(output.toString()).flush();
+		}
+
+	}
+
+	private class ConnectionIdentityMapper implements IdentityMapper {
+
+		private final Map<String, String> identityMapperOut = new HashMap<String, String>();
+
+		private final Map<String, String> identityMapperIn = new HashMap<String, String>();
+
+		@Override
+		public synchronized String deserializeIdentity(String identity) {
+			return identityMapperIn.get(identity);
+		}
+
+		@Override
+		public synchronized String serializeIdentity(String identity) {
+			if (identityMapperOut.containsKey(identity)) {
+				return identityMapperOut.get(identity);
 			}
+			String remoteId = UUID.randomUUID().toString();
+			identityMapperOut.put(identity, remoteId);
+			identityMapperIn.put(remoteId, identity);
+			return remoteId;
 		}
 
 	}

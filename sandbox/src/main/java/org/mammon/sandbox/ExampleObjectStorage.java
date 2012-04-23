@@ -37,7 +37,7 @@ public class ExampleObjectStorage implements ObjectStorage {
 		if (object == null) {
 			String json = persistedObjectMap.get(identity);
 			if (json != null) {
-				object = (Identifiable) jsonUtil.deserializeObject(json);
+				object = (Identifiable) jsonUtil.deserializeObject(json, null);
 			}
 		}
 		if (object instanceof SecondaryTransitionable) {
@@ -98,16 +98,16 @@ public class ExampleObjectStorage implements ObjectStorage {
 				LOG.finer(":-> " + serializedObject);
 			}
 			if (LOG.isLoggable(Level.FINEST)) {
-				 Object deserializedObject = jsonUtil.deserializeObject(serializedObject);
-				 LOG.finest(":<- " + deserializedObject);
-				 LOG.finest(":.. " + object);
-				 LOG.finest(":== " + deserializedObject.equals(object));
+				Object deserializedObject = jsonUtil.deserializeObject(serializedObject, null);
+				LOG.finest(":<- " + deserializedObject);
+				LOG.finest(":.. " + object);
+				LOG.finest(":== " + deserializedObject.equals(object));
 			}
 
 			persistedObjectMap.put(object.getIdentity(), serializedObject);
 			if (secT != null) {
 				persistedObjectMap.put(secT.getIdentity(), jsonUtil.serializeObject(new SecondaryTransitionable(object
-						.getIdentity().toString()), null));
+						.getIdentity().toString()), null, null));
 				secondaryIdentities.add(secT.getIdentity());
 			}
 		} else {
@@ -121,7 +121,7 @@ public class ExampleObjectStorage implements ObjectStorage {
 
 	public String serializeObject(Object object) {
 		Set<Identifiable> referencedObjects = new HashSet<Identifiable>();
-		String serializedObject = jsonUtil.serializeObject(object, referencedObjects);
+		String serializedObject = jsonUtil.serializeObject(object, null, referencedObjects);
 
 		for (Identifiable obj : referencedObjects) {
 			if (!runtimeObjectMap.containsKey(obj.getIdentity())
