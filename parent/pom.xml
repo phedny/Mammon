@@ -7,6 +7,15 @@
   <packaging>pom</packaging>
   <name>Mammon Parent</name>
 
+  <licenses>
+    <license>
+      <name>BSD</name>
+      <url>https://github.com/phedny/Mammon/blob/master/license.md</url>
+      <distribution>repo</distribution>
+      <comments>A business-friendly OSS license</comments>
+    </license>
+  </licenses>
+
   <organization>
     <name>Mammon</name>
     <url>http://phedny.github.com/Mammon/</url>
