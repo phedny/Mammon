@@ -7,6 +7,15 @@ Mammon is a distributed IOU management system, capable of running in daemon mode
 
 The protocol and crypto are based on a publication by [Stefan Brands][Br93].
 
+License
+-------
+
+This project can be distributed under the 
+[BSD license](http://www.opensource.org/licenses/bsd-license.php "opensource.org on BSD license").
+See 
+[license.md](https://github.com/phedny/Mammon/blob/master/license.md "Project License") 
+for details.
+
 References
 -------------
 
