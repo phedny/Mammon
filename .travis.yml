@@ -7,7 +7,7 @@ notifications:
     channels:
       - "irc.oftc.net#mammon"
     template:
-      - "%{branch}/%{commit} (#%{build_number} by %{author}): %{mesage} %{build_url}"
+      - "%{branch}/%{commit} (#%{build_number} by %{author}): %{message} %{build_url}"
     use_notice: true
     skip_join: true
 
