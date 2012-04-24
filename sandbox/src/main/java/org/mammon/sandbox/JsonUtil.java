@@ -309,13 +309,13 @@ public class JsonUtil {
 			try {
 				Method getter = clazz.getMethod(getterName);
 				Object value = getter.invoke(object);
-	
+
 				if (value == null) {
 					json.put(property, JSONObject.NULL);
 				} else {
 					Class<?> returnType = value.getClass();
 					if (returnType.isArray()) {
-						JSONArray array = serializeArrayJSON(value, referencedObjects);
+						JSONArray array = serializeArrayJSON(value, referencedObjects, identityMapper);
 						json.put(property, array);
 					} else if (value instanceof String) {
 						json.put(property, value);
@@ -324,10 +324,10 @@ public class JsonUtil {
 					} else if (value instanceof Identifiable) {
 						Identifiable identifiable = (Identifiable) value;
 						String identifier = identifiable.getIdentity().toString();
-						json.put(property, identifier);
+						json.put(property, identityMapper.serializeIdentity(identifier));
 						referencedObjects.add(identifiable);
 					} else {
-						json.put(property, serializeObjectJSON(value, referencedObjects, true));
+						json.put(property, serializeObjectJSON(value, referencedObjects, identityMapper, true));
 					}
 				}
 			} catch (SecurityException e) {
