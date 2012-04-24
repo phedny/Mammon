@@ -4,10 +4,10 @@ import org.mammon.math.FiniteField;
 import org.mammon.math.Gq;
 import org.mammon.math.Group;
 import org.mammon.math.Z;
-import org.mammon.sandbox.RealOracleHashFunction;
+import org.mammon.sandbox.Sha1HashFunction;
 import org.mammon.scheme.brands.SignatureHashFunction;
 
-public class ExampleSignatureHashFunction extends RealOracleHashFunction implements
+public class ExampleSignatureHashFunction extends Sha1HashFunction implements
 		SignatureHashFunction<Gq, Z> {
 
 	public ExampleSignatureHashFunction(Gq group, Z f) {
