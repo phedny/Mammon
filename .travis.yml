@@ -3,5 +3,11 @@ language: java
 before_install: (cd parent && exec mvn install)
 
 notifications:
-  irc: "irc.oftc.net#mammon"
+  irc:
+    channels:
+      - "irc.oftc.net#mammon"
+    template:
+      - "%{branch}/%{commit} (#%{build_number} by %{author}): %{message} %{build_url}"
+    use_notice: true
+    skip_join: true
 
