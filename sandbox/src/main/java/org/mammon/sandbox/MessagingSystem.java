@@ -1,6 +1,7 @@
 package org.mammon.sandbox;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -11,6 +12,7 @@ import java.util.logging.Logger;
 
 import org.mammon.messaging.DirectedMessage;
 import org.mammon.messaging.DualIdentityTransitionable;
+import org.mammon.messaging.ForwardRemote;
 import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.Message;
 import org.mammon.messaging.MessageEmitter;
@@ -35,6 +37,7 @@ public class MessagingSystem {
 		this.jsonUtil = jsonUtil;
 		jsonUtil.registerClass(StringRedeliverableMessage.class);
 		jsonUtil.registerClass(NetworkMessage.class);
+		jsonUtil.registerClass(PublishObject.class);
 		storage = new ExampleObjectStorage(jsonUtil);
 		registerStateHandler(MessageEmitter.class, new MessageEmitterHandler());
 		remoteMessaging = new RemoteMessaging(this, jsonUtil, nodeId);
@@ -44,14 +47,29 @@ public class MessagingSystem {
 		remoteMessaging.shutdown();
 		executor.shutdown();
 	}
+	
+	public void connect(String remoteHost) throws UnknownHostException, IOException {
+		remoteMessaging.connect(remoteHost);
+	}
+	
+	public String publish(String remoteId, Identifiable objectId) {
+		return remoteMessaging.publish(remoteId, objectId);
+	}
 
 	public void awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
 		executor.awaitTermination(timeout, unit);
 	}
 
 	public void addObject(Identifiable object) {
+		addObject(object, false);
+	}
+
+	public void addObject(Identifiable object, boolean publishToAll) {
 		storage.store(object);
 		enteredState(object, null);
+		if (publishToAll) {
+			remoteMessaging.publish(null, object);
+		}
 	}
 
 	public <C> void registerStateHandler(Class<C> clazz, StateHandler<C> stateHandler) {
@@ -94,7 +112,7 @@ public class MessagingSystem {
 				LOG.fine("Message " + serializedMessage + " to " + destination + " (" + destObj + ")");
 				Object newObject = null;
 
-				if (destObj == null) {
+				if (destObj == null || destObj.getClass().isAnnotationPresent(ForwardRemote.class)) {
 					if (!remoteMessaging.sendMessage(message, destination, replyDestination)) {
 						LOG.info("Discarded message: " + serializedMessage);
 					}

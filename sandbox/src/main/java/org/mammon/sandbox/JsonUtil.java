@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import org.mammon.messaging.AvailableAtRuntime;
 import org.mammon.messaging.FromPersistent;
 import org.mammon.messaging.Identifiable;
+import org.mammon.messaging.MapIdentity;
 import org.mammon.messaging.PersistAs;
 import org.mammon.messaging.ReturnsEnclosing;
 
@@ -126,6 +127,8 @@ public class JsonUtil {
 							+ " constructor has no @PersistAt");
 				} else if (String.class.isAssignableFrom(baseType)) {
 					registeredClass = String.class;
+				} else if (JSONObject.class.isAssignableFrom(baseType)) {
+					registeredClass = JSONObject.class;
 				} else if (Number.class.isAssignableFrom(baseType)) {
 					registeredClass = Number.class;
 				} else if (baseType.isPrimitive()) {
@@ -244,6 +247,8 @@ public class JsonUtil {
 			return deserializeArrayJSON((JSONArray) object, propertyType.getComponentType(), identityMapper);
 		} else if (String.class.isAssignableFrom(propertyType) && object instanceof String) {
 			return object;
+		} else if (JSONObject.class.isAssignableFrom(propertyType) && object instanceof JSONObject) {
+			return object;
 		} else if (Integer.TYPE.isAssignableFrom(propertyType) && object instanceof Number) {
 			return Integer.valueOf(((Number) object).intValue());
 		} else if (Long.TYPE.isAssignableFrom(propertyType) && object instanceof Number) {
@@ -251,7 +256,13 @@ public class JsonUtil {
 		} else if (BigInteger.class.isAssignableFrom(propertyType) && object instanceof Number) {
 			return new BigInteger(object.toString());
 		} else if (object instanceof String) {
-			return storage.get(identityMapper.deserializeIdentity((String) object));
+			String identity = (String) object;
+			object = storage.get(identity);
+			if (object == null) {
+				identity = identityMapper.deserializeIdentity(identity);
+				object = storage.get(identity);
+			}
+			return object;
 		} else if (object instanceof JSONObject) {
 			return deserializeObjectJSON((JSONObject) object, identityMapper);
 		} else {
@@ -319,12 +330,18 @@ public class JsonUtil {
 						json.put(property, array);
 					} else if (value instanceof String) {
 						json.put(property, value);
+					} else if (value instanceof JSONObject) {
+						json.put(property, value);
 					} else if (value instanceof Number) {
 						json.put(property, value);
 					} else if (value instanceof Identifiable) {
 						Identifiable identifiable = (Identifiable) value;
 						String identifier = identifiable.getIdentity().toString();
-						json.put(property, identityMapper.serializeIdentity(identifier));
+						if (value.getClass().isAnnotationPresent(MapIdentity.class)) {
+							json.put(property, identityMapper.serializeIdentity(identifier));
+						} else {
+							json.put(property, identifier);
+						}
 						referencedObjects.add(identifiable);
 					} else {
 						json.put(property, serializeObjectJSON(value, referencedObjects, identityMapper, true));

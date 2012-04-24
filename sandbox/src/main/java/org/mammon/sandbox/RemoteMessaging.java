@@ -7,14 +7,22 @@ import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.Message;
+import org.mammon.messaging.PublicationConverter;
+import org.mammon.messaging.PublishAs;
 
 public class RemoteMessaging {
 
@@ -29,6 +37,8 @@ public class RemoteMessaging {
 	private final Thread serverThread;
 
 	private final Map<String, Connection> remotes = Collections.synchronizedMap(new HashMap<String, Connection>());
+
+	private final Set<Identifiable> publishedToAll = new HashSet<Identifiable>();
 
 	public RemoteMessaging(MessagingSystem messaging, JsonUtil jsonUtil, String localId) {
 		this.messaging = messaging;
@@ -67,6 +77,24 @@ public class RemoteMessaging {
 		serverThread.interrupt();
 	}
 
+	public void connect(String remoteHost) throws UnknownHostException, IOException {
+		new Connection(new Socket(remoteHost, 49001));
+	}
+
+	public String publish(String remoteId, Identifiable object) {
+		if (remoteId == null) {
+			synchronized (publishedToAll) {
+				publishedToAll.add(object);
+			}
+			return null;
+		}
+		Connection connection = remotes.get(remoteId);
+		if (connection == null) {
+			return null;
+		}
+		return connection.publish(object);
+	}
+
 	public boolean sendMessage(Message message, String destination, String replyDestination) {
 		String[] destinations = destination.split(":");
 		if (destinations.length != 2) {
@@ -102,6 +130,16 @@ public class RemoteMessaging {
 			this.socket = socket;
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
 			out = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
+			out.append(localId).append("\n").flush();
+
+			final Identifiable[] published;
+			synchronized (publishedToAll) {
+				published = publishedToAll.toArray(new Identifiable[publishedToAll.size()]);
+			}
+
+			for (Identifiable toPublish : published) {
+				publish(toPublish);
+			}
 
 			inputThread = new Thread() {
 
@@ -139,8 +177,28 @@ public class RemoteMessaging {
 									identityMapper);
 							LOG.log(Level.WARNING, message.getSource() + " => " + message.getDestination() + ": "
 									+ message.getMessage());
-							messaging.sendMessage(message.getMessage(), identityMapper.deserializeIdentity(message
-									.getDestination()), remoteId + ":" + message.getSource());
+
+							if (message.getSource() == null || message.getDestination() == null
+									|| message.getMessage() instanceof PublishObject) {
+								if (message.getSource() != null || message.getDestination() != null
+										|| !(message.getMessage() instanceof PublishObject)) {
+									LOG.log(Level.WARNING, "Ignoring message!");
+									continue;
+								}
+
+								PublishObject publishObject = (PublishObject) message.getMessage();
+								JSONObject jsonObject = publishObject.getObject();
+								try {
+									jsonObject.put("identity", remoteId + ":" + jsonObject.getString("identity"));
+								} catch (JSONException e) {
+									throw new AssertionError(e);
+								}
+								Object remoteObject = jsonUtil.deserializeObject(jsonObject.toString(), identityMapper);
+								messaging.addObject((Identifiable) remoteObject);
+							} else {
+								messaging.sendMessage(message.getMessage(), identityMapper.deserializeIdentity(message
+										.getDestination()), remoteId + ":" + message.getSource());
+							}
 						}
 					} catch (IOException e) {
 						LOG.log(Level.INFO, "Closing connection due to IOException", e);
@@ -162,13 +220,37 @@ public class RemoteMessaging {
 			inputThread.start();
 		}
 
+		public <T extends Identifiable> String publish(T object) {
+			String remoteId = identityMapper.serializeIdentity(object.getIdentity());
+			Object outObject = object;
+			try {
+				PublishAs publishAs = object.getClass().getAnnotation(PublishAs.class);
+				if (publishAs != null) {
+					try {
+						PublicationConverter<T> converter = (PublicationConverter<T>) publishAs.value().newInstance();
+						outObject = converter.convert(object, remoteId);
+					} catch (InstantiationException e) {
+						throw new AssertionError(e);
+					} catch (IllegalAccessException e) {
+						throw new AssertionError(e);
+					}
+				}
+				send(null, null, new PublishObject(jsonUtil.serializeObject(outObject, identityMapper, null)));
+			} catch (IOException e) {
+				// Empty.
+			} catch (JSONException e) {
+				// Empty.
+			}
+			return remoteId;
+		}
+
 		public synchronized void send(String source, String destination, Message message) throws IOException {
-			NetworkMessage networkMessage = new NetworkMessage(identityMapper.serializeIdentity(source), destination,
-					message);
+			if (source != null) {
+				source = identityMapper.serializeIdentity(source);
+			}
+			NetworkMessage networkMessage = new NetworkMessage(source, destination, message);
 			final String json = jsonUtil.serializeKnownObject(networkMessage, identityMapper, null);
-			StringBuffer output = new StringBuffer();
-			output.append(json.length()).append("\n").append(json);
-			out.append(output.toString()).flush();
+			out.append(String.valueOf(json.length())).append("\n").append(json).flush();
 		}
 
 	}
