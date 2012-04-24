@@ -16,7 +16,7 @@ import org.mammon.scheme.brands.bank.Bank;
 import org.mammon.scheme.brands.coin.CoinSignature;
 import org.mammon.scheme.brands.coin.UnspentCoin;
 import org.mammon.scheme.brands.generic.accountholder.AbstractAccountHolderPrivate;
-import org.mammon.scheme.brands.generic.bank.AbstractBankPrivate;
+import org.mammon.scheme.brands.generic.bank.AbstractBank;
 import org.mammon.scheme.brands.generic.coin.AbstractTransferringCoinOne;
 import org.mammon.scheme.brands.generic.coin.AbstractUnspentCoin;
 
@@ -27,7 +27,7 @@ public class ExampleUnspentCoin extends
 	public ExampleUnspentCoin(
 			@PersistAs("setup") ExampleSetup setup,
 			@PersistAs("bearer") AbstractAccountHolderPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bearer,
-			@PersistAs("issuer") AbstractBankPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
+			@PersistAs("issuer") AbstractBank<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
 			@PersistAs("dualIdentity") String dualIdentity,
 			@PersistAs("blindingFactor") FiniteField.Element<Z> blindingFactor,
 			@PersistAs("payerWitness1") FiniteField.Element<Z> x1,
@@ -60,9 +60,10 @@ public class ExampleUnspentCoin extends
 			Group.Element<Gq> blindedIdentity, Group.Element<Gq> commitment, CoinSignature<Gq, Z> coinSignature,
 			AssetType assetType, Number faceValue, FiniteField.Element<Z> s, FiniteField.Element<Z> x1,
 			FiniteField.Element<Z> x2, String identity, String shop) {
-		return new TransferringCoinOne((ExampleSetup) setup, (ExampleBank) bank, (ExampleAccountHolder) bearer,
-				blindedIdentity, commitment, (ExampleCoinSignature) coinSignature, assetType, faceValue, s, x1, x2,
-				identity, shop);
+		return new TransferringCoinOne((ExampleSetup) setup,
+				(AbstractBank<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) bank,
+				(ExampleAccountHolder) bearer, blindedIdentity, commitment, (ExampleCoinSignature) coinSignature,
+				assetType, faceValue, s, x1, x2, identity, shop);
 	}
 
 }

@@ -10,6 +10,7 @@ import org.mammon.math.Z;
 import org.mammon.messaging.FromPersistent;
 import org.mammon.messaging.PersistAs;
 import org.mammon.scheme.brands.coin.SpentCoin;
+import org.mammon.scheme.brands.generic.bank.AbstractBank;
 import org.mammon.scheme.brands.generic.bank.AbstractBankPrivate;
 import org.mammon.scheme.brands.generic.coin.AbstractSpentCoin;
 
@@ -23,7 +24,7 @@ public class ExampleSpentCoin extends
 	}
 
 	@FromPersistent(SpentCoin.class)
-	public ExampleSpentCoin(@PersistAs("setup") ExampleSetup setup, @PersistAs("issuer") ExampleBank bank,
+	public ExampleSpentCoin(@PersistAs("setup") ExampleSetup setup, @PersistAs("issuer") AbstractBank<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
 			@PersistAs("blindedIdentity") Group.Element<Gq> blindedIdentity,
 			@PersistAs("commitment") Group.Element<Gq> commitment,
 			@PersistAs("coinSignature") ExampleCoinSignature coinSignature,
