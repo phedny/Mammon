@@ -4,10 +4,10 @@ import org.mammon.math.FiniteField;
 import org.mammon.math.Gq;
 import org.mammon.math.Group;
 import org.mammon.math.Z;
-import org.mammon.sandbox.RealOracleHashFunction;
+import org.mammon.sandbox.Sha1HashFunction;
 import org.mammon.scheme.brands.PaymentHashFunction;
 
-public class ExamplePaymentHashFunction extends RealOracleHashFunction implements
+public class ExamplePaymentHashFunction extends Sha1HashFunction implements
 		PaymentHashFunction<Gq, Z, String, Long> {
 
 	public ExamplePaymentHashFunction(Gq group, Z f) {
