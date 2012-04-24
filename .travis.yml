@@ -4,6 +4,8 @@ before_install: (cd parent && exec mvn install)
 
 notifications:
   irc: "irc.oftc.net#mammon"
-  template:
-    - "%{branch}/%{commit} (#%{build_number} by %{author}): %{mesage} %{build_url}"
+    template:
+      - "%{branch}/%{commit} (#%{build_number} by %{author}): %{mesage} %{build_url}"
+    use_notice: true
+    skip_join: true
 
