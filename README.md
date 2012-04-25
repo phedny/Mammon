@@ -16,8 +16,4 @@ See
 [license.md](https://github.com/phedny/Mammon/blob/master/license.md "Project License") 
 for details.
 
-References
--------------
-
 [Br93]: http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.41.8411 "Untraceable Off-line Cash in Wallets with Observers"
-
