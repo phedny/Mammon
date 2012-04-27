@@ -1,5 +1,8 @@
 package org.mammon.sandbox.real.example;
 
+import java.math.BigInteger;
+import java.util.Random;
+
 import org.mammon.math.Gq;
 import org.mammon.math.GqSetupFactory;
 import org.mammon.math.Group;
@@ -31,9 +34,9 @@ public class ExampleSetup
 	private final Group.Element<Gq> g2;
 
 	public ExampleSetup() {
-		g = group.getRandomElement();
-		g1 = group.getRandomElement();
-		g2 = group.getRandomElement();
+		g = group.new GqElement(BigInteger.valueOf(43715));
+		g1 = group.new GqElement(BigInteger.valueOf(33973));
+		g2 = group.new GqElement(BigInteger.valueOf(49448));
 	}
 
 	@Override
