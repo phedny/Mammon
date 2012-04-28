@@ -7,10 +7,13 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -217,6 +220,63 @@ public class FileObjectStorage implements ObjectStorage {
 		} catch (UnsupportedEncodingException e) {
 			throw new AssertionError(e);
 		}
+	}
+
+	@Override
+	public Iterator<Identifiable> iterator() {
+		return new Iterator<Identifiable>() {
+
+			private Iterator<Identifiable> iterator1 = runtimeObjectMap.values().iterator();
+
+			private File[] files = root.listFiles();
+
+			private Identifiable next = null;
+
+			private int fileId = 0;
+
+			@Override
+			public boolean hasNext() {
+				if (iterator1 != null) {
+					if (iterator1.hasNext()) {
+						return true;
+					} else {
+						iterator1 = null;
+					}
+				}
+				try {
+					do {
+						String name = files[fileId++].getName();
+						if (name.endsWith(".json")) {
+							String objectId = name.substring(0, name.length() - 5);
+							next = get(URLDecoder.decode(objectId, "UTF-8"));
+							if (objectId.equals(next.getIdentity())) {
+								return true;
+							}
+						}
+					} while (fileId < files.length);
+					return false;
+				} catch (UnsupportedEncodingException e) {
+					throw new AssertionError(e);
+				}
+			}
+
+			@Override
+			public Identifiable next() {
+				if (iterator1 != null) {
+					return iterator1.next();
+				}
+				if (fileId <= files.length) {
+					return next;
+				}
+				throw new NoSuchElementException();
+			}
+
+			@Override
+			public void remove() {
+				throw new UnsupportedOperationException();
+			}
+
+		};
 	}
 
 }

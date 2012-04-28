@@ -3,7 +3,9 @@ package org.mammon.sandbox;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -131,6 +133,57 @@ public class ExampleObjectStorage implements ObjectStorage {
 		}
 
 		return serializedObject;
+	}
+
+	@Override
+	public Iterator<Identifiable> iterator() {
+
+		return new Iterator<Identifiable>() {
+
+			private Iterator<String> iterator1 = persistedObjectMap.values().iterator();
+
+			private Iterator<Identifiable> iterator2 = runtimeObjectMap.values().iterator();
+
+			private Identifiable next = null;
+
+			@Override
+			public boolean hasNext() {
+				if (iterator1 != null) {
+					while (iterator1.hasNext()) {
+						Object next = jsonUtil.deserializeObject(iterator1.next());
+						if (!(next instanceof SecondaryTransitionable)) {
+							this.next = (Identifiable) next;
+							return true;
+						}
+					}
+					iterator1 = null;
+				}
+				if (iterator2 != null) {
+					if (iterator2.hasNext()) {
+						return true;
+					} else {
+						iterator2 = null;
+					}
+				}
+				return false;
+			}
+
+			@Override
+			public Identifiable next() {
+				if (iterator1 != null) {
+					return (Identifiable) jsonUtil.deserializeObject(iterator1.next());
+				}
+				if (iterator2 != null) {
+					return iterator2.next();
+				}
+				throw new NoSuchElementException();
+			}
+
+			@Override
+			public void remove() {
+				throw new UnsupportedOperationException();
+			}
+		};
 	}
 
 }

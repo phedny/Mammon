@@ -4,7 +4,7 @@ package org.mammon.messaging;
  * An implementation of this object is capable of persistently storing an
  * retrieving objects.
  */
-public interface ObjectStorage {
+public interface ObjectStorage extends Iterable<Identifiable> {
 
 	/**
 	 * Retrieve an object from persistent storage.
