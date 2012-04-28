@@ -1,5 +1,7 @@
 package org.mammon.sandbox.real.accountholder;
 
+import java.util.UUID;
+
 import org.mammon.math.FiniteField;
 import org.mammon.math.Gq;
 import org.mammon.math.Group;
@@ -47,7 +49,7 @@ public class WithdrawingCoinTwo
 				(ExampleSetup) getSetup(),
 				(AbstractAccountHolderPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getAccountHolder(),
 				(AbstractBankPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getBank(),
-				identity, getBlindingFactor(), getX1(), getX2(), getBigA(), getBigB(), r, coinSignature);
+				UUID.randomUUID().toString(), identity, getBlindingFactor(), getX1(), getX2(), getBigA(), getBigB(), r, coinSignature);
 	}
 
 	@Override

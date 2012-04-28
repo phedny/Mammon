@@ -1,7 +1,5 @@
 package org.mammon.sandbox.real.example;
 
-import java.util.UUID;
-
 import org.mammon.AssetType;
 import org.mammon.math.FiniteField;
 import org.mammon.math.Gq;
@@ -28,6 +26,7 @@ public class ExampleUnspentCoin extends
 			@PersistAs("setup") ExampleSetup setup,
 			@PersistAs("bearer") AbstractAccountHolderPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bearer,
 			@PersistAs("issuer") AbstractBankPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
+			@PersistAs("identity") String identity,
 			@PersistAs("dualIdentity") String dualIdentity,
 			@PersistAs("blindingFactor") FiniteField.Element<Z> blindingFactor,
 			@PersistAs("payerWitness1") FiniteField.Element<Z> x1,
@@ -35,7 +34,7 @@ public class ExampleUnspentCoin extends
 			@PersistAs("blindedIdentity") Group.Element<Gq> blindedIdentity,
 			@PersistAs("commitment") Group.Element<Gq> commitment, @PersistAs("r") FiniteField.Element<Z> r,
 			@PersistAs("coinSignature") CoinSignature<Gq, Z> coinSignature) {
-		super(setup, bearer, bank, UUID.randomUUID().toString(), dualIdentity, blindingFactor, x1, x2, blindedIdentity,
+		super(setup, bearer, bank, identity, dualIdentity, blindingFactor, x1, x2, blindedIdentity,
 				commitment, r, coinSignature);
 	}
 

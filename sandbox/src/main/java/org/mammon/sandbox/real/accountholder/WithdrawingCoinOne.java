@@ -20,13 +20,14 @@ public class WithdrawingCoinOne
 		extends
 		AbstractWithdrawingCoinOne<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
-	private final String identity = UUID.randomUUID().toString();
+	private final String identity;
 
 	@FromPersistent(AbstractWithdrawingCoinOne.class)
 	public WithdrawingCoinOne(@PersistAs("accountHolder") AbstractAccountHolderPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> accountHolder,
 			@PersistAs("bank") AbstractBankPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank, @PersistAs("publicKey") Group.Element<Gq> publicKey,
-			@PersistAs("count") int count) {
+			@PersistAs("count") int count, @PersistAs("identity") String identity) {
 		super(accountHolder, bank, publicKey, count);
+		this.identity = identity;
 	}
 
 	@Override
