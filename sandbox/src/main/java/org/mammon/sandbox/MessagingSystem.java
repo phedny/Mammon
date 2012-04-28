@@ -1,5 +1,6 @@
 package org.mammon.sandbox;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -22,7 +23,7 @@ public class MessagingSystem {
 
 	private JsonUtil jsonUtil;
 	
-	private ExampleObjectStorage storage;
+	private FileObjectStorage storage;
 
 	private Map<Class<?>, StateHandler<?>> stateHandlers = new HashMap<Class<?>, StateHandler<?>>();
 
@@ -31,7 +32,7 @@ public class MessagingSystem {
 	public MessagingSystem(JsonUtil jsonUtil) {
 		this.jsonUtil = jsonUtil;
 		jsonUtil.registerClass(StringRedeliverableMessage.class);
-		storage = new ExampleObjectStorage(jsonUtil);
+		storage = new FileObjectStorage(jsonUtil, new File("../storage"));
 		registerStateHandler(MessageEmitter.class, new MessageEmitterHandler());
 	}
 

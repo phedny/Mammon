@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import org.mammon.messaging.AvailableAtRuntime;
 import org.mammon.messaging.FromPersistent;
 import org.mammon.messaging.Identifiable;
+import org.mammon.messaging.ObjectStorage;
 import org.mammon.messaging.PersistAs;
 import org.mammon.messaging.ReturnsEnclosing;
 
@@ -32,7 +33,7 @@ public class JsonUtil {
 
 	private Map<Class, List<Class<?>>> classPropertyTypes = new HashMap<Class, List<Class<?>>>();
 	
-	private ExampleObjectStorage storage;
+	private ObjectStorage storage;
 
 	public JsonUtil(Class<?>... registerClasses) {
 		for (Class<?> registerClass : registerClasses) {
@@ -41,7 +42,7 @@ public class JsonUtil {
 		
 	}
 	
-	public void setStorage(ExampleObjectStorage storage) {
+	public void setStorage(ObjectStorage storage) {
 		if (this.storage != null) {
 			throw new IllegalStateException("Store has already been set");
 		}
