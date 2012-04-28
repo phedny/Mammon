@@ -62,7 +62,12 @@ public class FileObjectStorage implements ObjectStorage {
 
 				String json = new String(fileContents, "UTF-8");
 				if (json != null) {
-					object = (Identifiable) jsonUtil.deserializeObject(json);
+					Object deserializedObject = jsonUtil.deserializeObject(json);
+					if (deserializedObject instanceof SecondaryTransitionable) {
+						object = get((String) ((SecondaryTransitionable) deserializedObject).getPrimaryIdentity());
+					} else {
+						object = (Identifiable) deserializedObject;
+					}
 				}
 			} catch (UnsupportedEncodingException e) {
 				throw new AssertionError(e);
@@ -78,15 +83,25 @@ public class FileObjectStorage implements ObjectStorage {
 				}
 			}
 		}
-		if (object instanceof SecondaryTransitionable) {
-			object = get((String) ((SecondaryTransitionable) object).getPrimaryIdentity());
-		}
 		return object;
 	}
 
 	@Override
 	public void remove(String identity) {
-		getFile(identity).delete();
+		Identifiable object = get(identity);
+		if (object != null) {
+			if (!identity.equals(object.getIdentity())) {
+				throw new IllegalArgumentException("Argument must be primary identity");
+			}
+
+			LOG.fine("Removing " + identity);
+			getFile(identity).delete();
+			if (object instanceof DualIdentityTransitionable) {
+				Transitionable secT = ((DualIdentityTransitionable) object).getSecondaryTransitionable();
+				LOG.fine("Also removing " + secT.getIdentity());
+				getFile(secT.getIdentity()).delete();
+			}
+		}
 	}
 
 	@Override
