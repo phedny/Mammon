@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import org.mammon.messaging.AvailableAtRuntime;
 import org.mammon.messaging.FromPersistent;
 import org.mammon.messaging.Identifiable;
+import org.mammon.messaging.MapIdentity;
 import org.mammon.messaging.ObjectStorage;
 import org.mammon.messaging.PersistAs;
 import org.mammon.messaging.ReturnsEnclosing;
@@ -127,6 +128,8 @@ public class JsonUtil {
 							+ " constructor has no @PersistAt");
 				} else if (String.class.isAssignableFrom(baseType)) {
 					registeredClass = String.class;
+				} else if (JSONObject.class.isAssignableFrom(baseType)) {
+					registeredClass = JSONObject.class;
 				} else if (Number.class.isAssignableFrom(baseType)) {
 					registeredClass = Number.class;
 				} else if (baseType.isPrimitive()) {
@@ -184,30 +187,47 @@ public class JsonUtil {
 		classPropertyTypes.put(clazz, propertyTypes);
 	}
 
-	public Object deserializeObject(String json) {
+	public Object deserializeObject(String json, IdentityMapper identityMapper) {
+		if (identityMapper == null) {
+			identityMapper = new NoOpIdentityMapper();
+		}
 		try {
 			JSONObject jsonObject = new JSONObject(json);
-			return deserializeObjectJSON(jsonObject);
+			return deserializeObjectJSON(jsonObject, identityMapper);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
-	public Object deserializeObjectJSON(JSONObject json) throws JSONException {
+	public <C> C deserializeObject(String json, Class<C> implementation, IdentityMapper identityMapper) {
+		if (identityMapper == null) {
+			identityMapper = new NoOpIdentityMapper();
+		}
+		try {
+			JSONObject jsonObject = new JSONObject(json);
+			jsonObject.put("implementation", implementation.getName());
+			return (C) deserializeObjectJSON(jsonObject, identityMapper);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public Object deserializeObjectJSON(JSONObject json, IdentityMapper identityMapper) throws JSONException {
 		String implementation = json.getString("implementation");
 		Constructor constructor = implementationConstructors.get(implementation);
 		Class clazz = constructor.getDeclaringClass();
 		List<String> properties = classProperties.get(clazz);
 		List<Class<?>> propertyTypes = classPropertyTypes.get(clazz);
-	
+
 		Object[] arguments = new Object[properties.size()];
 		for (int i = 0; i < arguments.length; i++) {
 			String propertyName = properties.get(i);
 			Class<?> propertyType = propertyTypes.get(i);
-			arguments[i] = deserializePropertyJSON(json.get(propertyName), propertyType);
+			arguments[i] = deserializePropertyJSON(json.get(propertyName), propertyType, identityMapper);
 		}
-	
+
 		try {
 			return constructor.newInstance(arguments);
 		} catch (IllegalArgumentException e) {
@@ -219,14 +239,16 @@ public class JsonUtil {
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
-	
+
 		return null;
 	}
 
-	private Object deserializePropertyJSON(Object object, Class<?> propertyType) throws JSONException {
+	private Object deserializePropertyJSON(Object object, Class<?> propertyType, IdentityMapper identityMapper) throws JSONException {
 		if (propertyType.isArray() && object instanceof JSONArray) {
-			return deserializeArrayJSON((JSONArray) object, propertyType.getComponentType());
+			return deserializeArrayJSON((JSONArray) object, propertyType.getComponentType(), identityMapper);
 		} else if (String.class.isAssignableFrom(propertyType) && object instanceof String) {
+			return object;
+		} else if (JSONObject.class.isAssignableFrom(propertyType) && object instanceof JSONObject) {
 			return object;
 		} else if (Integer.TYPE.isAssignableFrom(propertyType) && object instanceof Number) {
 			return Integer.valueOf(((Number) object).intValue());
@@ -235,39 +257,61 @@ public class JsonUtil {
 		} else if (BigInteger.class.isAssignableFrom(propertyType) && object instanceof Number) {
 			return new BigInteger(object.toString());
 		} else if (object instanceof String) {
-			return storage.get((String) object);
+			String identity = (String) object;
+			object = storage.get(identity);
+			if (object == null) {
+				identity = identityMapper.deserializeIdentity(identity);
+				object = storage.get(identity);
+			}
+			return object;
 		} else if (object instanceof JSONObject) {
-			return deserializeObjectJSON((JSONObject) object);
+			return deserializeObjectJSON((JSONObject) object, identityMapper);
 		} else {
 			return null;
-	
+
 		}
 	}
 
-	private Object deserializeArrayJSON(JSONArray json, Class<?> expectedType) throws ArrayIndexOutOfBoundsException,
+	private Object deserializeArrayJSON(JSONArray json, Class<?> expectedType, IdentityMapper identityMapper) throws ArrayIndexOutOfBoundsException,
 			IllegalArgumentException, JSONException {
-				int length = json.length();
-				Object array = Array.newInstance(expectedType, length);
-				for (int i = 0; i < length; i++) {
-					Array.set(array, i, deserializePropertyJSON(json.get(i), expectedType));
-				}
-				return array;
-			}
+		int length = json.length();
+		Object array = Array.newInstance(expectedType, length);
+		for (int i = 0; i < length; i++) {
+			Array.set(array, i, deserializePropertyJSON(json.get(i), expectedType, identityMapper));
+		}
+		return array;
+	}
 
-	public JSONObject serializeObject(Object object, Set<Identifiable> referencedObjects) {
+	public JSONObject serializeObject(Object object, IdentityMapper identityMapper, Set<Identifiable> referencedObjects) {
 		if (referencedObjects == null) {
 			referencedObjects = new HashSet<Identifiable>();
 		}
-		return serializeObjectJSON(object, referencedObjects);
+		if (identityMapper == null) {
+			identityMapper = new NoOpIdentityMapper();
+		}
+		return serializeObjectJSON(object, referencedObjects, identityMapper, true);
 	}
 
-	private JSONObject serializeObjectJSON(Object object, Set<Identifiable> referencedObjects) {
+	public String serializeKnownObject(Object object, IdentityMapper identityMapper, Set<Identifiable> referencedObjects) {
+		if (referencedObjects == null) {
+			referencedObjects = new HashSet<Identifiable>();
+		}
+		if (identityMapper == null) {
+			identityMapper = new NoOpIdentityMapper();
+		}
+		return serializeObjectJSON(object, referencedObjects, identityMapper, false).toString();
+	}
+
+	private JSONObject serializeObjectJSON(Object object, Set<Identifiable> referencedObjects,
+			IdentityMapper identityMapper, boolean includeClassInfo) {
 		JSONObject json = new JSONObject();
 		Class<? extends Object> clazz = object.getClass();
 		Class<?> registeredClass = getRegisteredClass(clazz);
 		try {
-			json.put("interface", registeredClass.getName());
-			json.put("implementation", clazz.getName());
+			if (includeClassInfo) {
+				json.put("interface", registeredClass.getName());
+				json.put("implementation", clazz.getName());
+			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -277,25 +321,31 @@ public class JsonUtil {
 			try {
 				Method getter = clazz.getMethod(getterName);
 				Object value = getter.invoke(object);
-	
+
 				if (value == null) {
 					json.put(property, JSONObject.NULL);
 				} else {
 					Class<?> returnType = value.getClass();
 					if (returnType.isArray()) {
-						JSONArray array = serializeArrayJSON(value, referencedObjects);
+						JSONArray array = serializeArrayJSON(value, referencedObjects, identityMapper);
 						json.put(property, array);
 					} else if (value instanceof String) {
+						json.put(property, value);
+					} else if (value instanceof JSONObject) {
 						json.put(property, value);
 					} else if (value instanceof Number) {
 						json.put(property, value);
 					} else if (value instanceof Identifiable) {
 						Identifiable identifiable = (Identifiable) value;
 						String identifier = identifiable.getIdentity().toString();
-						json.put(property, identifier);
+						if (value.getClass().isAnnotationPresent(MapIdentity.class)) {
+							json.put(property, identityMapper.serializeIdentity(identifier));
+						} else {
+							json.put(property, identifier);
+						}
 						referencedObjects.add(identifiable);
 					} else {
-						json.put(property, serializeObjectJSON(value, referencedObjects));
+						json.put(property, serializeObjectJSON(value, referencedObjects, identityMapper, true));
 					}
 				}
 			} catch (SecurityException e) {
@@ -315,15 +365,15 @@ public class JsonUtil {
 		return json;
 	}
 
-	private JSONArray serializeArrayJSON(Object value, Set<Identifiable> referencedObjects) {
+	private JSONArray serializeArrayJSON(Object value, Set<Identifiable> referencedObjects, IdentityMapper outputMapper) {
 		JSONArray array = new JSONArray();
 		int length = Array.getLength(value);
 		for (int i = 0; i < length; i++) {
 			Object componentObject = Array.get(value, i);
 			if (componentObject.getClass().isArray()) {
-				array.put(serializeArrayJSON(componentObject, referencedObjects));
+				array.put(serializeArrayJSON(componentObject, referencedObjects, outputMapper));
 			} else {
-				array.put(serializeObjectJSON(componentObject, referencedObjects));
+				array.put(serializeObjectJSON(componentObject, referencedObjects, outputMapper, true));
 			}
 		}
 		return array;

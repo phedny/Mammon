@@ -11,19 +11,20 @@ import org.mammon.sandbox.real.example.ExamplePaymentHashFunction;
 import org.mammon.sandbox.real.example.ExampleSetup;
 import org.mammon.sandbox.real.example.ExampleSignatureHashFunction;
 import org.mammon.scheme.brands.accountholder.AccountHolderPrivate;
+import org.mammon.scheme.brands.bank.Bank;
 import org.mammon.scheme.brands.generic.accountholder.AbstractOpeningAccountHolder;
-import org.mammon.scheme.brands.generic.bank.AbstractBankPrivate;
+import org.mammon.scheme.brands.generic.bank.AbstractBank;
 
 public class OpeningAccountHolder
 		extends
 		AbstractOpeningAccountHolder<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
-	public OpeningAccountHolder(@PersistAs("setup") ExampleSetup setup, @PersistAs("bank") AbstractBankPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank) {
+	public OpeningAccountHolder(@PersistAs("setup") ExampleSetup setup, @PersistAs("bank") Bank<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank) {
 		super(setup, bank, setup.getFiniteField().getRandomElement());
 	}
 
 	@FromPersistent(AbstractOpeningAccountHolder.class)
-	public OpeningAccountHolder(@PersistAs("setup") ExampleSetup setup, @PersistAs("bank") AbstractBankPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
+	public OpeningAccountHolder(@PersistAs("setup") ExampleSetup setup, @PersistAs("bank") Bank<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
 			@PersistAs("privateKey") FiniteField.Element<Z> privateKey) {
 		super(setup, bank, privateKey);
 	}
@@ -32,7 +33,7 @@ public class OpeningAccountHolder
 	protected AccountHolderPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newAccountHolder(
 			Group.Element<Gq> blindedIdentity) {
 		return new ExampleAccountHolder((ExampleSetup) getSetup(), getPrivateKey(), getPublicKey(), blindedIdentity,
-				(AbstractBankPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getBank());
+				(AbstractBank<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getBank());
 	}
 
 }

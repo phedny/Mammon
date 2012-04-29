@@ -39,7 +39,7 @@ public class ExampleObjectStorage implements ObjectStorage {
 		if (object == null) {
 			String json = persistedObjectMap.get(identity);
 			if (json != null) {
-				object = (Identifiable) jsonUtil.deserializeObject(json);
+				object = (Identifiable) jsonUtil.deserializeObject(json, null);
 			}
 		}
 		if (object instanceof SecondaryTransitionable) {
@@ -100,16 +100,16 @@ public class ExampleObjectStorage implements ObjectStorage {
 				LOG.finer(":-> " + serializedObject);
 			}
 			if (LOG.isLoggable(Level.FINEST)) {
-				 Object deserializedObject = jsonUtil.deserializeObject(serializedObject);
-				 LOG.finest(":<- " + deserializedObject);
-				 LOG.finest(":.. " + object);
-				 LOG.finest(":== " + deserializedObject.equals(object));
+				Object deserializedObject = jsonUtil.deserializeObject(serializedObject, null);
+				LOG.finest(":<- " + deserializedObject);
+				LOG.finest(":.. " + object);
+				LOG.finest(":== " + deserializedObject.equals(object));
 			}
 
 			persistedObjectMap.put(object.getIdentity(), serializedObject);
 			if (secT != null) {
 				persistedObjectMap.put(secT.getIdentity(), jsonUtil.serializeObject(new SecondaryTransitionable(object
-						.getIdentity().toString()), null).toString());
+						.getIdentity().toString()), null, null).toString());
 				secondaryIdentities.add(secT.getIdentity());
 			}
 		} else {
@@ -123,7 +123,7 @@ public class ExampleObjectStorage implements ObjectStorage {
 
 	public String serializeObject(Object object) {
 		Set<Identifiable> referencedObjects = new HashSet<Identifiable>();
-		String serializedObject = jsonUtil.serializeObject(object, referencedObjects).toString();
+		String serializedObject = jsonUtil.serializeObject(object, null, referencedObjects).toString();
 
 		for (Identifiable obj : referencedObjects) {
 			if (!runtimeObjectMap.containsKey(obj.getIdentity()) && !persistedObjectMap.containsKey(obj.getIdentity())) {
@@ -149,7 +149,7 @@ public class ExampleObjectStorage implements ObjectStorage {
 			public boolean hasNext() {
 				if (iterator1 != null) {
 					while (iterator1.hasNext()) {
-						Object next = jsonUtil.deserializeObject(iterator1.next());
+						Object next = jsonUtil.deserializeObject(iterator1.next(), null);
 						if (!(next instanceof SecondaryTransitionable)) {
 							this.next = (Identifiable) next;
 							return true;
@@ -173,7 +173,7 @@ public class ExampleObjectStorage implements ObjectStorage {
 
 			public Identifiable nextIdentifiable() {
 				if (iterator1 != null) {
-					return (Identifiable) jsonUtil.deserializeObject(iterator1.next());
+					return (Identifiable) jsonUtil.deserializeObject(iterator1.next(), null);
 				}
 				if (iterator2 != null) {
 					return iterator2.next();

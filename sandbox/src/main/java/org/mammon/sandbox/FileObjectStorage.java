@@ -76,7 +76,7 @@ public class FileObjectStorage implements ObjectStorage {
 					if (jsonObject.has("REPLYTO")) {
 						replyTo = jsonObject.getString("REPLYTO");
 					}
-					Object deserializedObject = jsonUtil.deserializeObjectJSON(jsonObject);
+					Object deserializedObject = jsonUtil.deserializeObjectJSON(jsonObject, null);
 					if (deserializedObject instanceof SecondaryTransitionable) {
 						object = get((String) ((SecondaryTransitionable) deserializedObject).getPrimaryIdentity());
 					} else {
@@ -156,7 +156,7 @@ public class FileObjectStorage implements ObjectStorage {
 				LOG.finer(":-> " + serializedObject);
 			}
 			if (LOG.isLoggable(Level.FINEST)) {
-				Object deserializedObject = jsonUtil.deserializeObject(serializedObject);
+				Object deserializedObject = jsonUtil.deserializeObject(serializedObject, null);
 				LOG.finest(":<- " + deserializedObject);
 				LOG.finest(":.. " + object);
 				LOG.finest(":== " + deserializedObject.equals(object));
@@ -190,7 +190,7 @@ public class FileObjectStorage implements ObjectStorage {
 					writer
 							.append(
 									jsonUtil.serializeObject(new SecondaryTransitionable(object.getIdentity()
-											.toString()), null).toString()).flush();
+											.toString()), null, null).toString()).flush();
 					fos.getFD().sync();
 					writer.close();
 				} catch (IOException e) {
@@ -216,7 +216,7 @@ public class FileObjectStorage implements ObjectStorage {
 
 	public String serializeObject(Object object, String replyTo) {
 		Set<Identifiable> referencedObjects = new HashSet<Identifiable>();
-		JSONObject serializedObject = jsonUtil.serializeObject(object, referencedObjects);
+		JSONObject serializedObject = jsonUtil.serializeObject(object, null, referencedObjects);
 		if (replyTo != null) {
 			try {
 				serializedObject.put("REPLYTO", replyTo);

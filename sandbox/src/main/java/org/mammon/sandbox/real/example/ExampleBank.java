@@ -8,11 +8,14 @@ import org.mammon.math.Z;
 import org.mammon.math.Group.Element;
 import org.mammon.messaging.FromPersistent;
 import org.mammon.messaging.PersistAs;
+import org.mammon.messaging.PublishAs;
 import org.mammon.sandbox.real.bank.BlindedIdentity;
+import org.mammon.sandbox.real.bank.ConvertToRemoteBank;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
 import org.mammon.scheme.brands.generic.bank.AbstractBankPrivate;
 import org.mammon.scheme.brands.generic.bank.AbstractBlindedIdentity;
 
+@PublishAs(ConvertToRemoteBank.class)
 public class ExampleBank
 		extends
 		AbstractBankPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {

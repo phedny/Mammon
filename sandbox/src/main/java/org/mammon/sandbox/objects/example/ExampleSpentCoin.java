@@ -7,9 +7,9 @@ import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
 import org.mammon.messaging.FromPersistent;
 import org.mammon.messaging.PersistAs;
-import org.mammon.scheme.brands.bank.Bank;
 import org.mammon.scheme.brands.coin.SpentCoin;
 import org.mammon.scheme.brands.coin.UnspentCoin;
+import org.mammon.scheme.brands.generic.bank.AbstractBank;
 import org.mammon.scheme.brands.generic.bank.AbstractBankPrivate;
 import org.mammon.scheme.brands.generic.coin.AbstractSpentCoin;
 import org.mammon.scheme.brands.generic.shop.AbstractShop;
@@ -40,7 +40,7 @@ public class ExampleSpentCoin
 
 	public ExampleSpentCoin(
 			UnspentCoin<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> basedOnCoin,
-			Bank<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
+			AbstractBank<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
 			AbstractShop<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bearer,
 			Long time, String identity) {
 		super(basedOnCoin, bank, bearer, time, identity);

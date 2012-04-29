@@ -13,6 +13,7 @@ import org.mammon.sandbox.real.accountholder.ReceivingCoin;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
 import org.mammon.scheme.brands.bank.Bank;
 import org.mammon.scheme.brands.coin.CoinSignature;
+import org.mammon.scheme.brands.generic.bank.AbstractBank;
 import org.mammon.scheme.brands.generic.coin.AbstractReceivingCoin;
 import org.mammon.scheme.brands.generic.shop.AbstractShop;
 
@@ -31,8 +32,10 @@ public class ExampleShop extends
 			Group.Element<Gq> blindedIdentity, Group.Element<Gq> commitment, CoinSignature<Gq, Z> coinSignature,
 			AssetType assetType, Number faceValue,
 			AbstractShop<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> shop) {
-		return new ReceivingCoin((ExampleSetup) setup, (ExampleBank) bank, blindedIdentity, commitment, coinSignature,
-				assetType, faceValue, (ExampleShop) shop, Long.valueOf(new Date().getTime()));
+		return new ReceivingCoin((ExampleSetup) setup,
+				(AbstractBank<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) bank,
+				blindedIdentity, commitment, coinSignature, assetType, faceValue, (ExampleShop) shop, Long
+						.valueOf(new Date().getTime()));
 	}
 
 }

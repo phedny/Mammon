@@ -12,7 +12,7 @@ import org.mammon.sandbox.real.example.ExamplePaymentHashFunction;
 import org.mammon.sandbox.real.example.ExampleSetup;
 import org.mammon.sandbox.real.example.ExampleSignatureHashFunction;
 import org.mammon.scheme.brands.generic.accountholder.AbstractAccountHolderPrivate;
-import org.mammon.scheme.brands.generic.bank.AbstractBankPrivate;
+import org.mammon.scheme.brands.generic.bank.AbstractBank;
 import org.mammon.scheme.brands.generic.coin.AbstractWithdrawingCoinOne;
 import org.mammon.scheme.brands.generic.coin.AbstractWithdrawingCoinTwo;
 
@@ -24,7 +24,7 @@ public class WithdrawingCoinOne
 
 	@FromPersistent(AbstractWithdrawingCoinOne.class)
 	public WithdrawingCoinOne(@PersistAs("accountHolder") AbstractAccountHolderPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> accountHolder,
-			@PersistAs("bank") AbstractBankPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank, @PersistAs("publicKey") Group.Element<Gq> publicKey,
+			@PersistAs("bank") AbstractBank<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank, @PersistAs("publicKey") Group.Element<Gq> publicKey,
 			@PersistAs("count") int count, @PersistAs("identity") String identity) {
 		super(accountHolder, bank, publicKey, count);
 		this.identity = identity;
@@ -43,7 +43,7 @@ public class WithdrawingCoinOne
 			FiniteField.Element<Z> v, Group.Element<Gq> bigA,
 			Group.Element<Gq> bigB) {
 		return new WithdrawingCoinTwo((ExampleSetup) getSetup(), (AbstractAccountHolderPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getAccountHolder(),
-				getIdentity(), (AbstractBankPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getBank(), getPublicKey(), getCount(), s, x1, x2, u, v, bigA, bigB, a, b,
+				getIdentity(), (AbstractBank<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getBank(), getPublicKey(), getCount(), s, x1, x2, u, v, bigA, bigB, a, b,
 				c);
 	}
 
