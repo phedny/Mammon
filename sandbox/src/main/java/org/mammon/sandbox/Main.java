@@ -171,6 +171,7 @@ public class Main {
 		messaging.addObject(setup.getGroup());
 		messaging.addObject(setup.getFiniteField());
 		messaging.addObject(setup);
+		messaging.addObject(new EuroAssetType());
 
 		// Setup the bank.
 		final AbstractBankPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank = new ExampleBank(
@@ -279,6 +280,7 @@ public class Main {
 		messaging.addObject(setup.getGroup());
 		messaging.addObject(setup.getFiniteField());
 		messaging.addObject(setup);
+		messaging.addObject(new EuroAssetType());
 
 		// Setup the bank.
 //		final AbstractBankPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank = new ExampleBank(
