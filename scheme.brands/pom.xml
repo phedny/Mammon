@@ -7,7 +7,8 @@
   	<version>1.0.0-SNAPSHOT</version>
   </parent>
   
-  <artifactId>scheme.brands</artifactId>
+  <groupId>mammon.scheme</groupId>
+  <artifactId>brands</artifactId>
   <packaging>jar</packaging>
   <name>Mammon Brands Scheme</name>
   
