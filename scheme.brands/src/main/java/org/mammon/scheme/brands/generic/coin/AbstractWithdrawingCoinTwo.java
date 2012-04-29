@@ -110,7 +110,7 @@ public abstract class AbstractWithdrawingCoinTwo<G extends Group<G>, F extends F
 
 	@Override
 	public Message emitMessage() {
-		return new IssueCoinsRequest<G, F>(new EuroAssetType<G, F, I, T, H, H0>(), Integer.valueOf(1), c);
+		return new IssueCoinsRequest<G, F>(new EuroAssetType(), Integer.valueOf(1), c);
 	}
 
 	public BrandsSchemeSetup<G, F, I, T, H, H0> getSetup() {

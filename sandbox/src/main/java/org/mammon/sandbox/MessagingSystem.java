@@ -2,6 +2,7 @@ package org.mammon.sandbox;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,6 +19,7 @@ import org.mammon.messaging.Message;
 import org.mammon.messaging.MessageEmitter;
 import org.mammon.messaging.Transactable;
 import org.mammon.messaging.Transitionable;
+import org.mammon.messaging.ObjectStorage.StoredObject;
 
 public class MessagingSystem {
 
@@ -25,7 +27,7 @@ public class MessagingSystem {
 
 	private final JsonUtil jsonUtil;
 
-	private final ExampleObjectStorage storage;
+	private final FileObjectStorage storage;
 
 	private final Map<Class<?>, StateHandler<?>> stateHandlers = new HashMap<Class<?>, StateHandler<?>>();
 
@@ -38,9 +40,19 @@ public class MessagingSystem {
 		jsonUtil.registerClass(StringRedeliverableMessage.class);
 		jsonUtil.registerClass(NetworkMessage.class);
 		jsonUtil.registerClass(PublishObject.class);
-		storage = new ExampleObjectStorage(jsonUtil);
+		storage = new FileObjectStorage(jsonUtil, new File("../storage." + nodeId));
+//		storage = new ExampleObjectStorage(jsonUtil);
 		registerStateHandler(MessageEmitter.class, new MessageEmitterHandler());
 		remoteMessaging = new RemoteMessaging(this, jsonUtil, nodeId);
+	}
+	
+	public void restoreFromObjectStorage() {
+		for (StoredObject storedObject : storage) {
+			Identifiable object = storedObject.getObject();
+			if (!(object instanceof StringRedeliverableMessage)) {
+				enteredState(object, storedObject.getReplyTo());
+			}
+		}
 	}
 
 	public void shutdown() {
@@ -65,7 +77,7 @@ public class MessagingSystem {
 	}
 
 	public void addObject(Identifiable object, boolean publishToAll) {
-		storage.store(object);
+		storage.store(object, null);
 		enteredState(object, null);
 		if (publishToAll) {
 			remoteMessaging.publish(null, object);
@@ -101,8 +113,11 @@ public class MessagingSystem {
 	}
 
 	void sendMessage(Message message, final String destination, final String replyDestination) {
-		final String serializedMessage = storage.serializeObject(message);
-
+		final String serializedMessage = storage.serializeObject(message, null);
+		if (destination == null) {
+			LOG.warning("Destination for message is null: " + serializedMessage);
+		}
+		
 		executor.execute(new Runnable() {
 
 			@Override
@@ -144,7 +159,7 @@ public class MessagingSystem {
 				if (newObject != null) {
 					if (newObject instanceof Identifiable) {
 						Identifiable newIdentifiable = (Identifiable) newObject;
-						storage.store(newIdentifiable);
+						storage.store(newIdentifiable, replyDestination);
 						Identifiable testObj = newIdentifiable;
 						if (newObject instanceof DualIdentityTransitionable) {
 							testObj = ((DualIdentityTransitionable) newObject);

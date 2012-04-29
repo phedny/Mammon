@@ -5,7 +5,7 @@ import org.mammon.messaging.AvailableAtRuntime;
 import org.mammon.messaging.Identifiable;
 
 @AvailableAtRuntime(AssetType.class)
-public final class EuroAssetType<G, F, I, T, H, H0> implements Identifiable, AssetType {
+public final class EuroAssetType implements Identifiable, AssetType {
 
 	@Override
 	public String getCallSign() {

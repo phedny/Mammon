@@ -238,8 +238,6 @@ public class RemoteMessaging {
 				send(null, null, new PublishObject(jsonUtil.serializeObject(outObject, identityMapper, null)));
 			} catch (IOException e) {
 				// Empty.
-			} catch (JSONException e) {
-				// Empty.
 			}
 			return remoteId;
 		}

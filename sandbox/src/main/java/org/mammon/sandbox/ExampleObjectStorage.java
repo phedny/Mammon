@@ -3,7 +3,9 @@ package org.mammon.sandbox;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -65,13 +67,13 @@ public class ExampleObjectStorage implements ObjectStorage {
 	}
 
 	@Override
-	public synchronized void replace(String identity, Identifiable object) {
+	public synchronized void replace(String identity, Identifiable object, String replyTo) {
 		remove(identity);
-		store(object);
+		store(object, replyTo);
 	}
 
 	@Override
-	public synchronized void store(Identifiable object) {
+	public synchronized void store(Identifiable object, String replyTo) {
 		Class<?> clazz = jsonUtil.getRegisteredClass(object.getClass());
 		if (clazz == null) {
 			throw new IllegalArgumentException("No object interface has been registered for " + object.getClass());
@@ -107,7 +109,7 @@ public class ExampleObjectStorage implements ObjectStorage {
 			persistedObjectMap.put(object.getIdentity(), serializedObject);
 			if (secT != null) {
 				persistedObjectMap.put(secT.getIdentity(), jsonUtil.serializeObject(new SecondaryTransitionable(object
-						.getIdentity().toString()), null, null));
+						.getIdentity().toString()), null, null).toString());
 				secondaryIdentities.add(secT.getIdentity());
 			}
 		} else {
@@ -121,16 +123,69 @@ public class ExampleObjectStorage implements ObjectStorage {
 
 	public String serializeObject(Object object) {
 		Set<Identifiable> referencedObjects = new HashSet<Identifiable>();
-		String serializedObject = jsonUtil.serializeObject(object, null, referencedObjects);
+		String serializedObject = jsonUtil.serializeObject(object, null, referencedObjects).toString();
 
 		for (Identifiable obj : referencedObjects) {
-			if (!runtimeObjectMap.containsKey(obj.getIdentity())
-					&& !persistedObjectMap.containsKey(obj.getIdentity())) {
-				store(obj);
+			if (!runtimeObjectMap.containsKey(obj.getIdentity()) && !persistedObjectMap.containsKey(obj.getIdentity())) {
+				store(obj, null);
 			}
 		}
 
 		return serializedObject;
+	}
+
+	@Override
+	public Iterator<ObjectStorage.StoredObject> iterator() {
+
+		return new Iterator<ObjectStorage.StoredObject>() {
+
+			private Iterator<String> iterator1 = persistedObjectMap.values().iterator();
+
+			private Iterator<Identifiable> iterator2 = runtimeObjectMap.values().iterator();
+
+			private Identifiable next = null;
+
+			@Override
+			public boolean hasNext() {
+				if (iterator1 != null) {
+					while (iterator1.hasNext()) {
+						Object next = jsonUtil.deserializeObject(iterator1.next(), null);
+						if (!(next instanceof SecondaryTransitionable)) {
+							this.next = (Identifiable) next;
+							return true;
+						}
+					}
+					iterator1 = null;
+				}
+				if (iterator2 != null) {
+					if (iterator2.hasNext()) {
+						return true;
+					} else {
+						iterator2 = null;
+					}
+				}
+				return false;
+			}
+			
+			public ObjectStorage.StoredObject next() {
+				return new ObjectStorage.StoredObject(nextIdentifiable(), null);
+			}
+
+			public Identifiable nextIdentifiable() {
+				if (iterator1 != null) {
+					return (Identifiable) jsonUtil.deserializeObject(iterator1.next(), null);
+				}
+				if (iterator2 != null) {
+					return iterator2.next();
+				}
+				throw new NoSuchElementException();
+			}
+
+			@Override
+			public void remove() {
+				throw new UnsupportedOperationException();
+			}
+		};
 	}
 
 }

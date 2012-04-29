@@ -20,6 +20,7 @@ import org.mammon.messaging.AvailableAtRuntime;
 import org.mammon.messaging.FromPersistent;
 import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.MapIdentity;
+import org.mammon.messaging.ObjectStorage;
 import org.mammon.messaging.PersistAs;
 import org.mammon.messaging.ReturnsEnclosing;
 
@@ -33,7 +34,7 @@ public class JsonUtil {
 
 	private Map<Class, List<Class<?>>> classPropertyTypes = new HashMap<Class, List<Class<?>>>();
 	
-	private ExampleObjectStorage storage;
+	private ObjectStorage storage;
 
 	public JsonUtil(Class<?>... registerClasses) {
 		for (Class<?> registerClass : registerClasses) {
@@ -42,7 +43,7 @@ public class JsonUtil {
 		
 	}
 	
-	public void setStorage(ExampleObjectStorage storage) {
+	public void setStorage(ObjectStorage storage) {
 		if (this.storage != null) {
 			throw new IllegalStateException("Store has already been set");
 		}
@@ -213,7 +214,7 @@ public class JsonUtil {
 		return null;
 	}
 
-	private Object deserializeObjectJSON(JSONObject json, IdentityMapper identityMapper) throws JSONException {
+	public Object deserializeObjectJSON(JSONObject json, IdentityMapper identityMapper) throws JSONException {
 		String implementation = json.getString("implementation");
 		Constructor constructor = implementationConstructors.get(implementation);
 		Class clazz = constructor.getDeclaringClass();
@@ -281,14 +282,14 @@ public class JsonUtil {
 		return array;
 	}
 
-	public String serializeObject(Object object, IdentityMapper identityMapper, Set<Identifiable> referencedObjects) {
+	public JSONObject serializeObject(Object object, IdentityMapper identityMapper, Set<Identifiable> referencedObjects) {
 		if (referencedObjects == null) {
 			referencedObjects = new HashSet<Identifiable>();
 		}
 		if (identityMapper == null) {
 			identityMapper = new NoOpIdentityMapper();
 		}
-		return serializeObjectJSON(object, referencedObjects, identityMapper, true).toString();
+		return serializeObjectJSON(object, referencedObjects, identityMapper, true);
 	}
 
 	public String serializeKnownObject(Object object, IdentityMapper identityMapper, Set<Identifiable> referencedObjects) {
