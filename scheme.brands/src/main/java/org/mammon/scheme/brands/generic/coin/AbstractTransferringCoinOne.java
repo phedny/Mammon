@@ -16,6 +16,7 @@ import org.mammon.scheme.brands.coin.CoinSignature;
 import org.mammon.scheme.brands.messages.CoinHashRequest;
 import org.mammon.scheme.brands.messages.CoinHashResponse;
 import org.mammon.scheme.brands.messages.CoinTransferMessage;
+import org.mammon.scheme.brands.messages.TransferToShopMessage;
 import org.mammon.util.messaging.AbstractTransitionable;
 
 public abstract class AbstractTransferringCoinOne<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
@@ -130,6 +131,13 @@ public abstract class AbstractTransferringCoinOne<G extends Group<G>, F extends 
 				getX1());
 		FiniteField.Element<F> r2 = response.getHash().multiply(getS()).add(getX2());
 		return new CoinTransferMessage<F>(r1, r2);
+	}
+
+	public Object transition(TransferToShopMessage message) {
+		if (getIdentity().equals(message.getDestination()) && getShop().equals(message.getShop())) {
+			return this;
+		}
+		return null;
 	}
 
 }
