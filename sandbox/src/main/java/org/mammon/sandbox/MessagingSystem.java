@@ -16,6 +16,7 @@ import org.mammon.messaging.Message;
 import org.mammon.messaging.MessageEmitter;
 import org.mammon.messaging.Transactable;
 import org.mammon.messaging.Transitionable;
+import org.mammon.messaging.ObjectStorage.StoredObject;
 
 public class MessagingSystem {
 
@@ -33,7 +34,17 @@ public class MessagingSystem {
 		this.jsonUtil = jsonUtil;
 		jsonUtil.registerClass(StringRedeliverableMessage.class);
 		storage = new FileObjectStorage(jsonUtil, new File("../storage"));
+//		storage = new ExampleObjectStorage(jsonUtil);
 		registerStateHandler(MessageEmitter.class, new MessageEmitterHandler());
+	}
+	
+	public void restoreFromObjectStorage() {
+		for (StoredObject storedObject : storage) {
+			Identifiable object = storedObject.getObject();
+			if (!(object instanceof StringRedeliverableMessage)) {
+				enteredState(object, storedObject.getReplyTo());
+			}
+		}
 	}
 
 	public void shutdown() {
@@ -45,7 +56,7 @@ public class MessagingSystem {
 	}
 
 	public void addObject(Identifiable object) {
-		storage.store(object);
+		storage.store(object, null);
 		enteredState(object, null);
 	}
 
@@ -78,7 +89,10 @@ public class MessagingSystem {
 	}
 
 	private void sendMessage(Message message, final String destination, final String replyDestination) {
-		final String serializedMessage = storage.serializeObject(message);
+		final String serializedMessage = storage.serializeObject(message, null);
+		if (destination == null) {
+			LOG.warning("Destination for message is null: " + serializedMessage);
+		}
 		
 		executor.execute(new Runnable() {
 
@@ -119,7 +133,7 @@ public class MessagingSystem {
 				if (newObject != null) {
 					if (newObject instanceof Identifiable) {
 						Identifiable newIdentifiable = (Identifiable) newObject;
-						storage.store(newIdentifiable);
+						storage.store(newIdentifiable, replyDestination);
 						Identifiable testObj = newIdentifiable;
 						if (newObject instanceof DualIdentityTransitionable) {
 							testObj = ((DualIdentityTransitionable) newObject);

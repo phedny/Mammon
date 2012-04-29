@@ -18,6 +18,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.mammon.messaging.DualIdentityTransitionable;
 import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.ObjectStorage;
@@ -47,7 +49,12 @@ public class FileObjectStorage implements ObjectStorage {
 
 	@Override
 	public Identifiable get(String identity) {
+		return getWithReplyTo(identity).getObject();
+	}
+	
+	public ObjectStorage.StoredObject getWithReplyTo(String identity) {
 		Identifiable object = runtimeObjectMap.get(identity);
+		String replyTo = null;
 		if (object == null) {
 			FileInputStream fis = null;
 			try {
@@ -65,7 +72,11 @@ public class FileObjectStorage implements ObjectStorage {
 
 				String json = new String(fileContents, "UTF-8");
 				if (json != null) {
-					Object deserializedObject = jsonUtil.deserializeObject(json);
+					JSONObject jsonObject = new JSONObject(json);
+					if (jsonObject.has("REPLYTO")) {
+						replyTo = jsonObject.getString("REPLYTO");
+					}
+					Object deserializedObject = jsonUtil.deserializeObjectJSON(jsonObject);
 					if (deserializedObject instanceof SecondaryTransitionable) {
 						object = get((String) ((SecondaryTransitionable) deserializedObject).getPrimaryIdentity());
 					} else {
@@ -76,6 +87,8 @@ public class FileObjectStorage implements ObjectStorage {
 				throw new AssertionError(e);
 			} catch (IOException e) {
 				LOG.log(Level.SEVERE, "Failed to read persisted object", e);
+			} catch (JSONException e) {
+				e.printStackTrace();
 			} finally {
 				try {
 					if (fis != null) {
@@ -86,7 +99,7 @@ public class FileObjectStorage implements ObjectStorage {
 				}
 			}
 		}
-		return object;
+		return new ObjectStorage.StoredObject(object, replyTo);
 	}
 
 	@Override
@@ -108,13 +121,13 @@ public class FileObjectStorage implements ObjectStorage {
 	}
 
 	@Override
-	public void replace(String identity, Identifiable object) {
+	public void replace(String identity, Identifiable object, String replyTo) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void store(Identifiable object) {
+	public void store(Identifiable object, String replyTo) {
 		Class<?> clazz = jsonUtil.getRegisteredClass(object.getClass());
 		if (clazz == null) {
 			throw new IllegalArgumentException("No object interface has been registered for " + object.getClass());
@@ -138,7 +151,7 @@ public class FileObjectStorage implements ObjectStorage {
 		Constructor implementationConstructor = jsonUtil.getImplementationConstructor(implementationClass.getName());
 		if (implementationConstructor != null) {
 			LOG.fine("Storing " + object.getIdentity() + " (" + object.getClass() + " as " + clazz + ")");
-			String serializedObject = serializeObject(object);
+			String serializedObject = serializeObject(object, replyTo);
 			if (LOG.isLoggable(Level.FINER)) {
 				LOG.finer(":-> " + serializedObject);
 			}
@@ -177,7 +190,7 @@ public class FileObjectStorage implements ObjectStorage {
 					writer
 							.append(
 									jsonUtil.serializeObject(new SecondaryTransitionable(object.getIdentity()
-											.toString()), null)).flush();
+											.toString()), null).toString()).flush();
 					fos.getFD().sync();
 					writer.close();
 				} catch (IOException e) {
@@ -201,17 +214,24 @@ public class FileObjectStorage implements ObjectStorage {
 		}
 	}
 
-	public String serializeObject(Object object) {
+	public String serializeObject(Object object, String replyTo) {
 		Set<Identifiable> referencedObjects = new HashSet<Identifiable>();
-		String serializedObject = jsonUtil.serializeObject(object, referencedObjects);
-
-		for (Identifiable obj : referencedObjects) {
-			if (!runtimeObjectMap.containsKey(obj.getIdentity()) && !getFile(obj.getIdentity()).exists()) {
-				store(obj);
+		JSONObject serializedObject = jsonUtil.serializeObject(object, referencedObjects);
+		if (replyTo != null) {
+			try {
+				serializedObject.put("REPLYTO", replyTo);
+			} catch (JSONException e) {
+				throw new AssertionError(e);
 			}
 		}
 
-		return serializedObject;
+		for (Identifiable obj : referencedObjects) {
+			if (!runtimeObjectMap.containsKey(obj.getIdentity()) && !getFile(obj.getIdentity()).exists()) {
+				store(obj, null);
+			}
+		}
+
+		return serializedObject.toString();
 	}
 
 	private File getFile(String identity) {
@@ -223,14 +243,14 @@ public class FileObjectStorage implements ObjectStorage {
 	}
 
 	@Override
-	public Iterator<Identifiable> iterator() {
-		return new Iterator<Identifiable>() {
+	public Iterator<ObjectStorage.StoredObject> iterator() {
+		return new Iterator<ObjectStorage.StoredObject>() {
 
 			private Iterator<Identifiable> iterator1 = runtimeObjectMap.values().iterator();
 
 			private File[] files = root.listFiles();
 
-			private Identifiable next = null;
+			private StoredObject next = null;
 
 			private int fileId = 0;
 
@@ -244,16 +264,16 @@ public class FileObjectStorage implements ObjectStorage {
 					}
 				}
 				try {
-					do {
+					while (fileId < files.length) {
 						String name = files[fileId++].getName();
 						if (name.endsWith(".json")) {
 							String objectId = name.substring(0, name.length() - 5);
-							next = get(URLDecoder.decode(objectId, "UTF-8"));
-							if (objectId.equals(next.getIdentity())) {
+							next = getWithReplyTo(URLDecoder.decode(objectId, "UTF-8"));
+							if (objectId.equals(next.getObject().getIdentity())) {
 								return true;
 							}
 						}
-					} while (fileId < files.length);
+					}
 					return false;
 				} catch (UnsupportedEncodingException e) {
 					throw new AssertionError(e);
@@ -261,9 +281,9 @@ public class FileObjectStorage implements ObjectStorage {
 			}
 
 			@Override
-			public Identifiable next() {
+			public ObjectStorage.StoredObject next() {
 				if (iterator1 != null) {
-					return iterator1.next();
+					return new ObjectStorage.StoredObject(iterator1.next(), null);
 				}
 				if (fileId <= files.length) {
 					return next;

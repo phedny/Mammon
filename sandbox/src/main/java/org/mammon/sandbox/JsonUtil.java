@@ -194,7 +194,7 @@ public class JsonUtil {
 		return null;
 	}
 
-	private Object deserializeObjectJSON(JSONObject json) throws JSONException {
+	public Object deserializeObjectJSON(JSONObject json) throws JSONException {
 		String implementation = json.getString("implementation");
 		Constructor constructor = implementationConstructors.get(implementation);
 		Class clazz = constructor.getDeclaringClass();
@@ -254,11 +254,11 @@ public class JsonUtil {
 				return array;
 			}
 
-	public String serializeObject(Object object, Set<Identifiable> referencedObjects) {
+	public JSONObject serializeObject(Object object, Set<Identifiable> referencedObjects) {
 		if (referencedObjects == null) {
 			referencedObjects = new HashSet<Identifiable>();
 		}
-		return serializeObjectJSON(object, referencedObjects).toString();
+		return serializeObjectJSON(object, referencedObjects);
 	}
 
 	private JSONObject serializeObjectJSON(Object object, Set<Identifiable> referencedObjects) {

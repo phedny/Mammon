@@ -67,13 +67,13 @@ public class ExampleObjectStorage implements ObjectStorage {
 	}
 
 	@Override
-	public synchronized void replace(String identity, Identifiable object) {
+	public synchronized void replace(String identity, Identifiable object, String replyTo) {
 		remove(identity);
-		store(object);
+		store(object, replyTo);
 	}
 
 	@Override
-	public synchronized void store(Identifiable object) {
+	public synchronized void store(Identifiable object, String replyTo) {
 		Class<?> clazz = jsonUtil.getRegisteredClass(object.getClass());
 		if (clazz == null) {
 			throw new IllegalArgumentException("No object interface has been registered for " + object.getClass());
@@ -109,7 +109,7 @@ public class ExampleObjectStorage implements ObjectStorage {
 			persistedObjectMap.put(object.getIdentity(), serializedObject);
 			if (secT != null) {
 				persistedObjectMap.put(secT.getIdentity(), jsonUtil.serializeObject(new SecondaryTransitionable(object
-						.getIdentity().toString()), null));
+						.getIdentity().toString()), null).toString());
 				secondaryIdentities.add(secT.getIdentity());
 			}
 		} else {
@@ -123,12 +123,11 @@ public class ExampleObjectStorage implements ObjectStorage {
 
 	public String serializeObject(Object object) {
 		Set<Identifiable> referencedObjects = new HashSet<Identifiable>();
-		String serializedObject = jsonUtil.serializeObject(object, referencedObjects);
+		String serializedObject = jsonUtil.serializeObject(object, referencedObjects).toString();
 
 		for (Identifiable obj : referencedObjects) {
-			if (!runtimeObjectMap.containsKey(obj.getIdentity())
-					&& !persistedObjectMap.containsKey(obj.getIdentity())) {
-				store(obj);
+			if (!runtimeObjectMap.containsKey(obj.getIdentity()) && !persistedObjectMap.containsKey(obj.getIdentity())) {
+				store(obj, null);
 			}
 		}
 
@@ -136,9 +135,9 @@ public class ExampleObjectStorage implements ObjectStorage {
 	}
 
 	@Override
-	public Iterator<Identifiable> iterator() {
+	public Iterator<ObjectStorage.StoredObject> iterator() {
 
-		return new Iterator<Identifiable>() {
+		return new Iterator<ObjectStorage.StoredObject>() {
 
 			private Iterator<String> iterator1 = persistedObjectMap.values().iterator();
 
@@ -167,9 +166,12 @@ public class ExampleObjectStorage implements ObjectStorage {
 				}
 				return false;
 			}
+			
+			public ObjectStorage.StoredObject next() {
+				return new ObjectStorage.StoredObject(nextIdentifiable(), null);
+			}
 
-			@Override
-			public Identifiable next() {
+			public Identifiable nextIdentifiable() {
 				if (iterator1 != null) {
 					return (Identifiable) jsonUtil.deserializeObject(iterator1.next());
 				}
