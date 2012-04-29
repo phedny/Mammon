@@ -1,8 +1,8 @@
-package org.mammon.sandbox;
+package org.mammon.messaging.impl;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;

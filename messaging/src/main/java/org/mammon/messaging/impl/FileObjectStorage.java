@@ -1,4 +1,4 @@
-package org.mammon.sandbox;
+package org.mammon.messaging.impl;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -11,6 +11,7 @@
     <module>parent</module>
     <module>interfaces</module>
     <module>core</module>
+    <module>messaging</module>
     <module>scheme.brands</module>
     <module>cucumber</module>
     <module>sandbox</module>

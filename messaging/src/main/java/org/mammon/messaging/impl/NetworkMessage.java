@@ -1,4 +1,4 @@
-package org.mammon.sandbox;
+package org.mammon.messaging.impl;
 
 import org.mammon.messaging.FromPersistent;
 import org.mammon.messaging.Message;

@@ -1,4 +1,5 @@
-package org.mammon.sandbox;
+package org.mammon.messaging.impl;
+
 
 public class NoOpIdentityMapper implements IdentityMapper {
 

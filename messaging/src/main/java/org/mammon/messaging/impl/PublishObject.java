@@ -1,4 +1,4 @@
-package org.mammon.sandbox;
+package org.mammon.messaging.impl;
 
 import org.json.JSONException;
 import org.json.JSONObject;
