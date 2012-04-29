@@ -41,7 +41,7 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteFi
 			String dualIdentity, FiniteField.Element<F> blindingFactor, FiniteField.Element<F> x1,
 			FiniteField.Element<F> x2, Group.Element<G> blindedIdentity, Group.Element<G> commitment,
 			FiniteField.Element<F> r, CoinSignature<G, F> coinSignature) {
-		super(setup, bank, blindedIdentity, commitment, coinSignature, new EuroAssetType<G, F, I, T, H, H0>(), Integer
+		super(setup, bank, blindedIdentity, commitment, coinSignature, new EuroAssetType(), Integer
 				.valueOf(1), identity);
 		this.bearer = bearer;
 		this.dualIdentity = dualIdentity;
