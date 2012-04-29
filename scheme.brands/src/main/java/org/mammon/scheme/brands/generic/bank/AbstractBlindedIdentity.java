@@ -16,29 +16,29 @@ import org.mammon.scheme.brands.messages.BankWitnessesRequest;
 import org.mammon.scheme.brands.messages.BlindedIdentityResponse;
 import org.mammon.util.messaging.AbstractTransactable;
 
-public abstract class AbstractBlindedIdentity<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
+public abstract class AbstractBlindedIdentity<G extends Group<G>, F extends FiniteField<F>, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, T>>
 		extends AbstractTransactable implements Identifiable, Transactable, MessageEmitter {
 
-	private final BrandsSchemeSetup<G, F, I, T, H, H0> setup;
+	private final BrandsSchemeSetup<G, F, T, H, H0> setup;
 
-	private final AbstractBankPrivate<G, F, I, T, H, H0> bank;
+	private final AbstractBankPrivate<G, F, T, H, H0> bank;
 
 	private final Group.Element<G> payerIdentity;
 
 	private Map<Group.Element<G>, FiniteField.Element<F>> issuedWitnesses = new HashMap<Group.Element<G>, FiniteField.Element<F>>();
 
-	public AbstractBlindedIdentity(BrandsSchemeSetup<G, F, I, T, H, H0> setup,
-			AbstractBankPrivate<G, F, I, T, H, H0> bank, Group.Element<G> payerIdentity) {
+	public AbstractBlindedIdentity(BrandsSchemeSetup<G, F, T, H, H0> setup,
+			AbstractBankPrivate<G, F, T, H, H0> bank, Group.Element<G> payerIdentity) {
 		this.setup = setup;
 		this.bank = bank;
 		this.payerIdentity = payerIdentity;
 	}
 
-	public BrandsSchemeSetup<G, F, I, T, H, H0> getSetup() {
+	public BrandsSchemeSetup<G, F, T, H, H0> getSetup() {
 		return setup;
 	}
 
-	public AbstractBankPrivate<G, F, I, T, H, H0> getBank() {
+	public AbstractBankPrivate<G, F, T, H, H0> getBank() {
 		return bank;
 	}
 
@@ -55,7 +55,7 @@ public abstract class AbstractBlindedIdentity<G extends Group<G>, F extends Fini
 		return new BlindedIdentityResponse<G>(getBlindedIdentity());
 	}
 
-	public AbstractIssuedWitnesses<G, F, I, T, H, H0> transact(BankWitnessesRequest<G> request) {
+	public AbstractIssuedWitnesses<G, F, T, H, H0> transact(BankWitnessesRequest<G> request) {
 		final Group.Element<G> identity = request.getIdentity();
 		for (int i = 0; i < request.getCount(); i++) {
 			final FiniteField.Element<F> w = getSetup().getFiniteField().getRandomElement();
@@ -64,8 +64,8 @@ public abstract class AbstractBlindedIdentity<G extends Group<G>, F extends Fini
 		return null;
 	}
 
-	protected abstract AbstractIssuedWitnesses<G, F, I, T, H, H0> newAbstractIssuedWitnesses(
-			BrandsSchemeSetup<G, F, I, T, H, H0> setup, AbstractBankPrivate<G, F, I, T, H, H0> bank,
+	protected abstract AbstractIssuedWitnesses<G, F, T, H, H0> newAbstractIssuedWitnesses(
+			BrandsSchemeSetup<G, F, T, H, H0> setup, AbstractBankPrivate<G, F, T, H, H0> bank,
 			Group.Element<G> payerIdentity, FiniteField.Element<F> w);
 
 	@Override

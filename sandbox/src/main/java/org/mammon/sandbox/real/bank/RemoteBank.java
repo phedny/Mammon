@@ -15,7 +15,7 @@ import org.mammon.scheme.brands.generic.bank.AbstractBank;
 
 @ForwardRemote
 public class RemoteBank extends
-		AbstractBank<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> implements
+		AbstractBank<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> implements
 		Identifiable {
 
 	private final String identity;

@@ -11,7 +11,7 @@ import org.mammon.util.HashCodeUtil;
 public class ExampleSetup
 		implements
 		Identifiable,
-		BrandsSchemeSetup<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
+		BrandsSchemeSetup<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	private final ExampleRandomGenerator randomGenerator = new ExampleRandomGenerator();
 

@@ -16,21 +16,21 @@ import org.mammon.scheme.brands.messages.BankWitnessesRequest;
 import org.mammon.scheme.brands.messages.BankWitnessesResponse;
 import org.mammon.util.messaging.AbstractTransitionable;
 
-public abstract class AbstractWithdrawingCoinOne<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
+public abstract class AbstractWithdrawingCoinOne<G extends Group<G>, F extends FiniteField<F>, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, T>>
 		extends AbstractTransitionable implements Identifiable, Transitionable, MessageEmitter {
 
-	private final BrandsSchemeSetup<G, F, I, T, H, H0> setup;
+	private final BrandsSchemeSetup<G, F, T, H, H0> setup;
 
-	private final AccountHolderForBank<G, F, I, T, H, H0> accountHolder;
+	private final AccountHolderForBank<G, F, T, H, H0> accountHolder;
 
-	private final AbstractBank<G, F, I, T, H, H0> bank;
+	private final AbstractBank<G, F, T, H, H0> bank;
 
 	private final Group.Element<G> publicKey;
 
 	private final int count;
 
-	protected AbstractWithdrawingCoinOne(AccountHolderForBank<G, F, I, T, H, H0> accountHolder,
-			AbstractBank<G, F, I, T, H, H0> bank, Group.Element<G> publicKey, int count) {
+	protected AbstractWithdrawingCoinOne(AccountHolderForBank<G, F, T, H, H0> accountHolder,
+			AbstractBank<G, F, T, H, H0> bank, Group.Element<G> publicKey, int count) {
 		this.accountHolder = accountHolder;
 		this.bank = bank;
 		this.publicKey = publicKey;
@@ -38,7 +38,7 @@ public abstract class AbstractWithdrawingCoinOne<G extends Group<G>, F extends F
 		this.setup = accountHolder.getSetup();
 	}
 
-	public AbstractWithdrawingCoinTwo<G, F, I, T, H, H0> transition(BankWitnessesResponse<G> response) {
+	public AbstractWithdrawingCoinTwo<G, F, T, H, H0> transition(BankWitnessesResponse<G> response) {
 		Group.Element<G> a = response.getValA();
 		Group.Element<G> b = response.getValB();
 
@@ -61,7 +61,7 @@ public abstract class AbstractWithdrawingCoinOne<G extends Group<G>, F extends F
 		return newWithdrawingCoinTwo(a, b, c, s, x1, x2, u, v, bigA, bigB);
 	}
 
-	protected abstract AbstractWithdrawingCoinTwo<G, F, I, T, H, H0> newWithdrawingCoinTwo(Group.Element<G> a,
+	protected abstract AbstractWithdrawingCoinTwo<G, F, T, H, H0> newWithdrawingCoinTwo(Group.Element<G> a,
 			Group.Element<G> b, FiniteField.Element<F> c, FiniteField.Element<F> s, FiniteField.Element<F> x1,
 			FiniteField.Element<F> x2, FiniteField.Element<F> u, FiniteField.Element<F> v, Group.Element<G> bigA,
 			Group.Element<G> bigB);
@@ -71,15 +71,15 @@ public abstract class AbstractWithdrawingCoinOne<G extends Group<G>, F extends F
 		return new BankWitnessesRequest<G>(bank.getIdentity(), publicKey, count);
 	}
 
-	public BrandsSchemeSetup<G, F, I, T, H, H0> getSetup() {
+	public BrandsSchemeSetup<G, F, T, H, H0> getSetup() {
 		return setup;
 	}
 
-	public AccountHolderForBank<G, F, I, T, H, H0> getAccountHolder() {
+	public AccountHolderForBank<G, F, T, H, H0> getAccountHolder() {
 		return accountHolder;
 	}
 
-	public Bank<G, F, I, T, H, H0> getBank() {
+	public Bank<G, F, T, H, H0> getBank() {
 		return bank;
 	}
 

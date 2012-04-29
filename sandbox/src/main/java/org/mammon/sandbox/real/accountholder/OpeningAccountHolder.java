@@ -17,23 +17,23 @@ import org.mammon.scheme.brands.generic.bank.AbstractBank;
 
 public class OpeningAccountHolder
 		extends
-		AbstractOpeningAccountHolder<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
+		AbstractOpeningAccountHolder<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
-	public OpeningAccountHolder(@PersistAs("setup") ExampleSetup setup, @PersistAs("bank") Bank<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank) {
+	public OpeningAccountHolder(@PersistAs("setup") ExampleSetup setup, @PersistAs("bank") Bank<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank) {
 		super(setup, bank, setup.getFiniteField().getRandomElement());
 	}
 
 	@FromPersistent(AbstractOpeningAccountHolder.class)
-	public OpeningAccountHolder(@PersistAs("setup") ExampleSetup setup, @PersistAs("bank") Bank<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
+	public OpeningAccountHolder(@PersistAs("setup") ExampleSetup setup, @PersistAs("bank") Bank<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
 			@PersistAs("privateKey") FiniteField.Element<Z> privateKey) {
 		super(setup, bank, privateKey);
 	}
 
 	@Override
-	protected AccountHolderPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newAccountHolder(
+	protected AccountHolderPrivate<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newAccountHolder(
 			Group.Element<Gq> blindedIdentity) {
 		return new ExampleAccountHolder((ExampleSetup) getSetup(), getPrivateKey(), getPublicKey(), blindedIdentity,
-				(AbstractBank<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getBank());
+				(AbstractBank<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getBank());
 	}
 
 }

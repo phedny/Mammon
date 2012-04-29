@@ -20,11 +20,11 @@ import org.mammon.scheme.brands.messages.TransferToShopMessage;
 import org.mammon.util.HashCodeUtil;
 import org.mammon.util.messaging.AbstractTransitionable;
 
-public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
-		extends AbstractCoin<G, F, I, T, H, H0> implements UnspentCoin<G, F, I, T, H, H0>, Identifiable,
+public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteField<F>, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, T>>
+		extends AbstractCoin<G, F, T, H, H0> implements UnspentCoin<G, F, T, H, H0>, Identifiable,
 		Transitionable, DualIdentityTransitionable {
 
-	private final AccountHolderPrivate<G, F, I, T, H, H0> bearer;
+	private final AccountHolderPrivate<G, F, T, H, H0> bearer;
 
 	private final String dualIdentity;
 
@@ -36,8 +36,8 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteFi
 
 	private final FiniteField.Element<F> r;
 
-	protected AbstractUnspentCoin(BrandsSchemeSetup<G, F, I, T, H, H0> setup,
-			AccountHolderPrivate<G, F, I, T, H, H0> bearer, Bank<G, F, I, T, H, H0> bank, String identity,
+	protected AbstractUnspentCoin(BrandsSchemeSetup<G, F, T, H, H0> setup,
+			AccountHolderPrivate<G, F, T, H, H0> bearer, Bank<G, F, T, H, H0> bank, String identity,
 			String dualIdentity, FiniteField.Element<F> blindingFactor, FiniteField.Element<F> x1,
 			FiniteField.Element<F> x2, Group.Element<G> blindedIdentity, Group.Element<G> commitment,
 			FiniteField.Element<F> r, CoinSignature<G, F> coinSignature) {
@@ -52,7 +52,7 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteFi
 	}
 
 	@Override
-	public AccountHolder<G, F, I, T, H, H0> getBearer() {
+	public AccountHolder<G, F, T, H, H0> getBearer() {
 		return bearer;
 	}
 
@@ -85,17 +85,17 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteFi
 		return new SecondaryTransitionable();
 	}
 
-	public AbstractTransferringCoinOne<G, F, I, T, H, H0> transition(TransferToShopMessage message) {
+	public AbstractTransferringCoinOne<G, F, T, H, H0> transition(TransferToShopMessage message) {
 		return newAbstractTransferringCoinOne(getSetup(), getIssuer(), bearer, getBlindedIdentity(), getCommitment(),
 				getCoinSignature(), getAssetType(), getFaceValue(), s, x1, x2, getIdentity(), message.getShop());
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof AbstractUnspentCoin<?, ?, ?, ?, ?, ?>)) {
+		if (obj == null || !(obj instanceof AbstractUnspentCoin<?, ?, ?, ?, ?>)) {
 			return false;
 		}
-		AbstractUnspentCoin<?, ?, ?, ?, ?, ?> other = (AbstractUnspentCoin<?, ?, ?, ?, ?, ?>) obj;
+		AbstractUnspentCoin<?, ?, ?, ?, ?> other = (AbstractUnspentCoin<?, ?, ?, ?, ?>) obj;
 		return getSetup().equals(other.getSetup()) && getIssuer().equals(other.getIssuer())
 				&& bearer.equals(other.bearer) && s.equals(other.s) && x1.equals(other.x1) && x2.equals(other.x2);
 	}
@@ -127,9 +127,9 @@ public abstract class AbstractUnspentCoin<G extends Group<G>, F extends FiniteFi
 		}
 	}
 
-	protected abstract AbstractTransferringCoinOne<G, F, I, T, H, H0> newAbstractTransferringCoinOne(
-			BrandsSchemeSetup<G, F, I, T, H, H0> setup, Bank<G, F, I, T, H, H0> bank,
-			AccountHolderPrivate<G, F, I, T, H, H0> bearer, Group.Element<G> blindedIdentity,
+	protected abstract AbstractTransferringCoinOne<G, F, T, H, H0> newAbstractTransferringCoinOne(
+			BrandsSchemeSetup<G, F, T, H, H0> setup, Bank<G, F, T, H, H0> bank,
+			AccountHolderPrivate<G, F, T, H, H0> bearer, Group.Element<G> blindedIdentity,
 			Group.Element<G> commitment, CoinSignature<G, F> coinSignature, AssetType assetType, Number faceValue,
 			FiniteField.Element<F> s, FiniteField.Element<F> x1, FiniteField.Element<F> x2, String identity, String shop);
 

@@ -11,13 +11,13 @@ import org.mammon.scheme.brands.SignatureHashFunction;
 import org.mammon.scheme.brands.accountholder.AccountHolder;
 import org.mammon.util.messaging.AbstractTransactable;
 
-public abstract class AbstractAccountHolder<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
-		extends AbstractTransactable implements AccountHolder<G, F, I, T, H, H0>, Identifiable, Transactable {
+public abstract class AbstractAccountHolder<G extends Group<G>, F extends FiniteField<F>, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, T>>
+		extends AbstractTransactable implements AccountHolder<G, F, T, H, H0>, Identifiable, Transactable {
 
-	private final BrandsSchemeSetup<G, F, I, T, H, H0> setup;
+	private final BrandsSchemeSetup<G, F, T, H, H0> setup;
 	private final Group.Element<G> blindedIdentity;
 
-	public AbstractAccountHolder(BrandsSchemeSetup<G, F, I, T, H, H0> setup, Group.Element<G> blindedIdentity) {
+	public AbstractAccountHolder(BrandsSchemeSetup<G, F, T, H, H0> setup, Group.Element<G> blindedIdentity) {
 		this.setup = setup;
 		this.blindedIdentity = blindedIdentity;
 	}
@@ -28,16 +28,16 @@ public abstract class AbstractAccountHolder<G extends Group<G>, F extends Finite
 	}
 
 	@Override
-	public BrandsSchemeSetup<G, F, I, T, H, H0> getSetup() {
+	public BrandsSchemeSetup<G, F, T, H, H0> getSetup() {
 		return setup;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof AbstractAccountHolder<?, ?, ?, ?, ?, ?>)) {
+		if (obj == null || !(obj instanceof AbstractAccountHolder<?, ?, ?, ?, ?>)) {
 			return false;
 		}
-		AbstractAccountHolder<?, ?, ?, ?, ?, ?> other = (AbstractAccountHolder<?, ?, ?, ?, ?, ?>) obj;
+		AbstractAccountHolder<?, ?, ?, ?, ?> other = (AbstractAccountHolder<?, ?, ?, ?, ?>) obj;
 		return setup.equals(other.setup) && blindedIdentity.equals(other.blindedIdentity);
 	}
 

@@ -14,30 +14,30 @@ import org.mammon.scheme.brands.messages.IssueCoinsRequest;
 import org.mammon.scheme.brands.messages.IssueCoinsResponse;
 import org.mammon.util.messaging.AbstractTransitionable;
 
-public abstract class AbstractIssuedWitnesses<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
+public abstract class AbstractIssuedWitnesses<G extends Group<G>, F extends FiniteField<F>, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, T>>
 		extends AbstractTransitionable implements Identifiable, Transitionable, MessageEmitter {
 
-	private final BrandsSchemeSetup<G, F, I, T, H, H0> setup;
+	private final BrandsSchemeSetup<G, F, T, H, H0> setup;
 
-	private final AbstractBankPrivate<G, F, I, T, H, H0> bank;
+	private final AbstractBankPrivate<G, F, T, H, H0> bank;
 
 	private final Group.Element<G> payerIdentity;
 
 	private final FiniteField.Element<F> w;
 
-	public AbstractIssuedWitnesses(BrandsSchemeSetup<G, F, I, T, H, H0> setup,
-			AbstractBankPrivate<G, F, I, T, H, H0> bank, Group.Element<G> payerIdentity, FiniteField.Element<F> w) {
+	public AbstractIssuedWitnesses(BrandsSchemeSetup<G, F, T, H, H0> setup,
+			AbstractBankPrivate<G, F, T, H, H0> bank, Group.Element<G> payerIdentity, FiniteField.Element<F> w) {
 		this.setup = setup;
 		this.bank = bank;
 		this.payerIdentity = payerIdentity;
 		this.w = w;
 	}
 
-	public BrandsSchemeSetup<G, F, I, T, H, H0> getSetup() {
+	public BrandsSchemeSetup<G, F, T, H, H0> getSetup() {
 		return setup;
 	}
 
-	public AbstractBankPrivate<G, F, I, T, H, H0> getBank() {
+	public AbstractBankPrivate<G, F, T, H, H0> getBank() {
 		return bank;
 	}
 

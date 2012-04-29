@@ -23,7 +23,7 @@ import org.mammon.scheme.brands.shop.Shop;
 
 public class ReceivingCoin
 		extends
-		AbstractReceivingCoin<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
+		AbstractReceivingCoin<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	@FromPersistent(AbstractReceivingCoin.class)
 	public ReceivingCoin(@PersistAs("setup") ExampleSetup setup, @PersistAs("bank") ExampleBank bank,
@@ -36,16 +36,16 @@ public class ReceivingCoin
 	}
 
 	@Override
-	protected AbstractSpentCoin<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newAbstractSpentCoin(
-			BrandsSchemeSetup<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> setup,
-			AbstractBank<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
+	protected AbstractSpentCoin<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newAbstractSpentCoin(
+			BrandsSchemeSetup<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> setup,
+			AbstractBank<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
 			Group.Element<ExampleGroup> blindedIdentity,
 			Group.Element<ExampleGroup> commitment,
 			CoinSignature<ExampleGroup, ExampleFiniteField> coinSignature,
 			AssetType assetType,
 			Number faceValue,
 			String identity,
-			Shop<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bearer,
+			Shop<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bearer,
 			Long time, FiniteField.Element<ExampleFiniteField> r1, FiniteField.Element<ExampleFiniteField> r2) {
 		return new ExampleSpentCoin((ExampleSetup) setup, (ExampleBank) bank, blindedIdentity, commitment,
 				(ExampleCoinSignature) coinSignature, assetType, faceValue, identity, (ExampleShop) bearer, time, r1,

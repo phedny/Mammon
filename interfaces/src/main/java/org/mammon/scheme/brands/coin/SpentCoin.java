@@ -11,8 +11,8 @@ import org.mammon.scheme.brands.shop.Shop;
  * bearer that must be a Shop. The isSellable() method of any implementation of
  * this interface must return <code>false</code>.
  */
-public interface SpentCoin<G extends Group<G>, F extends FiniteField<F>, S, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, S, T>>
-		extends Coin<G, F, S, T, H, H0> {
+public interface SpentCoin<G extends Group<G>, F extends FiniteField<F>, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, T>>
+		extends Coin<G, F, T, H, H0> {
 
 	/**
 	 * The bearer of an IOU is the entity that currently holds the IOU and is
@@ -21,7 +21,7 @@ public interface SpentCoin<G extends Group<G>, F extends FiniteField<F>, S, T, H
 	 * @return the current bearer of this IOU.
 	 */
 	@Override
-	Shop<G, F, S, T, H, H0> getBearer();
+	Shop<G, F, T, H, H0> getBearer();
 
 	/**
 	 * @return the time when the payment protocol of the Brands scheme has been

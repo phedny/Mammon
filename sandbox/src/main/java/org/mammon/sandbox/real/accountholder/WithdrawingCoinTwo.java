@@ -22,14 +22,14 @@ import org.mammon.scheme.brands.generic.coin.AbstractWithdrawingCoinTwo;
 
 public class WithdrawingCoinTwo
 		extends
-		AbstractWithdrawingCoinTwo<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
+		AbstractWithdrawingCoinTwo<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	@FromPersistent(AbstractWithdrawingCoinTwo.class)
 	public WithdrawingCoinTwo(
 			@PersistAs("setup") ExampleSetup setup,
-			@PersistAs("accountHolder") AbstractAccountHolderPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> accountHolder,
+			@PersistAs("accountHolder") AbstractAccountHolderPrivate<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> accountHolder,
 			@PersistAs("identity") String identity,
-			@PersistAs("bank") AbstractBank<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
+			@PersistAs("bank") AbstractBank<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
 			@PersistAs("publicKey") Group.Element<Gq> publicKey, @PersistAs("count") int count,
 			@PersistAs("blindingFactor") FiniteField.Element<Z> s,
 			@PersistAs("x1") FiniteField.Element<Z> x1,
@@ -47,8 +47,8 @@ public class WithdrawingCoinTwo
 			CoinSignature<Gq, Z> coinSignature) {
 		return new ExampleUnspentCoin(
 				(ExampleSetup) getSetup(),
-				(AbstractAccountHolderPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getAccountHolder(),
-				(AbstractBank<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getBank(),
+				(AbstractAccountHolderPrivate<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getAccountHolder(),
+				(AbstractBank<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getBank(),
 				UUID.randomUUID().toString(), identity, getBlindingFactor(), getX1(), getX2(), getBigA(), getBigB(), r, coinSignature);
 	}
 

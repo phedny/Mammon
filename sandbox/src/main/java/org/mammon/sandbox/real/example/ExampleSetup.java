@@ -17,7 +17,7 @@ import org.mammon.util.HashCodeUtil;
 public class ExampleSetup
 		implements
 		Identifiable,
-		BrandsSchemeSetup<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
+		BrandsSchemeSetup<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	private final Gq group = new Gq(GqSetupFactory.factory(7919, 63353).generateSetup());
 

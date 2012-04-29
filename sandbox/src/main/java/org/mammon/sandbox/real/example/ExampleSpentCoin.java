@@ -15,16 +15,16 @@ import org.mammon.scheme.brands.generic.bank.AbstractBankPrivate;
 import org.mammon.scheme.brands.generic.coin.AbstractSpentCoin;
 
 public class ExampleSpentCoin extends
-		AbstractSpentCoin<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
+		AbstractSpentCoin<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	public ExampleSpentCoin(ExampleUnspentCoin basedOnCoin,
-			AbstractBankPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
+			AbstractBankPrivate<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
 			ExampleShop bearer, Long time) {
 		super(basedOnCoin, bank, bearer, time, UUID.randomUUID().toString());
 	}
 
 	@FromPersistent(SpentCoin.class)
-	public ExampleSpentCoin(@PersistAs("setup") ExampleSetup setup, @PersistAs("issuer") AbstractBank<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
+	public ExampleSpentCoin(@PersistAs("setup") ExampleSetup setup, @PersistAs("issuer") AbstractBank<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
 			@PersistAs("blindedIdentity") Group.Element<Gq> blindedIdentity,
 			@PersistAs("commitment") Group.Element<Gq> commitment,
 			@PersistAs("coinSignature") ExampleCoinSignature coinSignature,

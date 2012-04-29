@@ -20,14 +20,14 @@ import org.mammon.scheme.brands.generic.coin.AbstractWithdrawingCoinTwo;
 
 public class WithdrawingCoinTwo
 		extends
-		AbstractWithdrawingCoinTwo<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
+		AbstractWithdrawingCoinTwo<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	@FromPersistent(AbstractWithdrawingCoinTwo.class)
 	public WithdrawingCoinTwo(
 			@PersistAs("setup") ExampleSetup setup,
-			@PersistAs("accountHolder") AbstractAccountHolderPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> accountHolder,
+			@PersistAs("accountHolder") AbstractAccountHolderPrivate<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> accountHolder,
 			@PersistAs("identity") String identity,
-			@PersistAs("bank") AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
+			@PersistAs("bank") AbstractBankPrivate<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
 			@PersistAs("publicKey") Group.Element<ExampleGroup> publicKey, @PersistAs("count") int count,
 			@PersistAs("blindingFactor") FiniteField.Element<ExampleFiniteField> s,
 			@PersistAs("x1") FiniteField.Element<ExampleFiniteField> x1,
@@ -45,8 +45,8 @@ public class WithdrawingCoinTwo
 			CoinSignature<ExampleGroup, ExampleFiniteField> coinSignature) {
 		return new ExampleUnspentCoin(
 				(ExampleSetup) getSetup(),
-				(AbstractAccountHolderPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getAccountHolder(),
-				(AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getBank(),
+				(AbstractAccountHolderPrivate<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getAccountHolder(),
+				(AbstractBankPrivate<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getBank(),
 				identity, getBlindingFactor(), getX1(), getX2(), getBigA(), getBigB(), r, coinSignature);
 	}
 

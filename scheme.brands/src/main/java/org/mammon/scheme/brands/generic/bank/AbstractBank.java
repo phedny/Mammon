@@ -11,13 +11,13 @@ import org.mammon.scheme.brands.bank.Bank;
 import org.mammon.util.HashCodeUtil;
 import org.mammon.util.messaging.AbstractTransactable;
 
-public abstract class AbstractBank<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
-		extends AbstractTransactable implements Bank<G, F, I, T, H, H0>, Identifiable, Transactable {
+public abstract class AbstractBank<G extends Group<G>, F extends FiniteField<F>, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, T>>
+		extends AbstractTransactable implements Bank<G, F, T, H, H0>, Identifiable, Transactable {
 
-	private final BrandsSchemeSetup<G, F, I, T, H, H0> setup;
+	private final BrandsSchemeSetup<G, F, T, H, H0> setup;
 	private final Group.Element<G> publicKey;
 
-	protected AbstractBank(BrandsSchemeSetup<G, F, I, T, H, H0> setup,
+	protected AbstractBank(BrandsSchemeSetup<G, F, T, H, H0> setup,
 			Group.Element<G> publicKey) {
 		this.setup = setup;
 		this.publicKey = publicKey;
@@ -29,16 +29,16 @@ public abstract class AbstractBank<G extends Group<G>, F extends FiniteField<F>,
 	}
 
 	@Override
-	public BrandsSchemeSetup<G, F, I, T, H, H0> getSetup() {
+	public BrandsSchemeSetup<G, F, T, H, H0> getSetup() {
 		return setup;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof AbstractBank<?, ?, ?, ?, ?, ?>)) {
+		if (obj == null || !(obj instanceof AbstractBank<?, ?, ?, ?, ?>)) {
 			return false;
 		}
-		AbstractBank<?, ?, ?, ?, ?, ?> other = (AbstractBank<?, ?, ?, ?, ?, ?>) obj;
+		AbstractBank<?, ?, ?, ?, ?> other = (AbstractBank<?, ?, ?, ?, ?>) obj;
 		return setup.equals(other.setup) && publicKey.equals(other.publicKey);
 	}
 

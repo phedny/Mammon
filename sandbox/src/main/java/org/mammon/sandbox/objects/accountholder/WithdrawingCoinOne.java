@@ -18,13 +18,13 @@ import org.mammon.scheme.brands.generic.coin.AbstractWithdrawingCoinTwo;
 
 public class WithdrawingCoinOne
 		extends
-		AbstractWithdrawingCoinOne<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
+		AbstractWithdrawingCoinOne<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	private final String identity = UUID.randomUUID().toString();
 
 	@FromPersistent(AbstractWithdrawingCoinOne.class)
-	public WithdrawingCoinOne(@PersistAs("accountHolder") AbstractAccountHolderPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> accountHolder,
-			@PersistAs("bank") AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank, @PersistAs("publicKey") Group.Element<ExampleGroup> publicKey,
+	public WithdrawingCoinOne(@PersistAs("accountHolder") AbstractAccountHolderPrivate<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> accountHolder,
+			@PersistAs("bank") AbstractBankPrivate<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank, @PersistAs("publicKey") Group.Element<ExampleGroup> publicKey,
 			@PersistAs("count") int count) {
 		super(accountHolder, bank, publicKey, count);
 	}
@@ -35,14 +35,14 @@ public class WithdrawingCoinOne
 	}
 
 	@Override
-	protected AbstractWithdrawingCoinTwo<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newWithdrawingCoinTwo(
+	protected AbstractWithdrawingCoinTwo<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newWithdrawingCoinTwo(
 			Group.Element<ExampleGroup> a, Group.Element<ExampleGroup> b, FiniteField.Element<ExampleFiniteField> c,
 			FiniteField.Element<ExampleFiniteField> s, FiniteField.Element<ExampleFiniteField> x1,
 			FiniteField.Element<ExampleFiniteField> x2, FiniteField.Element<ExampleFiniteField> u,
 			FiniteField.Element<ExampleFiniteField> v, Group.Element<ExampleGroup> bigA,
 			Group.Element<ExampleGroup> bigB) {
-		return new WithdrawingCoinTwo((ExampleSetup) getSetup(), (AbstractAccountHolderPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getAccountHolder(),
-				getIdentity(), (AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getBank(), getPublicKey(), getCount(), s, x1, x2, u, v, bigA, bigB, a, b,
+		return new WithdrawingCoinTwo((ExampleSetup) getSetup(), (AbstractAccountHolderPrivate<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getAccountHolder(),
+				getIdentity(), (AbstractBankPrivate<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getBank(), getPublicKey(), getCount(), s, x1, x2, u, v, bigA, bigB, a, b,
 				c);
 	}
 

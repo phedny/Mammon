@@ -22,12 +22,12 @@ import org.mammon.scheme.brands.generic.coin.AbstractSpentCoin;
 import org.mammon.scheme.brands.shop.Shop;
 
 public class ReceivingCoin extends
-		AbstractReceivingCoin<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
+		AbstractReceivingCoin<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	@FromPersistent(AbstractReceivingCoin.class)
 	public ReceivingCoin(
 			@PersistAs("setup") ExampleSetup setup,
-			@PersistAs("bank") AbstractBank<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
+			@PersistAs("bank") AbstractBank<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
 			@PersistAs("blindedIdentity") Group.Element<Gq> blindedIdentity,
 			@PersistAs("commitment") Group.Element<Gq> commitment,
 			@PersistAs("coinSignature") CoinSignature<Gq, Z> coinSignature,
@@ -37,15 +37,15 @@ public class ReceivingCoin extends
 	}
 
 	@Override
-	protected AbstractSpentCoin<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newAbstractSpentCoin(
-			BrandsSchemeSetup<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> setup,
-			AbstractBank<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
+	protected AbstractSpentCoin<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newAbstractSpentCoin(
+			BrandsSchemeSetup<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> setup,
+			AbstractBank<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
 			Group.Element<Gq> blindedIdentity, Group.Element<Gq> commitment, CoinSignature<Gq, Z> coinSignature,
 			AssetType assetType, Number faceValue, String identity,
-			Shop<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bearer, Long time,
+			Shop<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bearer, Long time,
 			FiniteField.Element<Z> r1, FiniteField.Element<Z> r2) {
 		return new ExampleSpentCoin((ExampleSetup) setup,
-				(AbstractBank<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) bank,
+				(AbstractBank<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) bank,
 				blindedIdentity, commitment, (ExampleCoinSignature) coinSignature, assetType, faceValue, identity,
 				(ExampleShop) bearer, time, r1, r2);
 	}

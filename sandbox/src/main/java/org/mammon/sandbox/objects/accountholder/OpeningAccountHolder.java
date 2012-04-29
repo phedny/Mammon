@@ -16,23 +16,23 @@ import org.mammon.scheme.brands.generic.bank.AbstractBankPrivate;
 
 public class OpeningAccountHolder
 		extends
-		AbstractOpeningAccountHolder<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
+		AbstractOpeningAccountHolder<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
-	public OpeningAccountHolder(@PersistAs("setup") ExampleSetup setup, @PersistAs("bank") AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank) {
+	public OpeningAccountHolder(@PersistAs("setup") ExampleSetup setup, @PersistAs("bank") AbstractBankPrivate<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank) {
 		super(setup, bank, setup.getFiniteField().getRandomElement());
 	}
 
 	@FromPersistent(AbstractOpeningAccountHolder.class)
-	public OpeningAccountHolder(@PersistAs("setup") ExampleSetup setup, @PersistAs("bank") AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
+	public OpeningAccountHolder(@PersistAs("setup") ExampleSetup setup, @PersistAs("bank") AbstractBankPrivate<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
 			@PersistAs("privateKey") FiniteField.Element<ExampleFiniteField> privateKey) {
 		super(setup, bank, privateKey);
 	}
 
 	@Override
-	protected AccountHolderPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newAccountHolder(
+	protected AccountHolderPrivate<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newAccountHolder(
 			Group.Element<ExampleGroup> blindedIdentity) {
 		return new ExampleAccountHolder((ExampleSetup) getSetup(), getPrivateKey(), getPublicKey(), blindedIdentity,
-				(AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getBank());
+				(AbstractBankPrivate<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getBank());
 	}
 
 }

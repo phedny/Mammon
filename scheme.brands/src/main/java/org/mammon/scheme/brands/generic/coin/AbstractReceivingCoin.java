@@ -18,12 +18,12 @@ import org.mammon.scheme.brands.messages.CoinTransferMessage;
 import org.mammon.scheme.brands.shop.Shop;
 import org.mammon.util.messaging.AbstractTransitionable;
 
-public abstract class AbstractReceivingCoin<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
+public abstract class AbstractReceivingCoin<G extends Group<G>, F extends FiniteField<F>, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, T>>
 		extends AbstractTransitionable implements Identifiable, Transitionable, MessageEmitter {
 
-	private final BrandsSchemeSetup<G, F, I, T, H, H0> setup;
+	private final BrandsSchemeSetup<G, F, T, H, H0> setup;
 
-	private final AbstractBank<G, F, I, T, H, H0> bank;
+	private final AbstractBank<G, F, T, H, H0> bank;
 
 	private final Group.Element<G> blindedIdentity;
 
@@ -35,13 +35,13 @@ public abstract class AbstractReceivingCoin<G extends Group<G>, F extends Finite
 
 	private final Number faceValue;
 
-	private final AbstractShop<G, F, I, T, H, H0> shop;
+	private final AbstractShop<G, F, T, H, H0> shop;
 
 	private final T time;
 
-	public AbstractReceivingCoin(BrandsSchemeSetup<G, F, I, T, H, H0> setup, AbstractBank<G, F, I, T, H, H0> bank,
+	public AbstractReceivingCoin(BrandsSchemeSetup<G, F, T, H, H0> setup, AbstractBank<G, F, T, H, H0> bank,
 			Group.Element<G> blindedIdentity, Group.Element<G> commitment, CoinSignature<G, F> coinSignature,
-			AssetType assetType, Number faceValue, AbstractShop<G, F, I, T, H, H0> shop, T time) {
+			AssetType assetType, Number faceValue, AbstractShop<G, F, T, H, H0> shop, T time) {
 		this.setup = setup;
 		this.bank = bank;
 		this.blindedIdentity = blindedIdentity;
@@ -53,11 +53,11 @@ public abstract class AbstractReceivingCoin<G extends Group<G>, F extends Finite
 		this.time = time;
 	}
 
-	public BrandsSchemeSetup<G, F, I, T, H, H0> getSetup() {
+	public BrandsSchemeSetup<G, F, T, H, H0> getSetup() {
 		return setup;
 	}
 
-	public AbstractBank<G, F, I, T, H, H0> getBank() {
+	public AbstractBank<G, F, T, H, H0> getBank() {
 		return bank;
 	}
 
@@ -81,7 +81,7 @@ public abstract class AbstractReceivingCoin<G extends Group<G>, F extends Finite
 		return faceValue;
 	}
 
-	public AbstractShop<G, F, I, T, H, H0> getShop() {
+	public AbstractShop<G, F, T, H, H0> getShop() {
 		return shop;
 	}
 
@@ -104,15 +104,15 @@ public abstract class AbstractReceivingCoin<G extends Group<G>, F extends Finite
 				getTime());
 	}
 
-	public AbstractSpentCoin<G, F, I, T, H, H0> transition(CoinTransferMessage<F> message) {
+	public AbstractSpentCoin<G, F, T, H, H0> transition(CoinTransferMessage<F> message) {
 		return newAbstractSpentCoin(getSetup(), getBank(), getBlindedIdentity(), getCommitment(), getCoinSignature(),
 				getAssetType(), getFaceValue(), getIdentity(), getShop(), getTime(), message.getR1(), message.getR2());
 	}
 
-	protected abstract AbstractSpentCoin<G, F, I, T, H, H0> newAbstractSpentCoin(
-			BrandsSchemeSetup<G, F, I, T, H, H0> setup, AbstractBank<G, F, I, T, H, H0> bank,
+	protected abstract AbstractSpentCoin<G, F, T, H, H0> newAbstractSpentCoin(
+			BrandsSchemeSetup<G, F, T, H, H0> setup, AbstractBank<G, F, T, H, H0> bank,
 			Group.Element<G> blindedIdentity, Group.Element<G> commitment, CoinSignature<G, F> coinSignature,
-			AssetType assetType, Number faceValue, String identity, Shop<G, F, I, T, H, H0> bearer, T time,
+			AssetType assetType, Number faceValue, String identity, Shop<G, F, T, H, H0> bearer, T time,
 			FiniteField.Element<F> r1, FiniteField.Element<F> r2);
 
 }

@@ -12,8 +12,8 @@ import org.mammon.scheme.brands.accountholder.AccountHolder;
  * isSellable() method of any implementation of this interface must return
  * <code>true</code>.
  */
-public interface UnspentCoin<G extends Group<G>, F extends FiniteField<F>, S, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, S, T>>
-		extends Coin<G, F, S, T, H, H0> {
+public interface UnspentCoin<G extends Group<G>, F extends FiniteField<F>, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, T>>
+		extends Coin<G, F, T, H, H0> {
 
 	/**
 	 * The bearer of an IOU is the entity that currently holds the IOU and is
@@ -22,7 +22,7 @@ public interface UnspentCoin<G extends Group<G>, F extends FiniteField<F>, S, T,
 	 * @return the current bearer of this IOU.
 	 */
 	@Override
-	AccountHolder<G, F, S, T, H, H0> getBearer();
+	AccountHolder<G, F, T, H, H0> getBearer();
 
 	/**
 	 * @return the identity blinding factor $s$.

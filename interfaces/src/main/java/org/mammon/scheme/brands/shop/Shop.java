@@ -12,13 +12,13 @@ import org.mammon.scheme.brands.SignatureHashFunction;
  * isSellable() method on IOweYou objects hold by an Shop must return
  * <code>true</code>.
  */
-public interface Shop<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
+public interface Shop<G extends Group<G>, F extends FiniteField<F>, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, T>>
 		extends Bearer {
 
 	/**
 	 * @return the setup instantiation used by this object.
 	 */
-	BrandsSchemeSetup<G, F, I, T, H, H0> getSetup();
+	BrandsSchemeSetup<G, F, T, H, H0> getSetup();
 
 	/**
 	 * @return the identity $I_\mathcal{S}$ of the shop.

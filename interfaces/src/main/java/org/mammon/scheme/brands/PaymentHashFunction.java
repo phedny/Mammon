@@ -6,7 +6,7 @@ import org.mammon.math.Group;
 /**
  * The payment hash is used to compute challenges during the payment protocol.
  */
-public interface PaymentHashFunction<G extends Group<G>, F extends FiniteField<F>, S, T> {
+public interface PaymentHashFunction<G extends Group<G>, F extends FiniteField<F>, T> {
 
 	/**
 	 * Hash the input value into an output element.

@@ -8,7 +8,7 @@ import org.mammon.sandbox.Sha1HashFunction;
 import org.mammon.scheme.brands.PaymentHashFunction;
 
 public class ExamplePaymentHashFunction extends Sha1HashFunction implements
-		PaymentHashFunction<Gq, Z, String, Long> {
+		PaymentHashFunction<Gq, Z, Long> {
 
 	public ExamplePaymentHashFunction(Gq group, Z f) {
 		super(f, 4);

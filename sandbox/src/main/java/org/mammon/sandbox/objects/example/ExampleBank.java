@@ -13,21 +13,21 @@ import org.mammon.scheme.brands.generic.bank.AbstractBlindedIdentity;
 
 public class ExampleBank
 		extends
-		AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
+		AbstractBankPrivate<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	@FromPersistent(Issuer.class)
 	public ExampleBank(
-			@PersistAs("setup") BrandsSchemeSetup<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> setup,
+			@PersistAs("setup") BrandsSchemeSetup<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> setup,
 			@PersistAs("privateKey") FiniteField.Element<ExampleFiniteField> privateKey) {
 		super(setup, privateKey);
 	}
 
 	@Override
-	protected AbstractBlindedIdentity<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newBlindedIdentity(
-			BrandsSchemeSetup<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> setup,
-			AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
+	protected AbstractBlindedIdentity<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newBlindedIdentity(
+			BrandsSchemeSetup<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> setup,
+			AbstractBankPrivate<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
 			Group.Element<ExampleGroup> payerIdentity) {
-		return new BlindedIdentity((ExampleSetup) setup, (AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) bank, payerIdentity);
+		return new BlindedIdentity((ExampleSetup) setup, (AbstractBankPrivate<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) bank, payerIdentity);
 	}
 
 	@Override

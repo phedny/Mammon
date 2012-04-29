@@ -174,7 +174,7 @@ public class Main {
 		messaging.addObject(new EuroAssetType());
 
 		// Setup the bank.
-		final AbstractBankPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank = new ExampleBank(
+		final AbstractBankPrivate<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank = new ExampleBank(
 				setup, setup.getFiniteField().getRandomElement());
 		messaging.addObject(bank, true);
 
@@ -300,7 +300,7 @@ public class Main {
 			public void enteredState(RemoteBank object, String enteredBy) {
 
 				// Request a new account to be opened.
-				AbstractOpeningAccountHolder<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> openingAccountHolder = new OpeningAccountHolder(
+				AbstractOpeningAccountHolder<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> openingAccountHolder = new OpeningAccountHolder(
 						setup, object);
 				messaging.addObject(openingAccountHolder);
 

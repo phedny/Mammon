@@ -18,7 +18,7 @@ import org.mammon.scheme.brands.generic.coin.AbstractReceivingCoin;
 import org.mammon.scheme.brands.generic.shop.AbstractShop;
 
 public class ExampleShop extends
-		AbstractShop<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
+		AbstractShop<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	@FromPersistent(Bearer.class)
 	public ExampleShop(@PersistAs("setup") ExampleSetup setup, @PersistAs("identity") String identity) {
@@ -26,14 +26,14 @@ public class ExampleShop extends
 	}
 
 	@Override
-	protected AbstractReceivingCoin<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newAbstractReceivingCoin(
-			BrandsSchemeSetup<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> setup,
-			Bank<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
+	protected AbstractReceivingCoin<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newAbstractReceivingCoin(
+			BrandsSchemeSetup<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> setup,
+			Bank<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
 			Group.Element<Gq> blindedIdentity, Group.Element<Gq> commitment, CoinSignature<Gq, Z> coinSignature,
 			AssetType assetType, Number faceValue,
-			AbstractShop<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> shop) {
+			AbstractShop<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> shop) {
 		return new ReceivingCoin((ExampleSetup) setup,
-				(AbstractBank<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) bank,
+				(AbstractBank<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) bank,
 				blindedIdentity, commitment, coinSignature, assetType, faceValue, (ExampleShop) shop, Long
 						.valueOf(new Date().getTime()));
 	}

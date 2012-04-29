@@ -12,12 +12,12 @@ import org.mammon.scheme.brands.coin.Coin;
 import org.mammon.scheme.brands.coin.CoinSignature;
 import org.mammon.util.messaging.AbstractTransitionable;
 
-public abstract class AbstractCoin<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
-		extends AbstractTransitionable implements Coin<G, F, I, T, H, H0> {
+public abstract class AbstractCoin<G extends Group<G>, F extends FiniteField<F>, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, T>>
+		extends AbstractTransitionable implements Coin<G, F, T, H, H0> {
 
-	private final BrandsSchemeSetup<G, F, I, T, H, H0> setup;
+	private final BrandsSchemeSetup<G, F, T, H, H0> setup;
 
-	private final Bank<G, F, I, T, H, H0> bank;
+	private final Bank<G, F, T, H, H0> bank;
 
 	private final Group.Element<G> blindedIdentity;
 
@@ -31,7 +31,7 @@ public abstract class AbstractCoin<G extends Group<G>, F extends FiniteField<F>,
 
 	private final String identity;
 
-	public AbstractCoin(BrandsSchemeSetup<G, F, I, T, H, H0> setup, Bank<G, F, I, T, H, H0> bank,
+	public AbstractCoin(BrandsSchemeSetup<G, F, T, H, H0> setup, Bank<G, F, T, H, H0> bank,
 			Element<G> blindedIdentity, Element<G> commitment, CoinSignature<G, F> coinSignature, AssetType assetType,
 			Number faceValue, String identity) {
 		this.setup = setup;
@@ -60,12 +60,12 @@ public abstract class AbstractCoin<G extends Group<G>, F extends FiniteField<F>,
 	}
 
 	@Override
-	public Bank<G, F, I, T, H, H0> getIssuer() {
+	public Bank<G, F, T, H, H0> getIssuer() {
 		return bank;
 	}
 
 	@Override
-	public BrandsSchemeSetup<G, F, I, T, H, H0> getSetup() {
+	public BrandsSchemeSetup<G, F, T, H, H0> getSetup() {
 		return setup;
 	}
 

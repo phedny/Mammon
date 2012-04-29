@@ -16,20 +16,20 @@ import org.mammon.scheme.brands.generic.bank.AbstractIssuedWitnesses;
 
 public class BlindedIdentity
 		extends
-		AbstractBlindedIdentity<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
+		AbstractBlindedIdentity<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	@FromPersistent(AbstractBlindedIdentity.class)
-	public BlindedIdentity(@PersistAs("setup") ExampleSetup setup, @PersistAs("bank") AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
+	public BlindedIdentity(@PersistAs("setup") ExampleSetup setup, @PersistAs("bank") AbstractBankPrivate<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
 			@PersistAs("payerIdentity") Group.Element<ExampleGroup> payerIdentity) {
 		super(setup, bank, payerIdentity);
 	}
 
 	@Override
-	protected AbstractIssuedWitnesses<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newAbstractIssuedWitnesses(
-			BrandsSchemeSetup<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> setup,
-			AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
+	protected AbstractIssuedWitnesses<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newAbstractIssuedWitnesses(
+			BrandsSchemeSetup<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> setup,
+			AbstractBankPrivate<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
 			Group.Element<ExampleGroup> payerIdentity, FiniteField.Element<ExampleFiniteField> w) {
-		return new IssuedWitnesses((ExampleSetup) setup, (AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) bank, payerIdentity, w);
+		return new IssuedWitnesses((ExampleSetup) setup, (AbstractBankPrivate<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) bank, payerIdentity, w);
 	}
 
 }

@@ -19,14 +19,14 @@ import org.mammon.scheme.brands.messages.CoinTransferMessage;
 import org.mammon.scheme.brands.messages.TransferToShopMessage;
 import org.mammon.util.messaging.AbstractTransitionable;
 
-public abstract class AbstractTransferringCoinOne<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
+public abstract class AbstractTransferringCoinOne<G extends Group<G>, F extends FiniteField<F>, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, T>>
 		extends AbstractTransitionable implements Identifiable, Transitionable, MessageEmitter {
 
-	private final BrandsSchemeSetup<G, F, I, T, H, H0> setup;
+	private final BrandsSchemeSetup<G, F, T, H, H0> setup;
 
-	private final Bank<G, F, I, T, H, H0> bank;
+	private final Bank<G, F, T, H, H0> bank;
 
-	private final AccountHolderPrivate<G, F, I, T, H, H0> bearer;
+	private final AccountHolderPrivate<G, F, T, H, H0> bearer;
 
 	private final Group.Element<G> blindedIdentity;
 
@@ -48,8 +48,8 @@ public abstract class AbstractTransferringCoinOne<G extends Group<G>, F extends 
 
 	private final String shop;
 
-	public AbstractTransferringCoinOne(BrandsSchemeSetup<G, F, I, T, H, H0> setup, Bank<G, F, I, T, H, H0> bank,
-			AccountHolderPrivate<G, F, I, T, H, H0> bearer, Group.Element<G> blindedIdentity,
+	public AbstractTransferringCoinOne(BrandsSchemeSetup<G, F, T, H, H0> setup, Bank<G, F, T, H, H0> bank,
+			AccountHolderPrivate<G, F, T, H, H0> bearer, Group.Element<G> blindedIdentity,
 			Group.Element<G> commitment, CoinSignature<G, F> coinSignature, AssetType assetType, Number faceValue,
 			FiniteField.Element<F> s, FiniteField.Element<F> x1, FiniteField.Element<F> x2, String identity, String shop) {
 		this.setup = setup;
@@ -72,15 +72,15 @@ public abstract class AbstractTransferringCoinOne<G extends Group<G>, F extends 
 		return identity;
 	}
 
-	public BrandsSchemeSetup<G, F, I, T, H, H0> getSetup() {
+	public BrandsSchemeSetup<G, F, T, H, H0> getSetup() {
 		return setup;
 	}
 
-	public Bank<G, F, I, T, H, H0> getBank() {
+	public Bank<G, F, T, H, H0> getBank() {
 		return bank;
 	}
 
-	public AccountHolderPrivate<G, F, I, T, H, H0> getBearer() {
+	public AccountHolderPrivate<G, F, T, H, H0> getBearer() {
 		return bearer;
 	}
 
@@ -122,7 +122,7 @@ public abstract class AbstractTransferringCoinOne<G extends Group<G>, F extends 
 
 	@Override
 	public Message emitMessage() {
-		return new CoinHashRequest<G, F, I, T, H, H0>(setup, bank, blindedIdentity, commitment, coinSignature,
+		return new CoinHashRequest<G, F, T, H, H0>(setup, bank, blindedIdentity, commitment, coinSignature,
 				assetType, faceValue, shop);
 	}
 

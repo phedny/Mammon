@@ -8,13 +8,13 @@ import org.mammon.scheme.brands.PaymentHashFunction;
 import org.mammon.scheme.brands.SignatureHashFunction;
 import org.mammon.scheme.brands.bank.Bank;
 
-public interface Coin<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
+public interface Coin<G extends Group<G>, F extends FiniteField<F>, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, T>>
 		extends IOweYou {
 
 	/**
 	 * @return the setup instantiation used by this object.
 	 */
-	BrandsSchemeSetup<G, F, I, T, H, H0> getSetup();
+	BrandsSchemeSetup<G, F, T, H, H0> getSetup();
 
 	/**
 	 * The issuer of an IOU is the entity that has created the promise to pay
@@ -23,7 +23,7 @@ public interface Coin<G extends Group<G>, F extends FiniteField<F>, I, T, H exte
 	 * @return the issuer of this IOU.
 	 */
 	@Override
-	Bank<G, F, I, T, H, H0> getIssuer();
+	Bank<G, F, T, H, H0> getIssuer();
 
 	/**
 	 * @return the blinded identity $A$ of the AccountHolderPrivate that

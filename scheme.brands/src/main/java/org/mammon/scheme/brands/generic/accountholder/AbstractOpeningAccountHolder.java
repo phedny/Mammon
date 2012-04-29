@@ -14,18 +14,18 @@ import org.mammon.scheme.brands.messages.BlindedIdentityRequest;
 import org.mammon.scheme.brands.messages.BlindedIdentityResponse;
 import org.mammon.util.messaging.AbstractTransitionable;
 
-public abstract class AbstractOpeningAccountHolder<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
+public abstract class AbstractOpeningAccountHolder<G extends Group<G>, F extends FiniteField<F>, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, T>>
 		extends AbstractTransitionable implements Identifiable, Transitionable, MessageEmitter {
 
-	private final BrandsSchemeSetup<G, F, I, T, H, H0> setup;
+	private final BrandsSchemeSetup<G, F, T, H, H0> setup;
 
 	private final FiniteField.Element<F> privateKey;
 
 	private final Group.Element<G> publicKey;
 
-	private final Bank<G, F, I, T, H, H0> bank;
+	private final Bank<G, F, T, H, H0> bank;
 
-	public AbstractOpeningAccountHolder(BrandsSchemeSetup<G, F, I, T, H, H0> setup, Bank<G, F, I, T, H, H0> bank,
+	public AbstractOpeningAccountHolder(BrandsSchemeSetup<G, F, T, H, H0> setup, Bank<G, F, T, H, H0> bank,
 			FiniteField.Element<F> privateKey) {
 		this.setup = setup;
 		this.bank = bank;
@@ -42,7 +42,7 @@ public abstract class AbstractOpeningAccountHolder<G extends Group<G>, F extends
 		return new BlindedIdentityRequest<G>(((Identifiable) bank).getIdentity(), publicKey);
 	}
 
-	public BrandsSchemeSetup<G, F, I, T, H, H0> getSetup() {
+	public BrandsSchemeSetup<G, F, T, H, H0> getSetup() {
 		return setup;
 	}
 
@@ -54,11 +54,11 @@ public abstract class AbstractOpeningAccountHolder<G extends Group<G>, F extends
 		return publicKey;
 	}
 
-	public Bank<G, F, I, T, H, H0> getBank() {
+	public Bank<G, F, T, H, H0> getBank() {
 		return bank;
 	}
 
-	protected abstract AccountHolderPrivate<G, F, I, T, H, H0> newAccountHolder(Group.Element<G> element);
+	protected abstract AccountHolderPrivate<G, F, T, H, H0> newAccountHolder(Group.Element<G> element);
 
 	@Override
 	public int hashCode() {

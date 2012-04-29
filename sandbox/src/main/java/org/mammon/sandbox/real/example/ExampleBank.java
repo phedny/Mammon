@@ -18,21 +18,21 @@ import org.mammon.scheme.brands.generic.bank.AbstractBlindedIdentity;
 @PublishAs(ConvertToRemoteBank.class)
 public class ExampleBank
 		extends
-		AbstractBankPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
+		AbstractBankPrivate<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	@FromPersistent(Issuer.class)
 	public ExampleBank(
-			@PersistAs("setup") BrandsSchemeSetup<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> setup,
+			@PersistAs("setup") BrandsSchemeSetup<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> setup,
 			@PersistAs("privateKey") FiniteField.Element<Z> privateKey) {
 		super(setup, privateKey);
 	}
 
 	@Override
-	protected AbstractBlindedIdentity<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newBlindedIdentity(
-			BrandsSchemeSetup<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> setup,
-			AbstractBankPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
+	protected AbstractBlindedIdentity<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newBlindedIdentity(
+			BrandsSchemeSetup<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> setup,
+			AbstractBankPrivate<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
 			Group.Element<Gq> payerIdentity) {
-		return new BlindedIdentity((ExampleSetup) setup, (AbstractBankPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) bank, payerIdentity);
+		return new BlindedIdentity((ExampleSetup) setup, (AbstractBankPrivate<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) bank, payerIdentity);
 	}
 
 	@Override

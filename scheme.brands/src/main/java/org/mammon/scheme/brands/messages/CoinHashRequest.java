@@ -12,12 +12,12 @@ import org.mammon.scheme.brands.SignatureHashFunction;
 import org.mammon.scheme.brands.bank.Bank;
 import org.mammon.scheme.brands.coin.CoinSignature;
 
-public class CoinHashRequest<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>>
+public class CoinHashRequest<G extends Group<G>, F extends FiniteField<F>, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, T>>
 		implements DirectedMessage {
 
-	private final BrandsSchemeSetup<G, F, I, T, H, H0> setup;
+	private final BrandsSchemeSetup<G, F, T, H, H0> setup;
 
-	private final Bank<G, F, I, T, H, H0> bank;
+	private final Bank<G, F, T, H, H0> bank;
 
 	private final Group.Element<G> blindedIdentity;
 
@@ -32,8 +32,8 @@ public class CoinHashRequest<G extends Group<G>, F extends FiniteField<F>, I, T,
 	private final String destination;
 
 	@FromPersistent(CoinHashRequest.class)
-	public CoinHashRequest(@PersistAs("setup") BrandsSchemeSetup<G, F, I, T, H, H0> setup,
-			@PersistAs("bank") Bank<G, F, I, T, H, H0> bank,
+	public CoinHashRequest(@PersistAs("setup") BrandsSchemeSetup<G, F, T, H, H0> setup,
+			@PersistAs("bank") Bank<G, F, T, H, H0> bank,
 			@PersistAs("blindedIdentity") Group.Element<G> blindedIdentity,
 			@PersistAs("commitment") Group.Element<G> commitment,
 			@PersistAs("coinSignature") CoinSignature<G, F> coinSignature, @PersistAs("assetType") AssetType assetType,
@@ -48,11 +48,11 @@ public class CoinHashRequest<G extends Group<G>, F extends FiniteField<F>, I, T,
 		this.destination = destination;
 	}
 
-	public BrandsSchemeSetup<G, F, I, T, H, H0> getSetup() {
+	public BrandsSchemeSetup<G, F, T, H, H0> getSetup() {
 		return setup;
 	}
 
-	public Bank<G, F, I, T, H, H0> getBank() {
+	public Bank<G, F, T, H, H0> getBank() {
 		return bank;
 	}
 

@@ -18,13 +18,13 @@ import org.mammon.scheme.brands.generic.coin.AbstractWithdrawingCoinTwo;
 
 public class WithdrawingCoinOne
 		extends
-		AbstractWithdrawingCoinOne<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
+		AbstractWithdrawingCoinOne<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	private final String identity;
 
 	@FromPersistent(AbstractWithdrawingCoinOne.class)
-	public WithdrawingCoinOne(@PersistAs("accountHolder") AbstractAccountHolderPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> accountHolder,
-			@PersistAs("bank") AbstractBank<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank, @PersistAs("publicKey") Group.Element<Gq> publicKey,
+	public WithdrawingCoinOne(@PersistAs("accountHolder") AbstractAccountHolderPrivate<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> accountHolder,
+			@PersistAs("bank") AbstractBank<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank, @PersistAs("publicKey") Group.Element<Gq> publicKey,
 			@PersistAs("count") int count, @PersistAs("identity") String identity) {
 		super(accountHolder, bank, publicKey, count);
 		this.identity = identity;
@@ -36,14 +36,14 @@ public class WithdrawingCoinOne
 	}
 
 	@Override
-	protected AbstractWithdrawingCoinTwo<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newWithdrawingCoinTwo(
+	protected AbstractWithdrawingCoinTwo<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newWithdrawingCoinTwo(
 			Group.Element<Gq> a, Group.Element<Gq> b, FiniteField.Element<Z> c,
 			FiniteField.Element<Z> s, FiniteField.Element<Z> x1,
 			FiniteField.Element<Z> x2, FiniteField.Element<Z> u,
 			FiniteField.Element<Z> v, Group.Element<Gq> bigA,
 			Group.Element<Gq> bigB) {
-		return new WithdrawingCoinTwo((ExampleSetup) getSetup(), (AbstractAccountHolderPrivate<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getAccountHolder(),
-				getIdentity(), (AbstractBank<Gq, Z, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getBank(), getPublicKey(), getCount(), s, x1, x2, u, v, bigA, bigB, a, b,
+		return new WithdrawingCoinTwo((ExampleSetup) getSetup(), (AbstractAccountHolderPrivate<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getAccountHolder(),
+				getIdentity(), (AbstractBank<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction>) getBank(), getPublicKey(), getCount(), s, x1, x2, u, v, bigA, bigB, a, b,
 				c);
 	}
 

@@ -12,13 +12,13 @@ import org.mammon.scheme.brands.SignatureHashFunction;
  * isSellable() method on IOweYou objects hold by an AccountHolderPrivate must
  * return <code>true</code>.
  */
-public interface AccountHolder<G extends Group<G>, F extends FiniteField<F>, S, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, S, T>>
+public interface AccountHolder<G extends Group<G>, F extends FiniteField<F>, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, T>>
 		extends Bearer {
 
 	/**
 	 * @return the setup instantiation used by this object.
 	 */
-	BrandsSchemeSetup<G, F, S, T, H, H0> getSetup();
+	BrandsSchemeSetup<G, F, T, H, H0> getSetup();
 
 	/**
 	 * @return the identity $z$ of the Account Holder blinded by the

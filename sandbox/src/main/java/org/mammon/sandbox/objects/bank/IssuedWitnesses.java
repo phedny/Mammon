@@ -14,10 +14,10 @@ import org.mammon.scheme.brands.generic.bank.AbstractIssuedWitnesses;
 
 public class IssuedWitnesses
 		extends
-		AbstractIssuedWitnesses<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
+		AbstractIssuedWitnesses<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	@FromPersistent(AbstractIssuedWitnesses.class)
-	public IssuedWitnesses(@PersistAs("setup") ExampleSetup setup, @PersistAs("bank") AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
+	public IssuedWitnesses(@PersistAs("setup") ExampleSetup setup, @PersistAs("bank") AbstractBankPrivate<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
 			@PersistAs("payerIdentity") Group.Element<ExampleGroup> payerIdentity,
 			@PersistAs("w") FiniteField.Element<ExampleFiniteField> w) {
 		super(setup, bank, payerIdentity, w);

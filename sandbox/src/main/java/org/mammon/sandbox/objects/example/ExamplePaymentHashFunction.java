@@ -6,7 +6,7 @@ import org.mammon.sandbox.OracleHashFunction;
 import org.mammon.scheme.brands.PaymentHashFunction;
 
 public class ExamplePaymentHashFunction extends OracleHashFunction implements
-		PaymentHashFunction<ExampleGroup, ExampleFiniteField, String, Long> {
+		PaymentHashFunction<ExampleGroup, ExampleFiniteField, Long> {
 
 	public ExamplePaymentHashFunction(ExampleGroup group, ExampleFiniteField f) {
 		super(f, 4);

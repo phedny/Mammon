@@ -20,13 +20,13 @@ import org.mammon.scheme.brands.generic.coin.AbstractUnspentCoin;
 
 public class ExampleUnspentCoin
 		extends
-		AbstractUnspentCoin<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
+		AbstractUnspentCoin<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	@FromPersistent(UnspentCoin.class)
 	public ExampleUnspentCoin(
 			@PersistAs("setup") ExampleSetup setup,
-			@PersistAs("bearer") AbstractAccountHolderPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bearer,
-			@PersistAs("issuer") AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
+			@PersistAs("bearer") AbstractAccountHolderPrivate<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bearer,
+			@PersistAs("issuer") AbstractBankPrivate<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
 			@PersistAs("dualIdentity") String dualIdentity,
 			@PersistAs("blindingFactor") FiniteField.Element<ExampleFiniteField> blindingFactor,
 			@PersistAs("payerWitness1") FiniteField.Element<ExampleFiniteField> x1,
@@ -53,10 +53,10 @@ public class ExampleUnspentCoin
 	}
 
 	@Override
-	protected AbstractTransferringCoinOne<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newAbstractTransferringCoinOne(
-			BrandsSchemeSetup<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> setup,
-			Bank<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
-			AccountHolderPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bearer,
+	protected AbstractTransferringCoinOne<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newAbstractTransferringCoinOne(
+			BrandsSchemeSetup<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> setup,
+			Bank<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
+			AccountHolderPrivate<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bearer,
 			Group.Element<ExampleGroup> blindedIdentity, Group.Element<ExampleGroup> commitment,
 			CoinSignature<ExampleGroup, ExampleFiniteField> coinSignature, AssetType assetType, Number faceValue,
 			FiniteField.Element<ExampleFiniteField> s, FiniteField.Element<ExampleFiniteField> x1,

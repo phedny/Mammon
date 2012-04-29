@@ -16,11 +16,11 @@ import org.mammon.scheme.brands.generic.shop.AbstractShop;
 
 public class ExampleSpentCoin
 		extends
-		AbstractSpentCoin<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
+		AbstractSpentCoin<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	public ExampleSpentCoin(
 			ExampleUnspentCoin basedOnCoin,
-			AbstractBankPrivate<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
+			AbstractBankPrivate<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
 			ExampleShop bearer, Long time) {
 		super(basedOnCoin, bank, bearer, time, UUID.randomUUID().toString());
 	}
@@ -39,9 +39,9 @@ public class ExampleSpentCoin
 	}
 
 	public ExampleSpentCoin(
-			UnspentCoin<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> basedOnCoin,
-			AbstractBank<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
-			AbstractShop<ExampleGroup, ExampleFiniteField, String, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bearer,
+			UnspentCoin<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> basedOnCoin,
+			AbstractBank<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank,
+			AbstractShop<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bearer,
 			Long time, String identity) {
 		super(basedOnCoin, bank, bearer, time, identity);
 	}

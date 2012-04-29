@@ -10,8 +10,6 @@ import org.mammon.math.Group;
  * 
  * @param <G>
  *            The group used for this setup.
- * @param <S>
- *            The type used to identify shops (unused).
  * @param <T>
  *            The type used to express times.
  * @param <H>
@@ -19,7 +17,7 @@ import org.mammon.math.Group;
  * @param <H0>
  *            The payment hash function.
  */
-public interface BrandsSchemeSetup<G extends Group<G>, F extends FiniteField<F>, I, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, I, T>> {
+public interface BrandsSchemeSetup<G extends Group<G>, F extends FiniteField<F>, T, H extends SignatureHashFunction<G, F>, H0 extends PaymentHashFunction<G, F, T>> {
 
 	/**
 	 * @return the object that describes the group that is named $G$ in the
