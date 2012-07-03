@@ -26,6 +26,11 @@ public class ExampleBank
 			@PersistAs("privateKey") FiniteField.Element<Z> privateKey) {
 		super(setup, privateKey);
 	}
+	
+	public ExampleBank(
+			BrandsSchemeSetup<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> setup) {
+		super(setup, setup.getFiniteField().getRandomElement());
+	}
 
 	@Override
 	protected AbstractBlindedIdentity<Gq, Z, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> newBlindedIdentity(
