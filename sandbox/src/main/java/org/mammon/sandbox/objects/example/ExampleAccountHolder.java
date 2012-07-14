@@ -6,6 +6,8 @@ import org.mammon.math.Group;
 import org.mammon.messaging.FromPersistent;
 import org.mammon.messaging.PersistAs;
 import org.mammon.sandbox.objects.accountholder.WithdrawingCoinOne;
+import org.mammon.scheme.brands.BrandsSchemeSetup;
+import org.mammon.scheme.brands.bank.BankPrivate;
 import org.mammon.scheme.brands.generic.accountholder.AbstractAccountHolderPrivate;
 import org.mammon.scheme.brands.generic.bank.AbstractBankPrivate;
 import org.mammon.scheme.brands.generic.coin.AbstractWithdrawingCoinOne;
@@ -16,11 +18,11 @@ public class ExampleAccountHolder
 		AbstractAccountHolderPrivate<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> {
 
 	@FromPersistent(Bearer.class)
-	public ExampleAccountHolder(@PersistAs("setup") ExampleSetup setup,
+	public ExampleAccountHolder(@PersistAs("setup") BrandsSchemeSetup<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> setup,
 			@PersistAs("privateKey") FiniteField.Element<ExampleFiniteField> privateKey,
 			@PersistAs("publicKey") Group.Element<ExampleGroup> publicKey,
 			@PersistAs("blindedIdentity") Group.Element<ExampleGroup> blindedIdentity,
-			@PersistAs("bank") AbstractBankPrivate<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank) {
+			@PersistAs("bank") BankPrivate<ExampleGroup, ExampleFiniteField, Long, ExampleSignatureHashFunction, ExamplePaymentHashFunction> bank) {
 		super(setup, privateKey, publicKey, blindedIdentity, bank);
 	}
 

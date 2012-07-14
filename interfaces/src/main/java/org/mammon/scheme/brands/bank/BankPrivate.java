@@ -15,5 +15,7 @@ public interface BankPrivate<G extends Group<G>, F extends FiniteField<F>, T, H 
 	 * @return the private key $x$ of the BankPrivate.
 	 */
 	FiniteField.Element<F> getPrivateKey();
+	
+	Group.Element<G> getBlindedIdentityFor(Group.Element<G> payerIdentity);
 
 }

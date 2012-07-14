@@ -2,6 +2,7 @@ package org.mammon.scheme.brands.generic.bank;
 
 import org.mammon.math.FiniteField;
 import org.mammon.math.Group;
+import org.mammon.math.Group.Element;
 import org.mammon.messaging.Identifiable;
 import org.mammon.messaging.Transactable;
 import org.mammon.scheme.brands.BrandsSchemeSetup;
@@ -28,6 +29,11 @@ public abstract class AbstractBankPrivate<G extends Group<G>, F extends FiniteFi
 
 	public AbstractBlindedIdentity<G, F, T, H, H0> transact(BlindedIdentityRequest<G> request) {
 		return newBlindedIdentity(getSetup(), this, request.getIdentity());
+	}
+
+	@Override
+	public Element<G> getBlindedIdentityFor(Element<G> payerIdentity) {
+		return payerIdentity.multiply(getSetup().getGenerator(2)).exponentiate(this.getPrivateKey());
 	}
 
 	public String transact(BankWitnessesRequest<G> request) {
